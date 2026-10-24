@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Same result, second tool: speculative decoding through llama-server &middot; Spliced</title>
+<meta name="description" content="Notes 7 and 9 repeated through llama-server, the program real deployments use. Every finding holds. Also why Windows Smart App Control blocked the same run on our Windows laptop.">
+<meta property="og:title" content="Same result, second tool: speculative decoding through llama-server &middot; Spliced">
+<meta property="og:description" content="Notes 7 and 9 repeated through llama-server, the program real deployments use. Every finding holds. Also why Windows Smart App Control blocked the same run on our Windows laptop.">
+<meta property="og:image" content="https://splicedso.github.io/assets/og.png">
+<meta property="og:url" content="https://splicedso.github.io/research/speculative-second-tool/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Spliced">
+<link rel="canonical" href="https://splicedso.github.io/research/speculative-second-tool/">
+<meta name="color-scheme" content="light dark">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>try { const t = localStorage.getItem("theme"); if (t) document.documentElement.dataset.theme = t; } catch {}</script>
+<link rel="stylesheet" href="../../assets/style.css?v=202610241341">
+<link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
+</head>
+<body data-root="../../" data-page="research">
+<a class="skip" href="#content">Skip to content</a>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="../../" aria-label="Spliced home">
+      <svg viewBox="0 0 500 659" aria-hidden="true"><path fill="currentColor" d="M0 192 L418 0 L418 205 L145 331 L145 449 L0 516 Z M197 385 L500 246 L500 520 L197 659 Z"/></svg>
+      Spliced
+    </a>
+    <div class="nav-right">
+      <ul>
+        <li><a href="../../research/" data-nav="research">Research</a></li>
+        <li><a href="../../learn/" data-nav="learn">Learn</a></li>
+        <li><a href="../../data/" data-nav="data">Data</a></li>
+        <li><a href="../../tools/phase/" data-nav="tools">Tools</a></li>
+        <li><a href="../../lab/" data-nav="lab">Lab</a></li>
+      </ul>
+      <a class="icon-link" href="https://github.com/splicedso" aria-label="Spliced on GitHub" title="GitHub"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a>
+      <a class="icon-link" href="https://www.linkedin.com/company/splicedso" aria-label="Spliced on LinkedIn" title="LinkedIn"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M0 1.15C0 .52.52 0 1.18 0h13.64C15.48 0 16 .52 16 1.15v13.7c0 .63-.52 1.15-1.18 1.15H1.18C.52 16 0 15.48 0 14.85V1.15zM4.75 13.39V6.17H2.35v7.22h2.4zM3.55 5.18c.84 0 1.36-.55 1.36-1.25-.02-.71-.52-1.25-1.34-1.25-.82 0-1.36.54-1.36 1.25 0 .7.52 1.25 1.33 1.25h.01zm4.91 8.21V9.36c0-.22.02-.43.08-.59.18-.43.57-.88 1.23-.88.87 0 1.22.66 1.22 1.64v3.86h2.4V9.25c0-2.22-1.18-3.25-2.76-3.25-1.27 0-1.84.7-2.16 1.19v.03h-.02l.02-.03V6.17h-2.4c.03.68 0 7.22 0 7.22h2.4z"/></svg></a>
+      <button class="theme" id="theme" type="button" aria-label="Dark mode" aria-pressed="false">
+        <svg class="moon" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M10.5 1.5a6.5 6.5 0 1 0 4 11.6A7 7 0 0 1 10.5 1.5Z"/></svg>
+        <svg class="sun" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="3.2" fill="currentColor"/><path stroke="currentColor" stroke-width="1.4" stroke-linecap="round" d="M8 1v1.6M8 13.4V15M1 8h1.6M13.4 8H15M3 3l1.1 1.1M11.9 11.9 13 13M3 13l1.1-1.1M11.9 4.1 13 3"/></svg>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<svg id="bus" aria-hidden="true"></svg>
+
+<div id="content">
+<header class="page-head">
+  <div class="wrap">
+    <span class="refdes mono" data-via><b>N11</b> Research note &middot; 24 October 2026</span>
+    <h1>Same result, second tool: speculative decoding through llama-server</h1>
+    <p class="lede">Spliced research note 11, 24 October 2026. Apple M5 Pro, 24 GB, llama.cpp build 11669. Target Qwen2.5 7B Q4_0, draft Qwen2.5 0.5B Q4_0.</p>
+  </div>
+</header>
+<main><article class="wrap note-body"><p>Notes 7 and 9 measured speculative decoding with <code>llama-speculative-simple</code>, an example program in llama.cpp. Real deployments use <code>llama-server</code>, a different program with its own scheduling, batching and request handling. A result that holds in one tool might be a property of that tool. This note repeats both experiments through <code>llama-server</code>, and records why the same experiment could not be run on our Windows laptop.</p>
+<h2 data-via>Method</h2>
+<p><code>experiments/speculative_server.py</code>. Every condition, plain decoding included, runs through <code>llama-server</code>: one server process per condition, warmed up with a short request before measurement, then the three prompts of note 7 (new code, prose, an edit), 384 generated tokens each, greedy. The server reports its own decode time and the numbers of drafted and accepted tokens; the measurement window is aligned to that decode time as in note 7. Chip energy only, for the reason note 7 gives. Three repetitions per condition in a shuffled order. Two sessions: the strategies of note 7, then the thresholds of note 9.</p>
+<p>Plain decoding repeated within 2% to 7% in the first session and within 17% to 20% in the second, so the second session's percentages are less precise. Every comparison is against plain decoding within the same session.</p>
+<h2 data-via>Results</h2>
+<p>Chip energy relative to plain decoding, with the same figures from notes 7 and 9 (which used <code>llama-speculative-simple</code>):</p>
+<table>
+<thead>
+<tr>
+<th>prompt</th>
+<th>strategy</th>
+<th style="text-align: right;">accepted</th>
+<th style="text-align: right;">speed</th>
+<th style="text-align: right;">energy, server</th>
+<th style="text-align: right;">energy, note 7 or 9</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>code</td>
+<td>draft-2</td>
+<td style="text-align: right;">81%</td>
+<td style="text-align: right;">1.50x</td>
+<td style="text-align: right;">0.97</td>
+<td style="text-align: right;">1.06</td>
+</tr>
+<tr>
+<td>code</td>
+<td>draft-4</td>
+<td style="text-align: right;">71%</td>
+<td style="text-align: right;">1.80x</td>
+<td style="text-align: right;">0.76</td>
+<td style="text-align: right;">0.83</td>
+</tr>
+<tr>
+<td>code</td>
+<td>draft-8</td>
+<td style="text-align: right;">53%</td>
+<td style="text-align: right;">1.37x</td>
+<td style="text-align: right;">0.97</td>
+<td style="text-align: right;">1.05</td>
+</tr>
+<tr>
+<td>code</td>
+<td>draft-16</td>
+<td style="text-align: right;">33%</td>
+<td style="text-align: right;">0.76x</td>
+<td style="text-align: right;">1.91</td>
+<td style="text-align: right;">2.15</td>
+</tr>
+<tr>
+<td>prose</td>
+<td>draft-2</td>
+<td style="text-align: right;">61%</td>
+<td style="text-align: right;">1.27x</td>
+<td style="text-align: right;">1.12</td>
+<td style="text-align: right;">1.24</td>
+</tr>
+<tr>
+<td>prose</td>
+<td>draft-4</td>
+<td style="text-align: right;">45%</td>
+<td style="text-align: right;">1.32x</td>
+<td style="text-align: right;">1.01</td>
+<td style="text-align: right;">1.10</td>
+</tr>
+<tr>
+<td>prose</td>
+<td>draft-8</td>
+<td style="text-align: right;">28%</td>
+<td style="text-align: right;">0.86x</td>
+<td style="text-align: right;">1.52</td>
+<td style="text-align: right;">1.70</td>
+</tr>
+<tr>
+<td>prose</td>
+<td>draft-16</td>
+<td style="text-align: right;">14%</td>
+<td style="text-align: right;">0.40x</td>
+<td style="text-align: right;">3.60</td>
+<td style="text-align: right;">3.95</td>
+</tr>
+<tr>
+<td>edit</td>
+<td>draft-4</td>
+<td style="text-align: right;">99%</td>
+<td style="text-align: right;">2.24x</td>
+<td style="text-align: right;">0.62</td>
+<td style="text-align: right;">0.64</td>
+</tr>
+<tr>
+<td>edit</td>
+<td>draft-8</td>
+<td style="text-align: right;">97%</td>
+<td style="text-align: right;">2.24x</td>
+<td style="text-align: right;">0.60</td>
+<td style="text-align: right;">0.62</td>
+</tr>
+<tr>
+<td>edit</td>
+<td>ngram</td>
+<td style="text-align: right;">100%</td>
+<td style="text-align: right;">5.59x</td>
+<td style="text-align: right;">0.27</td>
+<td style="text-align: right;">0.32</td>
+</tr>
+<tr>
+<td>code</td>
+<td>draft-8, p 0.5</td>
+<td style="text-align: right;">66%</td>
+<td style="text-align: right;">1.49x</td>
+<td style="text-align: right;">0.92</td>
+<td style="text-align: right;">0.84</td>
+</tr>
+<tr>
+<td>prose</td>
+<td>draft-8, p 0.5</td>
+<td style="text-align: right;">68%</td>
+<td style="text-align: right;">1.25x</td>
+<td style="text-align: right;">1.04</td>
+<td style="text-align: right;">0.99</td>
+</tr>
+<tr>
+<td>edit</td>
+<td>draft-8, p 0.5</td>
+<td style="text-align: right;">97%</td>
+<td style="text-align: right;">2.25x</td>
+<td style="text-align: right;">0.62</td>
+<td style="text-align: right;">0.61</td>
+</tr>
+<tr>
+<td>prose</td>
+<td>draft-16, p 0.8</td>
+<td style="text-align: right;">94%</td>
+<td style="text-align: right;">1.05x</td>
+<td style="text-align: right;">1.11</td>
+<td style="text-align: right;">1.09</td>
+</tr>
+</tbody>
+</table>
+<h2 data-via>1. Every finding holds in the second tool</h2>
+<ul>
+<li><strong>Faster can still cost more.</strong> On prose, drafting 2 tokens is 1.27 times faster than plain decoding and costs 12% more energy.</li>
+<li><strong>Long drafts on unpredictable text are still the worst case</strong>: drafting 16 tokens on prose costs 3.60 times plain decoding's energy, at 0.40 times its speed.</li>
+<li><strong>Copying from the context still wins on edits</strong>: 5.59 times the speed at 27% of the energy.</li>
+<li><strong>A threshold of 0.5 still removes the penalty</strong>: prose is within 4% of plain decoding's energy at 1.25 times the speed, and code and edits save energy.</li>
+</ul>
+<p>The acceptance rates are almost identical between the two tools (for example 14%, 28%, 45% and 61% on prose here against 14%, 28%, 45% and 60% in note 7), which is expected: the draft model and target are the same, and greedy decoding makes the same guesses.</p>
+<h2 data-via>2. The server is slightly cheaper relative to plain decoding</h2>
+<p>In all 11 rows from the first session, the server's energy ratio is lower than the example program's, by 3% to 16%. The four threshold rows, from the noisier second session, land within 1 to 8 points of note 9 in the other direction, inside that session's spread. Both measure plain decoding through the same program as their speculative conditions, so the ratios are internally consistent; the difference is in how each program handles speculation. One plausible cause is that the server's request scheduling overlaps draft and verification work better, but we have not measured that. The direction of every finding is the same; the size is slightly more favourable to speculation in the server.</p>
+<h2 data-via>3. Why there is no Windows number</h2>
+<p>The Windows laptop of notes 4 and 10 could not run this experiment. Windows Smart App Control, a reputation-based security policy available on new Windows 11 installs, blocks the unsigned library <code>mtmd.dll</code> that <code>llama-server</code> loads at start-up (code-integrity events 3033 and 3077, load error 4551). The official llama.cpp release builds are not code-signed, so any fresh download is blocked the same way, while the tools used in notes 4 and 10 (<code>llama-bench</code>, <code>llama-quantize</code>, <code>llama-completion</code>) do not load that library and run. Turning the policy off needs administrator rights and cannot be undone without reinstalling, so we did not. A measurement is not worth weakening a machine's security, and that machine's next study uses the tools it can run.</p>
+<p>This is a practical finding for anyone deploying local inference on Windows: on machines with Smart App Control, unsigned llama.cpp server builds will not start.</p>
+<h2 data-via>Limits</h2>
+<p>One machine, one model pair, three prompts, greedy decoding. The second session was noisy (plain decoding varied by up to 20% between repeats). The cause of the server's slightly better ratios is not established.</p>
+<h2 data-via>Reproduce</h2>
+<pre><code class="language-bash">uv run python experiments/speculative_server.py results/speculative-server-mac.json
+uv run python experiments/speculative_server.py results/speculative-pmin-server-mac.json \
+  plain,draft-8,draft-8-p0.5,draft-8-p0.8,draft-8-p0.95,draft-16,draft-16-p0.8
+</code></pre>
+<p>Raw results: <code>results/speculative-server-mac.json</code>, <code>results/speculative-pmin-server-mac.json</code>, <code>results/summary-speculative-server-mac.json</code>, <code>results/summary-speculative-pmin-server-mac.json</code>.</p>
+<p class="source mono">Source, scripts and raw data: <a href="https://github.com/splicedso/phase/blob/main/notes/2026-10-speculative-second-tool.md">phase/notes/2026-10-speculative-second-tool.md</a></p>
+</article></main>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="titleblock mono" data-via>
+      <div><svg viewBox="0 0 500 659" aria-hidden="true"><path fill="currentColor" d="M0 192 L418 0 L418 205 L145 331 L145 449 L0 516 Z M197 385 L500 246 L500 520 L197 659 Z"/></svg><span><span class="k">Title</span>N11 &middot; Same result, second tool: speculative decoding through llama-server</span></div>
+      <div><span class="k">Drawn</span>2026-10</div>
+      <div><span class="k">Sheet</span>16 of 16</div>
+      <div><span class="k">Elsewhere</span><span class="foot-links"><a href="https://github.com/splicedso" aria-label="GitHub"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>GitHub</a><a href="https://www.linkedin.com/company/splicedso" aria-label="LinkedIn"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M0 1.15C0 .52.52 0 1.18 0h13.64C15.48 0 16 .52 16 1.15v13.7c0 .63-.52 1.15-1.18 1.15H1.18C.52 16 0 15.48 0 14.85V1.15zM4.75 13.39V6.17H2.35v7.22h2.4zM3.55 5.18c.84 0 1.36-.55 1.36-1.25-.02-.71-.52-1.25-1.34-1.25-.82 0-1.36.54-1.36 1.25 0 .7.52 1.25 1.33 1.25h.01zm4.91 8.21V9.36c0-.22.02-.43.08-.59.18-.43.57-.88 1.23-.88.87 0 1.22.66 1.22 1.64v3.86h2.4V9.25c0-2.22-1.18-3.25-2.76-3.25-1.27 0-1.84.7-2.16 1.19v.03h-.02l.02-.03V6.17h-2.4c.03.68 0 7.22 0 7.22h2.4z"/></svg>LinkedIn</a></span></div>
+    </div>
+  </div>
+</footer>
+
+<script src="../../assets/site.js?v=202610241341"></script>
+<script src="../../assets/charts.js?v=202610241341"></script>
+</body>
+</html>
