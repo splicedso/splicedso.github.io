@@ -1,10 +1,10 @@
 // Home page: the token-by-token headline and the live power-path schematic.
 
-// Hero: the headline is written one real Qwen2.5 token at a time. At the measured 198 tokens
+// Hero: the headline is written one real Qwen2.5 token at a time, as an example of what we measure. At the measured 198 tokens
 // per second it would be over in a fifth of a second, so it is replayed 30 times slower, and
 // the meter adds the measured 141.5 mJ per decoded token as it goes.
-const HEAD = ["What", " does", " a", " token", " cost", "?"];
-const LEDE = ["Sp", "liced", " works", " on", " efficient", " inference", ".", " We", " start", " by", " measuring", " it", ":", " at", " the", " chip", " and", " at", " the", " board", ",", " with", " pre", "fill", " and", " decode", " reported", " apart", "."];
+const HEAD = ["The", " engineering", " of", " efficient", " inference", "."];
+const LEDE = ["Sp", "liced", " is", " a", " research", " lab", " for", " the", " engineering", " side", " of", " AI", ":", " what", " it", " takes", " to", " run", " models", " well", ",", " from", " the", " kernels", " on", " a", " laptop", " to", " the", " servers", " in", " a", " data", "center", ".", " We", " measure", ",", " publish", " the", " method", " and", " the", " data", ",", " and", " say", " what", " each", " result", " cannot", " show", "."];
 (function typeTokens() {
   const h1 = document.getElementById("h1"), lede = document.getElementById("lede");
   const mt = document.getElementById("m-tok"), mj = document.getElementById("m-j");

@@ -104,7 +104,7 @@ nav ul a.on { color: var(--ink); }
 .refdes { display: inline-flex; gap: 10px; align-items: center; color: var(--mute); }
 .refdes b { color: var(--ink); font-weight: 500; border: 1px solid var(--ink); padding: 1px 6px; }
 .hero h1 { font-weight: 500; font-size: clamp(42px, 6.4vw, 84px); line-height: .98; letter-spacing: -.045em; margin-top: 26px; min-height: 2em; }
-.hero p.lede { margin-top: 26px; max-width: 470px; color: var(--body); font-size: 18px; min-height: 4.7em; }
+.hero p.lede { margin-top: 26px; max-width: 480px; color: var(--body); font-size: 18px; min-height: 8em; }
 .tok { position: relative; white-space: pre-wrap; }
 .tok::before { content: ""; position: absolute; left: 0; top: .1em; bottom: .05em; width: 1px; background: var(--ink); opacity: 0; }
 .tok.fresh::before { opacity: .55; }
