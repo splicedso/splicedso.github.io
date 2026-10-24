@@ -60,6 +60,9 @@ NOTES = [
     {"slug": "model-width-on-nvidia", "file": "2026-10-windows-width.md", "n": 12,
      "summary": "Note 6's width sweep on an RTX 5070 Ti. Small models pay up to 2.2 times more energy per weight, more than "
                 "on the Mac for the 4-bit formats; Q4_0 is cheapest at every width; Q5_K_M beats Q6_K throughout."},
+    {"slug": "context-depth", "file": "2026-10-windows-context.md", "n": 13,
+     "summary": "What a long context costs per token on an RTX 5070 Ti: 1.3 times at 16k, too little to explain the datacenter's "
+                "60 times. And an 8-bit KV cache costs more energy, not less, when the full one already fits."},
 ]
 
 FIGURES = {
