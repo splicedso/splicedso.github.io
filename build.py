@@ -27,6 +27,9 @@ NOTES = [
     {"slug": "roofline-and-energy-model", "file": "2026-10-roofline-and-energy-model.md", "n": 2,
      "summary": "A decode roofline from measured bandwidth, and a validated energy model whose residuals "
                 "isolate the cost of unpacking each format. Two wrong first attempts, kept in."},
+    {"slug": "scale-and-runtime", "file": "2026-10-scale-and-runtime.md", "n": 3,
+     "summary": "The format study at 7B, where every finding replicates and the hardware is used better, and in MLX, "
+                "where repeat runs do not yet agree, so only claims that survive both passes are made."},
 ]
 
 FIGURES = {
@@ -35,6 +38,12 @@ FIGURES = {
     <span class="toggle" role="group" aria-label="Measurement point"><button data-v="board" aria-pressed="true">TP1 board</button><button data-v="soc" aria-pressed="false">TP2 chip only</button></span></div>
   <svg viewBox="0 0 1000 440" role="img" aria-label="Decode energy per token against perplexity for eight quantization formats"></svg>
   <figcaption class="mono">x: millijoules per decoded token. y: WikiText-2 perplexity, lower is better, so better is higher. The dashed line joins the formats nothing else beats on both. Toggle the test point to see how chip-only measurement moves every format.</figcaption>
+</figure>""",
+    "fmt7": """<figure class="chart" id="fmt7">
+  <div class="chart-bar mono"><span>Qwen2.5 7B: decode energy against perplexity</span>
+    <span class="toggle" role="group" aria-label="Measurement point"><button data-v="board" aria-pressed="true">TP1 board</button><button data-v="soc" aria-pressed="false">TP2 chip only</button></span></div>
+  <svg viewBox="0 0 1000 440" role="img" aria-label="Decode energy per token against perplexity for eight quantization formats of the 7B model"></svg>
+  <figcaption class="mono">Mean of two passes. F16 is plotted but did not repeat (memory pressure), so it is left out of the conclusions. Same layout as note 1: better is higher, cheaper is further left.</figcaption>
 </figure>""",
     "bat": """<figure class="chart" id="bat">
   <div class="chart-bar mono"><span>Decode energy per token and GPU power, by batch size</span><span id="bat-read">batch 1</span></div>
@@ -80,7 +89,10 @@ def chart_data():
                         "chip": round(r["soc_j_per_tok"] * 1e3, 1), "board": round(r["sys_j_per_tok"] * 1e3, 1)})
     results += baseline("7b-1.json", "Qwen2.5 7B")
     roofline = json.load(open(R / "roofline-1.5b.json"))
-    return {"formats": formats, "batch": {"q4_0": batch("q4_0"), "q4_k_m": batch("q4_k_m")},
+    s7 = json.load(open(R / "summary-7b.json"))["rows"]
+    formats7 = [{"name": r["format"], "ppl": round(r["ppl"], 2), "soc": round(r["soc_mj"], 1), "board": round(r["board_mj"], 1),
+                 **({"note": "(did not repeat)"} if r["spread_board"] > .05 else {})} for r in s7]
+    return {"formats": formats, "formats7": formats7, "batch": {"q4_0": batch("q4_0"), "q4_k_m": batch("q4_k_m")},
             "results": results, "roofline": roofline}
 
 

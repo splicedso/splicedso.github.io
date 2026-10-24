@@ -15,7 +15,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>try { const t = localStorage.getItem("theme"); if (t) document.documentElement.dataset.theme = t; } catch {}</script>
-<link rel="stylesheet" href="assets/style.css?v=202610240046">
+<link rel="stylesheet" href="assets/style.css?v=202610240114">
 </head>
 <body data-root="" data-page="home">
 
@@ -94,7 +94,7 @@
     <div class="wrap">
       <div class="label"><span class="refdes mono" data-via><b>J3</b> Notes</span></div>
       <h2>Published research.</h2>
-      <div class="notes"><a class="note-card" href="research/roofline-and-energy-model/"><span class="mono">N2 &middot; 24 October 2026</span><h3>Where the joules go: a roofline and an energy model for decode</h3><p>A decode roofline from measured bandwidth, and a validated energy model whose residuals isolate the cost of unpacking each format. Two wrong first attempts, kept in.</p><span class="mono go">Read note &rarr;</span></a><a class="note-card" href="research/formats-and-batching/"><span class="mono">N1 &middot; 24 October 2026</span><h3>Fewer bits is not fewer joules</h3><p>Eight quantization formats and batch sizes 1 to 8, energy at the chip and at the board. Chip-only measurement misranks F16 by 2x; batch 2 saves 1% per token and batch 8 saves 72%.</p><span class="mono go">Read note &rarr;</span></a></div>
+      <div class="notes"><a class="note-card" href="research/scale-and-runtime/"><span class="mono">N3 &middot; 24 October 2026</span><h3>Does it hold? A model five times larger, and a second runtime</h3><p>The format study at 7B, where every finding replicates and the hardware is used better, and in MLX, where repeat runs do not yet agree, so only claims that survive both passes are made.</p><span class="mono go">Read note &rarr;</span></a><a class="note-card" href="research/roofline-and-energy-model/"><span class="mono">N2 &middot; 24 October 2026</span><h3>Where the joules go: a roofline and an energy model for decode</h3><p>A decode roofline from measured bandwidth, and a validated energy model whose residuals isolate the cost of unpacking each format. Two wrong first attempts, kept in.</p><span class="mono go">Read note &rarr;</span></a><a class="note-card" href="research/formats-and-batching/"><span class="mono">N1 &middot; 24 October 2026</span><h3>Fewer bits is not fewer joules</h3><p>Eight quantization formats and batch sizes 1 to 8, energy at the chip and at the board. Chip-only measurement misranks F16 by 2x; batch 2 saves 1% per token and batch 8 saves 72%.</p><span class="mono go">Read note &rarr;</span></a></div>
       <a class="cta" href="research/">All research <span aria-hidden="true">&rarr;</span></a>
     </div>
   </section>
@@ -106,7 +106,7 @@
         <h2>On the bench now.</h2>
       </div>
       <ol class="steps">
-        <li><div><b>A 7B model and MLX.</b> The format study on a model five times larger, and on Apple's own runtime.</div></li>
+        <li><div><b>MLX repeatability.</b> Why two MLX passes disagree by up to 17% when llama.cpp repeats within 2%.</div></li>
         <li><div><b>A second machine.</b> The same study on a Windows laptop, to see which findings are Apple Silicon and which are physics.</div></li>
         <li><div><b>Per-kernel energy.</b> Each format's matrix-vector kernel timed and power-sampled alone, to explain what the energy model cannot.</div></li>
         <li><div><b>Cluster design.</b> Tokens per megawatt-hour across GPU generations, from public specs and a roofline, checked against published benchmarks.</div></li>
@@ -122,13 +122,13 @@
     <div class="titleblock mono" data-via>
       <div><svg viewBox="0 0 500 659" aria-hidden="true"><path fill="currentColor" d="M0 192 L418 0 L418 205 L145 331 L145 449 L0 516 Z M197 385 L500 246 L500 520 L197 659 Z"/></svg><span><span class="k">Title</span>Spliced &middot; Efficient inference</span></div>
       <div><span class="k">Drawn</span>2026-10</div>
-      <div><span class="k">Sheet</span>1 of 6</div>
+      <div><span class="k">Sheet</span>1 of 7</div>
       <div><span class="k">Source</span><a href="https://github.com/splicedso">github.com/splicedso</a></div>
     </div>
   </div>
 </footer>
 
-<script src="assets/site.js?v=202610240046"></script>
-<script src="assets/home.js?v=202610240046"></script>
+<script src="assets/site.js?v=202610240114"></script>
+<script src="assets/home.js?v=202610240114"></script>
 </body>
 </html>

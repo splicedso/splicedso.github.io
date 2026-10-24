@@ -3,7 +3,8 @@
 
 fetch(ROOT + "assets/data.json").then(r => r.json()).then(D => {
   resultsBars(D.results);
-  formatChart(D.formats);
+  formatChart(D.formats, "#fmt", 9.5, 11.0, [9.5, 10, 10.5, 11]);
+  formatChart(D.formats7, "#fmt7", 7.2, 7.9, [7.3, 7.5, 7.7, 7.9]);
   batchChart(D.batch);
   rooflineChart(D.roofline);
 });
@@ -33,20 +34,20 @@ function axes(svg, xs, ys) {
   for (const [x1, y1, x2, y2] of [...xs, ...ys]) el("line", { x1, y1, x2, y2, class: "gridline" }, svg);
 }
 
-function formatChart(FORMATS) {
-  const svg = document.querySelector("#fmt svg");
+function formatChart(FORMATS, sel, ymin, ymax, ticks) {
+  const svg = document.querySelector(sel + " svg");
   if (!svg) return;
   const W = 1000, H = 440, L = 56, R = 24, T = 20, B = 40;
   const xmax = Math.ceil(Math.max(...FORMATS.flatMap(f => [f.soc, f.board])) / 100) * 100;
-  const ymin = 9.5, ymax = 11.0;
+  const step = xmax > 1000 ? 500 : 100;
   const LBL = { F16: [10, -10], Q8_0: [10, 16], Q6_K: [-10, -10, "end"], Q5_K_M: [10, 18], Q4_0: [10, 18] };
   const X = v => L + v / xmax * (W - L - R);
   const Y = p => T + (Math.min(p, ymax) - ymin) / (ymax - ymin) * (H - T - B);
-  for (let v = 0; v <= xmax; v += 100) {
+  for (let v = 0; v <= xmax; v += step) {
     el("line", { x1: X(v), x2: X(v), y1: T, y2: H - B, class: "gridline" }, svg);
     el("text", { x: X(v), y: H - B + 22, "text-anchor": "middle" }, svg).textContent = v;
   }
-  for (const p of [9.5, 10, 10.5, 11]) {
+  for (const p of ticks) {
     el("line", { x1: L, x2: W - R, y1: Y(p), y2: Y(p), class: "gridline" }, svg);
     el("text", { x: L - 10, y: Y(p) + 4, "text-anchor": "end" }, svg).textContent = p.toFixed(1);
   }
@@ -58,7 +59,7 @@ function formatChart(FORMATS) {
     el("circle", { r: f.name === "Q4_0" ? 6 : 4.5, class: "ink-fill" }, g);
     const [dx, dy, anchor] = LBL[f.name] || [10, -10];
     const off = f.ppl > ymax ? `  ${f.ppl.toFixed(1)}, off scale` : "";
-    el("text", { x: dx, y: dy, class: "lbl", "text-anchor": anchor || "start" }, g).textContent = f.name + off;
+    el("text", { x: dx, y: dy, class: "lbl", "text-anchor": anchor || "start" }, g).textContent = f.name + off + (f.note ? "  " + f.note : "");
     return { f, g };
   });
   function frontier(key) {
@@ -74,9 +75,9 @@ function formatChart(FORMATS) {
       g.querySelector(".ghost").setAttribute("x2", X(key === "board" ? f.soc : f.board) - X(f[key]));
     }
     front.setAttribute("d", frontier(key).map((p, i) => (i ? "L" : "M") + X(p.x) + " " + Y(p.y)).join(" "));
-    document.querySelectorAll("#fmt .toggle button").forEach(b => b.setAttribute("aria-pressed", b.dataset.v === key));
+    document.querySelectorAll(sel + " .toggle button").forEach(b => b.setAttribute("aria-pressed", b.dataset.v === key));
   }
-  document.querySelectorAll("#fmt .toggle button").forEach(b => b.onclick = () => show(b.dataset.v));
+  document.querySelectorAll(sel + " .toggle button").forEach(b => b.onclick = () => show(b.dataset.v));
   show("soc");
   new IntersectionObserver((es, o) => {
     if (es[0].isIntersecting) { setTimeout(() => show("board"), 400); o.disconnect(); }
