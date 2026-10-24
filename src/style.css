@@ -403,3 +403,29 @@ section.tight { padding: 88px 0; }
   nav ul a { font-size: 10.5px; letter-spacing: .07em; }
   .theme { margin-left: 12px; width: 30px; height: 30px; }
 }
+
+/* phones: links drop to their own row under the brand, nothing scrolls sideways */
+html, body { overflow-x: clip; }
+img, video, svg, canvas { max-width: 100%; }
+h1, h2, h3 { overflow-wrap: break-word; }
+@media (max-width: 600px) {
+  nav .wrap { height: auto; flex-wrap: wrap; padding-top: 12px; }
+  .nav-right { display: contents; }
+  .theme { order: 2; margin-left: auto; }
+  nav ul { order: 3; width: 100%; justify-content: space-between; gap: 8px; margin-top: 12px; padding: 12px 0; border-top: 1px solid var(--line); overflow-x: auto; scrollbar-width: none; }
+  nav ul a { font-size: 11px; letter-spacing: .1em; padding: 6px 0; }
+  section { padding: 72px 0; }
+  section.tight { padding: 56px 0; }
+  .hero { padding: 44px 0 36px; }
+  .page-head { padding: 52px 0 24px; }
+  .page-head .lede, .hero p.lede { font-size: 17px; min-height: 0; }
+  .area, .note-card, .fact { padding: 22px 18px; }
+  .row { grid-template-columns: 1fr 52px 104px; gap: 10px; padding: 12px 10px; }
+  .cmp-pick select { font-size: 16px; }
+  ol.steps li { grid-template-columns: 40px 1fr; }
+  .titleblock { grid-template-columns: 1fr; }
+  .titleblock > div { border-left: 0 !important; }
+  .titleblock > div + div { border-top: 1px solid var(--line); }
+  .foot-links { flex-wrap: wrap; }
+  pre { font-size: 12.5px; padding: 14px; }
+}
