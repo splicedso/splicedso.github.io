@@ -51,9 +51,9 @@ NOTES = [
     {"slug": "speculative-threshold", "file": "2026-10-speculative-threshold.md", "n": 9,
      "summary": "A draft confidence threshold removes speculative decoding's energy penalty on every task tested. "
                 "At about 0.5, speculation on prose becomes a free 1.3x speed-up."},
-    {"slug": "batching-without-a-step", "file": "2026-10-windows-rtx5070ti.md", "n": 10,
-     "summary": "The Windows laptop plugged in, and a batch sweep on CUDA. Its GPU is at a 100 W ceiling from batch 1, "
-                "so the second request saves 43% where on the Mac it saved 1%."},
+    {"slug": "batching-without-a-step", "file": "2026-10-windows-ac-and-batching.md", "n": 10,
+     "summary": "The Windows laptop plugged in, and a batch sweep on CUDA. Plugging in buys 34 to 46% more speed for 23 to 33% "
+                "more energy per token, and with the GPU at its ceiling from batch 1 the second request saves 43%."},
 ]
 
 FIGURES = {
