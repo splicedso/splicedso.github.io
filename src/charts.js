@@ -8,6 +8,7 @@ fetch(ROOT + "assets/data.json").then(r => r.json()).then(D => {
   batchChart(D.batch);
   rooflineChart(D.roofline);
   twoChart(D.two);
+  kernChart(D.kernels);
 });
 
 function resultsBars(rows) {
@@ -180,6 +181,39 @@ function twoChart(rows) {
   new IntersectionObserver((es, o) => {
     if (!es[0].isIntersecting) return;
     bars.forEach(([b, w], i) => setTimeout(() => b.setAttribute("width", w), reduced ? 0 : 45 * i));
+    o.disconnect();
+  }, { threshold: .3 }).observe(svg);
+}
+
+// Chip energy per weight for each format's matvec kernel, split into streaming the bytes
+// (F16's energy per byte, which needs no unpacking) and unpacking them (the rest).
+function kernChart(rows) {
+  const svg = document.querySelector("#kern svg");
+  if (!svg) return;
+  const W = 1000, rowH = 40, L = 96, R = 90, T = 24;
+  const H = T + rows.length * rowH + 30;
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  const stream = rows.find(r => r.format === "f16").soc_nj_b;
+  const max = 120;
+  const X = v => L + v / max * (W - L - R);
+  for (let v = 0; v <= max; v += 20) {
+    el("line", { x1: X(v), x2: X(v), y1: T - 6, y2: H - 30, class: "gridline" }, svg);
+    el("text", { x: X(v), y: H - 10, "text-anchor": "middle" }, svg).textContent = v;
+  }
+  el("text", { x: W - R + 80, y: H - 10, "text-anchor": "end" }, svg).textContent = "pJ/weight";
+  const bars = [];
+  rows.forEach((r, i) => {
+    const y = T + i * rowH;
+    const s = stream * r.bytes_per_weight * 1e3;
+    el("text", { x: L - 12, y: y + 22, "text-anchor": "end", class: "lbl" }, svg).textContent = r.format.toUpperCase();
+    const a = el("rect", { x: L, y: y + 8, width: 0, height: 20, class: "hatch" }, svg);
+    const b = el("rect", { x: X(s), y: y + 8, width: 0, height: 20, class: "ink-fill" }, svg);
+    el("text", { x: X(r.soc_pj_w) + 8, y: y + 23 }, svg).textContent = r.soc_pj_w.toFixed(0);
+    bars.push([a, X(s) - L], [b, X(r.soc_pj_w) - X(s)]);
+  });
+  new IntersectionObserver((es, o) => {
+    if (!es[0].isIntersecting) return;
+    bars.forEach(([b, w], i) => setTimeout(() => b.setAttribute("width", Math.max(0, w)), reduced ? 0 : 40 * i));
     o.disconnect();
   }, { threshold: .3 }).observe(svg);
 }

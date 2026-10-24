@@ -41,7 +41,7 @@
       <div class="facts">
         <div class="fact"><span class="mono">TP1 / TP2, F16 vs Q4_0</span><div class="n">2.1<small>&times;</small></div><p>what full precision really costs over 4-bit at the board. Measured at the chip alone, the two look the same: the memory energy is invisible there.</p></div>
         <div class="fact"><span class="mono">batch 1 &rarr; 8, Q4_0</span><div class="n">72<small>%</small></div><p>less energy per token from serving eight requests at once. Batch 2 saves 1%: the GPU reaches its power ceiling at the second sequence.</p></div>
-        <div class="fact"><span class="mono">F16 decode / roof</span><div class="n">97<small>%</small></div><p>of the measured 266 GB/s memory bandwidth. Decode is memory bound, and each step down in bits uses less of the roof.</p></div>
+        <div class="fact"><span class="mono">Q4_K / Q4_0, same bytes</span><div class="n">40<small>%</small></div><p>more chip energy for the same traffic at the same speed. The two formats read identical bytes; the difference is entirely how the bits are unpacked.</p></div>
       </div>
     </div>
   </section>
@@ -63,7 +63,7 @@
       </div>
       <ol class="steps">
         <li><div><b>MLX repeatability.</b> Why two MLX passes disagree by up to 17% when llama.cpp repeats within 2%.</div></li>
-                <li><div><b>Per-kernel energy.</b> Each format's matrix-vector kernel timed and power-sampled alone, to explain what the energy model cannot.</div></li>
+                <li><div><b>Matrix shape.</b> Where fixed per-kernel costs take over from bytes, sweeping the matrix size from phone-sized models to 70B layers.</div></li>
         <li><div><b>Cluster design.</b> Tokens per megawatt-hour across GPU generations, from public specs and a roofline, checked against published benchmarks.</div></li>
         <li><div><b>Speculative decoding.</b> Does a draft model save joules, or only seconds?</div></li>
       </ol>

@@ -8,6 +8,11 @@
 <meta property="og:title" content="Does it hold? A model five times larger, and a second runtime &middot; Spliced">
 <meta property="og:description" content="The format study at 7B, where every finding replicates and the hardware is used better, and in MLX, where repeat runs do not yet agree, so only claims that survive both passes are made.">
 <meta property="og:image" content="https://splicedso.github.io/assets/og.png">
+<meta property="og:url" content="https://splicedso.github.io/research/scale-and-runtime/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Spliced">
+<link rel="canonical" href="https://splicedso.github.io/research/scale-and-runtime/">
+<meta name="color-scheme" content="light dark">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
@@ -15,9 +20,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>try { const t = localStorage.getItem("theme"); if (t) document.documentElement.dataset.theme = t; } catch {}</script>
-<link rel="stylesheet" href="../../assets/style.css?v=202610240134">
+<link rel="stylesheet" href="../../assets/style.css?v=202610240154">
 </head>
 <body data-root="../../" data-page="research">
+<a class="skip" href="#content">Skip to content</a>
 
 <nav>
   <div class="wrap">
@@ -42,6 +48,7 @@
 
 <svg id="bus" aria-hidden="true"></svg>
 
+<div id="content">
 <header class="page-head">
   <div class="wrap">
     <span class="refdes mono" data-via><b>N3</b> Research note &middot; 24 October 2026</span>
@@ -243,19 +250,20 @@ uv run --extra mlx python experiments/mlx_formats.py models/mlx/1.5b-mlx-* resul
 <p>Raw results: <code>results/quant-energy-7b*.json</code>, <code>results/quant-ppl-7b.txt</code>, <code>results/summary-7b.json</code>, <code>results/mlx-formats-1.5b-v2-run*.json</code>.</p>
 <p class="source mono">Source, scripts and raw data: <a href="https://github.com/splicedso/joule/blob/main/notes/2026-10-scale-and-runtime.md">joule/notes/2026-10-scale-and-runtime.md</a></p>
 </article></main>
+</div>
 
 <footer>
   <div class="wrap">
     <div class="titleblock mono" data-via>
       <div><svg viewBox="0 0 500 659" aria-hidden="true"><path fill="currentColor" d="M0 192 L418 0 L418 205 L145 331 L145 449 L0 516 Z M197 385 L500 246 L500 520 L197 659 Z"/></svg><span><span class="k">Title</span>N3 &middot; Does it hold? A model five times larger, and a second runtime</span></div>
       <div><span class="k">Drawn</span>2026-10</div>
-      <div><span class="k">Sheet</span>7 of 8</div>
+      <div><span class="k">Sheet</span>7 of 9</div>
       <div><span class="k">Source</span><a href="https://github.com/splicedso">github.com/splicedso</a></div>
     </div>
   </div>
 </footer>
 
-<script src="../../assets/site.js?v=202610240134"></script>
-<script src="../../assets/charts.js?v=202610240134"></script>
+<script src="../../assets/site.js?v=202610240154"></script>
+<script src="../../assets/charts.js?v=202610240154"></script>
 </body>
 </html>

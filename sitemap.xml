@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://splicedso.github.io/</loc><lastmod>2026-10-24</lastmod></url>
+  <url><loc>https://splicedso.github.io/research/</loc><lastmod>2026-10-24</lastmod></url>
+  <url><loc>https://splicedso.github.io/tools/joule/</loc><lastmod>2026-10-24</lastmod></url>
+  <url><loc>https://splicedso.github.io/lab/</loc><lastmod>2026-10-24</lastmod></url>
+  <url><loc>https://splicedso.github.io/research/formats-and-batching/</loc><lastmod>2026-10-24</lastmod></url>
+  <url><loc>https://splicedso.github.io/research/roofline-and-energy-model/</loc><lastmod>2026-10-24</lastmod></url>
+  <url><loc>https://splicedso.github.io/research/scale-and-runtime/</loc><lastmod>2026-10-24</lastmod></url>
+  <url><loc>https://splicedso.github.io/research/two-machines/</loc><lastmod>2026-10-24</lastmod></url>
+  <url><loc>https://splicedso.github.io/research/kernel-energy/</loc><lastmod>2026-10-24</lastmod></url>
+</urlset>

@@ -7,7 +7,12 @@
 <meta name="description" content="{{description}}">
 <meta property="og:title" content="{{title}}">
 <meta property="og:description" content="{{description}}">
-<meta property="og:image" content="https://splicedso.github.io/assets/og.png">
+<meta property="og:image" content="{{site}}/assets/og.png">
+<meta property="og:url" content="{{site}}/{{path}}">
+<meta property="og:type" content="{{ogtype}}">
+<meta property="og:site_name" content="Spliced">
+<link rel="canonical" href="{{site}}/{{path}}">
+<meta name="color-scheme" content="light dark">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="{{root}}assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="{{root}}assets/apple-touch-icon.png">
@@ -18,6 +23,7 @@
 <link rel="stylesheet" href="{{root}}assets/style.css?v={{version}}">
 </head>
 <body data-root="{{root}}" data-page="{{page}}">
+<a class="skip" href="#content">Skip to content</a>
 
 <nav>
   <div class="wrap">
@@ -42,7 +48,9 @@
 
 <svg id="bus" aria-hidden="true"></svg>
 
+<div id="content">
 {{content}}
+</div>
 
 <footer>
   <div class="wrap">

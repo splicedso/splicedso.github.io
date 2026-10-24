@@ -19,7 +19,7 @@
       <div class="label"><span class="refdes mono" data-via><b>R2</b> Open questions</span></div>
       <h2>What we want to know next.</h2>
       <div class="limits">
-        <div><h3>Is it the kernel?</h3><p>The energy model leaves Q4_0 29% cheaper and Q5_K_M 19% dearer than their bytes predict. Measuring each unpacking kernel alone should account for it.</p></div>
+        <div><h3>Why does shape matter?</h3><p>Q5_K and Q6_K cost the same per weight at a 7B layer's size, yet rank differently in a 1.5B model and on another GPU. Sweeping the matrix shape should show where fixed costs take over.</p></div>
         <div><h3>Does it hold at scale?</h3><p>Tokens per megawatt-hour for datacenter GPUs, from a roofline and published specs, checked against MLPerf results.</p></div>
         <div><h3>Joules or seconds?</h3><p>Speculative decoding is sold on latency. On memory-bound hardware it might cost energy instead of saving it.</p></div>
       </div>

@@ -12,4 +12,6 @@ uv run --with markdown python build.py
 - `brand/`: the mark in every variant, generated from one geometry by `brand/build.py`, plus the LinkedIn banner.
 - `render/`: Blender scenes for the brand films (not used on the current pages).
 
+To move to a custom domain, set `"domain"` in `site.json` (for example `"spliced.ai"`) and rebuild: the build writes `CNAME` and switches every canonical URL, the sitemap and the link previews. Then point the domain's DNS at GitHub Pages.
+
 Preview with `python3 -m http.server`.

@@ -19,6 +19,9 @@ HERE = Path(__file__).parent
 SRC = HERE / "src"
 JOULE = HERE.parent / "joule"
 VERSION = time.strftime("%Y%m%d%H%M")
+CONFIG = json.loads((HERE / "site.json").read_text())
+SITE = ("https://" + CONFIG["domain"]) if CONFIG.get("domain") else CONFIG["url"].rstrip("/")
+PAGES = []
 
 NOTES = [
     {"slug": "formats-and-batching", "file": "2026-10-formats-and-batching.md", "n": 1,
@@ -33,6 +36,9 @@ NOTES = [
     {"slug": "two-machines", "file": "2026-10-two-machines.md", "n": 4,
      "summary": "The study on a Windows laptop with an RTX 5070 Ti, on battery. Q4_0 wins on both machines and a 4-bit token "
                 "costs the same whole-machine energy on both; one Mac finding does not transfer."},
+    {"slug": "kernel-energy", "file": "2026-10-kernel-energy.md", "n": 5,
+     "summary": "Each format's matrix-vector kernel measured alone. Q4_0 and Q4_K read identical bytes at identical speed; "
+                "Q4_K's unpacking costs 40% more chip energy. Explains note 2's largest residual and corrects its roof."},
 ]
 
 FIGURES = {
@@ -52,6 +58,11 @@ FIGURES = {
   <div class="chart-bar mono"><span>Whole-machine decode energy, Qwen2.5 1.5B, two laptops</span><span>solid: Windows, RTX 5070 Ti, battery &middot; outline: Mac, M5 Pro, board</span></div>
   <svg viewBox="0 0 1000 400" role="img" aria-label="Whole-machine energy per token for eight formats on a Windows laptop and a Mac"></svg>
   <figcaption class="mono">Mean of two passes per machine. The labels read Windows / Mac in millijoules per token. At 4 bits the two machines land within 5% of each other; at full precision they part.</figcaption>
+</figure>""",
+    "kern": """<figure class="chart" id="kern">
+  <div class="chart-bar mono"><span>Chip energy per weight, one 4096 x 14336 matrix-vector kernel per format</span><span>outline: streaming the bytes &middot; solid: unpacking them</span></div>
+  <svg viewBox="0 0 1000 380" role="img" aria-label="Chip energy per weight for each format, split into streaming and unpacking"></svg>
+  <figcaption class="mono">Streaming is the format's bytes at F16's energy per byte, since F16 needs no unpacking; unpacking is the rest. Q4_0 and Q4_K stream the same bytes, so the difference between them is all unpacking. Mean of two passes.</figcaption>
 </figure>""",
     "bat": """<figure class="chart" id="bat">
   <div class="chart-bar mono"><span>Decode energy per token and GPU power, by batch size</span><span id="bat-read">batch 1</span></div>
@@ -102,7 +113,8 @@ def chart_data():
                  **({"note": "(did not repeat)"} if r["spread_board"] > .05 else {})} for r in s7]
     two = [{k: (round(v, 1) if isinstance(v, float) else v) for k, v in r.items()}
            for r in json.load(open(R / "summary-two-machines.json"))]
-    return {"formats": formats, "formats7": formats7, "two": two, "batch": {"q4_0": batch("q4_0"), "q4_k_m": batch("q4_k_m")},
+    kernels = json.load(open(R / "summary-kernels.json"))
+    return {"formats": formats, "formats7": formats7, "two": two, "kernels": kernels, "batch": {"q4_0": batch("q4_0"), "q4_k_m": batch("q4_k_m")},
             "results": results, "roofline": roofline}
 
 
@@ -134,13 +146,17 @@ def note_body(n):
     return lede, html
 
 
-def page(path, content, *, title, description, page, sheet, sheetno, scripts=""):
+def page(path, content, *, title, description, page, sheet, sheetno, scripts="", root=None, ogtype="website"):
     depth = len(Path(path).parts) - 1
-    root = "../" * depth
+    root = "../" * depth if root is None else root
+    url_path = "" if path == "index.html" else path.removesuffix("index.html")
+    if not path.startswith("404"):
+        PAGES.append(url_path)
     html = (SRC / "base.html").read_text()
     for k, v in {"content": content, "title": title, "description": description, "page": page,
                  "sheet": sheet, "sheetno": sheetno, "date": time.strftime("%Y-%m"),
-                 "scripts": scripts.replace("{{root}}", root), "root": root, "version": VERSION}.items():
+                 "scripts": scripts.replace("{{root}}", root), "root": root, "version": VERSION,
+                 "site": SITE, "path": url_path, "ogtype": ogtype}.items():
         html = html.replace("{{" + k + "}}", v)
     out = HERE / path
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -183,8 +199,20 @@ def main():
 <p class="source mono">Source, scripts and raw data: <a href="https://github.com/splicedso/joule/blob/main/notes/{n['file']}">joule/notes/{n['file']}</a></p>
 </article></main>"""
         page(f"research/{n['slug']}/index.html", content, title=f"{title} &middot; Spliced", description=n["summary"],
-             page="research", sheet=f"N{n['n']} &middot; {title}", sheetno=f"{5 + i} of {total}", scripts=charts)
-    print("built", total, "pages")
+             page="research", sheet=f"N{n['n']} &middot; {title}", sheetno=f"{5 + i} of {total}", scripts=charts,
+             ogtype="article")
+    page("404.html", (SRC / "pages/404.html").read_text(), title="Not found &middot; Spliced",
+         description="This page does not exist.", page="404", sheet="Not found", sheetno="&mdash;", root="/")
+    (HERE / "sitemap.xml").write_text('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+        + "".join(f"  <url><loc>{SITE}/{p}</loc><lastmod>{time.strftime('%Y-%m-%d')}</lastmod></url>\n" for p in PAGES)
+        + "</urlset>\n")
+    (HERE / "robots.txt").write_text(f"User-agent: *\nAllow: /\nSitemap: {SITE}/sitemap.xml\n")
+    cname = HERE / "CNAME"
+    if CONFIG.get("domain"):
+        cname.write_text(CONFIG["domain"] + "\n")
+    elif cname.exists():
+        cname.unlink()
+    print("built", total, "pages for", SITE)
 
 
 if __name__ == "__main__":

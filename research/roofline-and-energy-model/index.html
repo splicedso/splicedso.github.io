@@ -8,6 +8,11 @@
 <meta property="og:title" content="Where the joules go: a roofline and an energy model for decode &middot; Spliced">
 <meta property="og:description" content="A decode roofline from measured bandwidth, and a validated energy model whose residuals isolate the cost of unpacking each format. Two wrong first attempts, kept in.">
 <meta property="og:image" content="https://splicedso.github.io/assets/og.png">
+<meta property="og:url" content="https://splicedso.github.io/research/roofline-and-energy-model/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Spliced">
+<link rel="canonical" href="https://splicedso.github.io/research/roofline-and-energy-model/">
+<meta name="color-scheme" content="light dark">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
@@ -15,9 +20,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>try { const t = localStorage.getItem("theme"); if (t) document.documentElement.dataset.theme = t; } catch {}</script>
-<link rel="stylesheet" href="../../assets/style.css?v=202610240134">
+<link rel="stylesheet" href="../../assets/style.css?v=202610240154">
 </head>
 <body data-root="../../" data-page="research">
+<a class="skip" href="#content">Skip to content</a>
 
 <nav>
   <div class="wrap">
@@ -42,6 +48,7 @@
 
 <svg id="bus" aria-hidden="true"></svg>
 
+<div id="content">
 <header class="page-head">
   <div class="wrap">
     <span class="refdes mono" data-via><b>N2</b> Research note &middot; 24 October 2026</span>
@@ -80,6 +87,7 @@
 </tbody>
 </table>
 <p>Many smaller layer-shaped matrix-vector products in one batch reached the same 243 to 265 GB/s, so about <strong>266 GB/s</strong> is the roof.</p>
+<p><strong>Correction, note 5:</strong> llama.cpp's own F16 kernel moves 306 to 309 GB/s, so this MLX-measured roof is low and the shares of roof below are overstated by about 15%. The rankings do not change.</p>
 <h2 data-via>2. Bytes per token, and the first mistake</h2>
 <p>The first attempt used the model file size as bytes per token. F16 then decoded at 298 GB/s, above the roof, which is impossible. The data was right and the byte count was wrong:</p>
 <ul>
@@ -271,19 +279,20 @@ uv run --with numpy python experiments/energy_model.py results/energy-model-1.5b
 </code></pre>
 <p class="source mono">Source, scripts and raw data: <a href="https://github.com/splicedso/joule/blob/main/notes/2026-10-roofline-and-energy-model.md">joule/notes/2026-10-roofline-and-energy-model.md</a></p>
 </article></main>
+</div>
 
 <footer>
   <div class="wrap">
     <div class="titleblock mono" data-via>
       <div><svg viewBox="0 0 500 659" aria-hidden="true"><path fill="currentColor" d="M0 192 L418 0 L418 205 L145 331 L145 449 L0 516 Z M197 385 L500 246 L500 520 L197 659 Z"/></svg><span><span class="k">Title</span>N2 &middot; Where the joules go: a roofline and an energy model for decode</span></div>
       <div><span class="k">Drawn</span>2026-10</div>
-      <div><span class="k">Sheet</span>6 of 8</div>
+      <div><span class="k">Sheet</span>6 of 9</div>
       <div><span class="k">Source</span><a href="https://github.com/splicedso">github.com/splicedso</a></div>
     </div>
   </div>
 </footer>
 
-<script src="../../assets/site.js?v=202610240134"></script>
-<script src="../../assets/charts.js?v=202610240134"></script>
+<script src="../../assets/site.js?v=202610240154"></script>
+<script src="../../assets/charts.js?v=202610240154"></script>
 </body>
 </html>

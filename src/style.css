@@ -279,3 +279,9 @@ a.area:hover { background: var(--hl); }
   .note-body table { display: block; overflow-x: auto; }
   .page-head { padding: 56px 0 24px; }
 }
+
+/* accessibility */
+.skip { position: absolute; left: 12px; top: -48px; z-index: 50; background: var(--ink); color: var(--paper); padding: 8px 12px; font: 500 14px var(--sans); text-decoration: none; }
+.skip:focus { top: 10px; }
+:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+a.area:focus-visible, .note-card:focus-visible { outline-offset: -3px; }
