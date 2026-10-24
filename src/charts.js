@@ -12,6 +12,7 @@ fetch(ROOT + "assets/data.json").then(r => r.json()).then(D => {
   widthChart(D.width);
   specChart(D.spec);
   mwhChart(D.mwh);
+  pminChart(D.pmin);
 });
 
 function resultsBars(rows) {
@@ -356,6 +357,48 @@ function mwhChart(rows) {
   new IntersectionObserver((es, o) => {
     if (!es[0].isIntersecting) return;
     show(1);
+    o.disconnect();
+  }, { threshold: .3 }).observe(svg);
+}
+
+// Energy against plain decoding for each threshold, one group per prompt. Bars grow up from
+// the 1x line (costlier) or down from it (cheaper), so the threshold's effect reads as
+// bars collapsing toward or below the line.
+function pminChart(rows) {
+  const svg = document.querySelector("#pmin svg");
+  if (!svg) return;
+  const read = document.getElementById("pmin-read");
+  const conds = ["draft-8", "draft-8-p0.5", "draft-8-p0.8", "draft-8-p0.95", "draft-16", "draft-16-p0.8"];
+  const short = { "draft-8": "d8", "draft-8-p0.5": "d8 .5", "draft-8-p0.8": "d8 .8", "draft-8-p0.95": "d8 .95", "draft-16": "d16", "draft-16-p0.8": "d16 .8" };
+  const prompts = ["code", "prose", "edit"];
+  const W = 1000, H = 400, L = 56, R = 16, T = 20, B = 56;
+  const Y = v => T + (1 - Math.log2(v / .5) / Math.log2(4 / .5)) * (H - T - B);
+  for (const v of [.5, 1, 2, 4]) {
+    el("line", { x1: L, x2: W - R, y1: Y(v), y2: Y(v), class: v === 1 ? "ink-line" : "gridline", "stroke-dasharray": v === 1 ? "4 3" : "" }, svg);
+    el("text", { x: L - 10, y: Y(v) + 4, "text-anchor": "end" }, svg).textContent = v + "x";
+  }
+  const gw = (W - L - R) / prompts.length, bw = gw / (conds.length + 1.5);
+  const bars = [];
+  prompts.forEach((p, gi) => {
+    el("text", { x: L + gi * gw + gw / 2, y: H - 12, "text-anchor": "middle", class: "lbl" }, svg).textContent = p;
+    conds.forEach((c, ci) => {
+      const r = rows.find(x => x.prompt === p && x.cond === c);
+      const x = L + gi * gw + (ci + .75) * bw;
+      const top = Math.min(Y(r.vs_plain), Y(1)), h = Math.abs(Y(r.vs_plain) - Y(1));
+      const thr = c.includes("-p");
+      const b = el("rect", { x, y: Y(1), width: bw * .8, height: 0, class: thr ? "ink-fill" : "hatch" }, svg);
+      el("text", { x: x + bw * .4, y: H - B + 16, "text-anchor": "middle", style: "font-size:10px" }, svg).textContent = short[c];
+      b.addEventListener("pointerenter", () => read.textContent =
+        `${p} ${c}: ${r.vs_plain.toFixed(2)}x energy, ${r.speed.toFixed(2)}x speed, ${Math.round(r.accept * 100)}% accepted`);
+      bars.push({ b, top, h });
+    });
+  });
+  new IntersectionObserver((es, o) => {
+    if (!es[0].isIntersecting) return;
+    bars.forEach(({ b, top, h }, i) => setTimeout(() => {
+      b.style.transition = "y .8s cubic-bezier(.2,.7,.1,1), height .8s cubic-bezier(.2,.7,.1,1)";
+      b.setAttribute("y", top); b.setAttribute("height", Math.max(1, h));
+    }, reduced ? 0 : 40 * i));
     o.disconnect();
   }, { threshold: .3 }).observe(svg);
 }

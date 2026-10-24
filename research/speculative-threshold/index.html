@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>One flag fixes speculative decoding's energy problem &middot; Spliced</title>
+<meta name="description" content="A draft confidence threshold removes speculative decoding's energy penalty on every task tested. At about 0.5, speculation on prose becomes a free 1.3x speed-up.">
+<meta property="og:title" content="One flag fixes speculative decoding's energy problem &middot; Spliced">
+<meta property="og:description" content="A draft confidence threshold removes speculative decoding's energy penalty on every task tested. At about 0.5, speculation on prose becomes a free 1.3x speed-up.">
+<meta property="og:image" content="https://splicedso.github.io/assets/og.png">
+<meta property="og:url" content="https://splicedso.github.io/research/speculative-threshold/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Spliced">
+<link rel="canonical" href="https://splicedso.github.io/research/speculative-threshold/">
+<meta name="color-scheme" content="light dark">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>try { const t = localStorage.getItem("theme"); if (t) document.documentElement.dataset.theme = t; } catch {}</script>
+<link rel="stylesheet" href="../../assets/style.css?v=202610241237">
+</head>
+<body data-root="../../" data-page="research">
+<a class="skip" href="#content">Skip to content</a>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="../../" aria-label="Spliced home">
+      <svg viewBox="0 0 500 659" aria-hidden="true"><path fill="currentColor" d="M0 192 L418 0 L418 205 L145 331 L145 449 L0 516 Z M197 385 L500 246 L500 520 L197 659 Z"/></svg>
+      Spliced
+    </a>
+    <div class="nav-right">
+      <ul>
+        <li><a href="../../research/" data-nav="research">Research</a></li>
+        <li><a href="../../data/" data-nav="data">Data</a></li>
+        <li><a href="../../tools/joule/" data-nav="tools">Tools</a></li>
+        <li><a href="../../lab/" data-nav="lab">Lab</a></li>
+      </ul>
+      <a class="icon-link" href="https://github.com/splicedso" aria-label="Spliced on GitHub" title="GitHub"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a>
+      <a class="icon-link" href="https://www.linkedin.com/company/splicedso" aria-label="Spliced on LinkedIn" title="LinkedIn"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M0 1.15C0 .52.52 0 1.18 0h13.64C15.48 0 16 .52 16 1.15v13.7c0 .63-.52 1.15-1.18 1.15H1.18C.52 16 0 15.48 0 14.85V1.15zM4.75 13.39V6.17H2.35v7.22h2.4zM3.55 5.18c.84 0 1.36-.55 1.36-1.25-.02-.71-.52-1.25-1.34-1.25-.82 0-1.36.54-1.36 1.25 0 .7.52 1.25 1.33 1.25h.01zm4.91 8.21V9.36c0-.22.02-.43.08-.59.18-.43.57-.88 1.23-.88.87 0 1.22.66 1.22 1.64v3.86h2.4V9.25c0-2.22-1.18-3.25-2.76-3.25-1.27 0-1.84.7-2.16 1.19v.03h-.02l.02-.03V6.17h-2.4c.03.68 0 7.22 0 7.22h2.4z"/></svg></a>
+      <button class="theme" id="theme" type="button" aria-label="Dark mode" aria-pressed="false">
+        <svg class="moon" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M10.5 1.5a6.5 6.5 0 1 0 4 11.6A7 7 0 0 1 10.5 1.5Z"/></svg>
+        <svg class="sun" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="3.2" fill="currentColor"/><path stroke="currentColor" stroke-width="1.4" stroke-linecap="round" d="M8 1v1.6M8 13.4V15M1 8h1.6M13.4 8H15M3 3l1.1 1.1M11.9 11.9 13 13M3 13l1.1-1.1M11.9 4.1 13 3"/></svg>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<svg id="bus" aria-hidden="true"></svg>
+
+<div id="content">
+<header class="page-head">
+  <div class="wrap">
+    <span class="refdes mono" data-via><b>N9</b> Research note &middot; 24 October 2026</span>
+    <h1>One flag fixes speculative decoding's energy problem</h1>
+    <p class="lede">Spliced research note 9, 24 October 2026. Apple M5 Pro, 24 GB, llama.cpp build 11669. Target Qwen2.5 7B Q4_0, draft Qwen2.5 0.5B Q4_0.</p>
+  </div>
+</header>
+<main><article class="wrap note-body"><p>Note 7 found that speculative decoding can make decoding faster and more expensive at once, and that long drafts on unpredictable text are an energy disaster: drafting 16 tokens on prose cost 3.95 times the energy of plain decoding. The cause is wasted guesses. llama.cpp already has a control for that: <code>--spec-draft-p-min</code>, a confidence threshold. The draft model stops guessing as soon as its confidence in its next token falls below the threshold, so it drafts long runs where text is predictable and short ones where it is not. This note asks whether that one setting removes the penalty, and what value to use.</p>
+<h2 data-via>Method</h2>
+<p>As in note 7 (<code>experiments/speculative.py</code>), with the conditions given on the command line: plain decoding; drafts of up to 8 tokens with no threshold and with thresholds of 0.5, 0.8 and 0.95; drafts of up to 16 with no threshold and with 0.8. Code, prose and edit prompts, 384 generated tokens, greedy, three runs each in a shuffled order. Chip energy only, for the reason note 7 gives.</p>
+<p>Plain decoding cost 394 to 404 mJ per token in this run, 9% to 11% more than in note 7. Since both notes were run on the same machine with the same settings, the difference is a property of the session (temperature, background load), and so every comparison here is against plain decoding <strong>within this run</strong>. Most conditions repeated within 10%; a few threshold conditions varied by up to 23%, and those spreads are reported.</p>
+<h2 data-via>Results</h2>
+<p>Chip energy per generated token relative to plain decoding (below 1 saves energy), with the speed-up:</p>
+<table>
+<thead>
+<tr>
+<th>prompt</th>
+<th>strategy</th>
+<th style="text-align: right;">accepted</th>
+<th style="text-align: right;">speed</th>
+<th style="text-align: right;">energy vs plain</th>
+<th style="text-align: right;">spread</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>code</td>
+<td>draft-8</td>
+<td style="text-align: right;">51%</td>
+<td style="text-align: right;">1.32x</td>
+<td style="text-align: right;">1.03</td>
+<td style="text-align: right;">1%</td>
+</tr>
+<tr>
+<td>code</td>
+<td>draft-8, p 0.5</td>
+<td style="text-align: right;">71%</td>
+<td style="text-align: right;">1.57x</td>
+<td style="text-align: right;"><strong>0.84</strong></td>
+<td style="text-align: right;">6%</td>
+</tr>
+<tr>
+<td>code</td>
+<td>draft-8, p 0.8</td>
+<td style="text-align: right;">95%</td>
+<td style="text-align: right;">1.52x</td>
+<td style="text-align: right;">0.85</td>
+<td style="text-align: right;">3%</td>
+</tr>
+<tr>
+<td>code</td>
+<td>draft-8, p 0.95</td>
+<td style="text-align: right;">100%</td>
+<td style="text-align: right;">1.25x</td>
+<td style="text-align: right;">1.03</td>
+<td style="text-align: right;">13%</td>
+</tr>
+<tr>
+<td>code</td>
+<td>draft-16</td>
+<td style="text-align: right;">31%</td>
+<td style="text-align: right;">0.74x</td>
+<td style="text-align: right;">2.05</td>
+<td style="text-align: right;">1%</td>
+</tr>
+<tr>
+<td>code</td>
+<td>draft-16, p 0.8</td>
+<td style="text-align: right;">93%</td>
+<td style="text-align: right;">1.50x</td>
+<td style="text-align: right;">0.88</td>
+<td style="text-align: right;">17%</td>
+</tr>
+<tr>
+<td>prose</td>
+<td>draft-8</td>
+<td style="text-align: right;">28%</td>
+<td style="text-align: right;">0.86x</td>
+<td style="text-align: right;">1.59</td>
+<td style="text-align: right;">1%</td>
+</tr>
+<tr>
+<td>prose</td>
+<td>draft-8, p 0.5</td>
+<td style="text-align: right;">68%</td>
+<td style="text-align: right;">1.30x</td>
+<td style="text-align: right;"><strong>0.99</strong></td>
+<td style="text-align: right;">6%</td>
+</tr>
+<tr>
+<td>prose</td>
+<td>draft-8, p 0.8</td>
+<td style="text-align: right;">92%</td>
+<td style="text-align: right;">1.08x</td>
+<td style="text-align: right;">1.11</td>
+<td style="text-align: right;">16%</td>
+</tr>
+<tr>
+<td>prose</td>
+<td>draft-8, p 0.95</td>
+<td style="text-align: right;">98%</td>
+<td style="text-align: right;">0.95x</td>
+<td style="text-align: right;">1.20</td>
+<td style="text-align: right;">23%</td>
+</tr>
+<tr>
+<td>prose</td>
+<td>draft-16</td>
+<td style="text-align: right;">14%</td>
+<td style="text-align: right;">0.40x</td>
+<td style="text-align: right;">3.69</td>
+<td style="text-align: right;">8%</td>
+</tr>
+<tr>
+<td>prose</td>
+<td>draft-16, p 0.8</td>
+<td style="text-align: right;">92%</td>
+<td style="text-align: right;">1.08x</td>
+<td style="text-align: right;">1.09</td>
+<td style="text-align: right;">19%</td>
+</tr>
+<tr>
+<td>edit</td>
+<td>draft-8</td>
+<td style="text-align: right;">97%</td>
+<td style="text-align: right;">2.24x</td>
+<td style="text-align: right;">0.60</td>
+<td style="text-align: right;">2%</td>
+</tr>
+<tr>
+<td>edit</td>
+<td>draft-8, p 0.5</td>
+<td style="text-align: right;">97%</td>
+<td style="text-align: right;">2.24x</td>
+<td style="text-align: right;"><strong>0.61</strong></td>
+<td style="text-align: right;">10%</td>
+</tr>
+<tr>
+<td>edit</td>
+<td>draft-8, p 0.8</td>
+<td style="text-align: right;">98%</td>
+<td style="text-align: right;">2.24x</td>
+<td style="text-align: right;">0.60</td>
+<td style="text-align: right;">6%</td>
+</tr>
+<tr>
+<td>edit</td>
+<td>draft-8, p 0.95</td>
+<td style="text-align: right;">98%</td>
+<td style="text-align: right;">2.15x</td>
+<td style="text-align: right;">0.62</td>
+<td style="text-align: right;">14%</td>
+</tr>
+<tr>
+<td>edit</td>
+<td>draft-16</td>
+<td style="text-align: right;">94%</td>
+<td style="text-align: right;">1.90x</td>
+<td style="text-align: right;">0.82</td>
+<td style="text-align: right;">20%</td>
+</tr>
+<tr>
+<td>edit</td>
+<td>draft-16, p 0.8</td>
+<td style="text-align: right;">95%</td>
+<td style="text-align: right;">2.01x</td>
+<td style="text-align: right;">0.73</td>
+<td style="text-align: right;">3%</td>
+</tr>
+</tbody>
+</table>
+<figure class="chart" id="pmin">
+  <div class="chart-bar mono"><span>Chip energy vs plain decoding, with and without a draft threshold</span><span id="pmin-read">outline: no threshold &middot; solid: threshold</span></div>
+  <svg viewBox="0 0 1000 400" role="img" aria-label="Energy relative to plain decoding for drafts with and without a confidence threshold"></svg>
+  <figcaption class="mono">Bars rise above the dashed 1x line when speculation costs more energy than plain decoding and fall below it when it saves. d8 .5 means drafts of up to 8 tokens with a 0.5 threshold. Log scale. Hover a bar to read it.</figcaption>
+</figure>
+
+<h2 data-via>1. The threshold removes the penalty</h2>
+<p>Without a threshold, drafting 16 tokens cost 2.05 times plain decoding's energy on code and 3.69 times on prose. With a threshold of 0.8 the same drafts cost 0.88 and 1.09 times, and ran 1.5 and 1.08 times faster instead of slower. The draft model stops when it is unsure, so the large model no longer wastes work verifying guesses that were never likely to survive. Acceptance rises from 14% to 92% on prose for the same reason.</p>
+<h2 data-via>2. A low threshold is the best one tested</h2>
+<p>A threshold of 0.5 gave the best result on every prompt, or tied for it:</p>
+<ul>
+<li><strong>code</strong>: 16% less energy at 1.57 times the speed (against 3% more energy with no threshold).</li>
+<li><strong>prose</strong>: the same energy as plain decoding at 1.30 times the speed. Speculation on prose, which cost 59% more energy with no threshold, becomes a free speed-up.</li>
+<li><strong>edit</strong>: 39% less energy at 2.24 times the speed, the same as with no threshold. Where the text is predictable the threshold rarely stops a draft, so it costs nothing.</li>
+</ul>
+<h2 data-via>3. Too strict a threshold gives the savings back</h2>
+<p>At 0.95 the draft model stops almost immediately, so drafts are short and nearly always right (98% to 100% accepted), but each round of drafting and verifying now produces few tokens, and its fixed cost is spread thin. Code returned to 3% more energy than plain decoding and prose to 20% more, at 0.95 to 1.25 times the speed. Acceptance rate alone is the wrong target: what matters is accepted tokens per round.</p>
+<h2 data-via>What to take from this</h2>
+<ol>
+<li>If you run speculative decoding, set a draft confidence threshold. In llama.cpp that is <code>--spec-draft-p-min</code>; around 0.5 was best here. Without it, a draft length tuned on predictable text costs up to 3.7 times the energy on unpredictable text.</li>
+<li>With the threshold, speculation stopped costing energy on every task measured, and became a pure speed-up on prose.</li>
+<li>Optimize accepted tokens per draft round, not acceptance rate. A very confident drafter is right almost every time and still wastes energy.</li>
+</ol>
+<h2 data-via>Limits</h2>
+<p>One machine, one model pair, greedy decoding, three prompts, three thresholds. 0.5 was the lowest threshold tried, so a lower value might do better still. Some threshold conditions varied by up to 23% between runs, more than the untreated conditions; the conclusions above hold within those spreads, but the exact percentages should be read as approximate. Chip energy only.</p>
+<h2 data-via>Reproduce</h2>
+<pre><code class="language-bash">uv run python experiments/speculative.py results/speculative-pmin-7b.json \
+  plain,draft-8,draft-8-p0.5,draft-8-p0.8,draft-8-p0.95,draft-16,draft-16-p0.8
+</code></pre>
+<p>Raw results: <code>results/speculative-pmin-7b.json</code>, <code>results/summary-speculative-pmin.json</code>.</p>
+<p class="source mono">Source, scripts and raw data: <a href="https://github.com/splicedso/joule/blob/main/notes/2026-10-speculative-threshold.md">joule/notes/2026-10-speculative-threshold.md</a></p>
+</article></main>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="titleblock mono" data-via>
+      <div><svg viewBox="0 0 500 659" aria-hidden="true"><path fill="currentColor" d="M0 192 L418 0 L418 205 L145 331 L145 449 L0 516 Z M197 385 L500 246 L500 520 L197 659 Z"/></svg><span><span class="k">Title</span>N9 &middot; One flag fixes speculative decoding's energy problem</span></div>
+      <div><span class="k">Drawn</span>2026-10</div>
+      <div><span class="k">Sheet</span>14 of 14</div>
+      <div><span class="k">Elsewhere</span><span class="foot-links"><a href="https://github.com/splicedso" aria-label="GitHub"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>GitHub</a><a href="https://www.linkedin.com/company/splicedso" aria-label="LinkedIn"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M0 1.15C0 .52.52 0 1.18 0h13.64C15.48 0 16 .52 16 1.15v13.7c0 .63-.52 1.15-1.18 1.15H1.18C.52 16 0 15.48 0 14.85V1.15zM4.75 13.39V6.17H2.35v7.22h2.4zM3.55 5.18c.84 0 1.36-.55 1.36-1.25-.02-.71-.52-1.25-1.34-1.25-.82 0-1.36.54-1.36 1.25 0 .7.52 1.25 1.33 1.25h.01zm4.91 8.21V9.36c0-.22.02-.43.08-.59.18-.43.57-.88 1.23-.88.87 0 1.22.66 1.22 1.64v3.86h2.4V9.25c0-2.22-1.18-3.25-2.76-3.25-1.27 0-1.84.7-2.16 1.19v.03h-.02l.02-.03V6.17h-2.4c.03.68 0 7.22 0 7.22h2.4z"/></svg>LinkedIn</a></span></div>
+    </div>
+  </div>
+</footer>
+
+<script src="../../assets/site.js?v=202610241237"></script>
+<script src="../../assets/charts.js?v=202610241237"></script>
+</body>
+</html>

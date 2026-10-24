@@ -48,6 +48,9 @@ NOTES = [
     {"slug": "tokens-per-megawatt-hour", "file": "2026-10-tokens-per-megawatt-hour.md", "n": 8,
      "summary": "Every MLPerf LLM result with measured wall power. A B200 server buys 2.7 times the tokens per joule "
                 "of an H100 NVL one, and the roofline says it must batch 58 or more sequences per weight pass."},
+    {"slug": "speculative-threshold", "file": "2026-10-speculative-threshold.md", "n": 9,
+     "summary": "A draft confidence threshold removes speculative decoding's energy penalty on every task tested. "
+                "At about 0.5, speculation on prose becomes a free 1.3x speed-up."},
 ]
 
 FIGURES = {
@@ -88,6 +91,11 @@ FIGURES = {
     <span class="toggle" role="group" aria-label="Where energy is counted"><button data-v="1" aria-pressed="true">wall</button><button data-v="1.09" aria-pressed="false">PUE 1.09</button><button data-v="1.56" aria-pressed="false">PUE 1.56</button></span></div>
   <svg viewBox="0 0 1000 260" role="img" aria-label="Tokens per megawatt-hour for each audited system"></svg>
   <figcaption class="mono">Output tokens per MWh from measured wall power. PUE 1.09 is Google's fleet; 1.56 is the 2024 industry average. The 405B row counts only output tokens of long-context prompts and is not comparable as a model cost.</figcaption>
+</figure>""",
+    "pmin": """<figure class="chart" id="pmin">
+  <div class="chart-bar mono"><span>Chip energy vs plain decoding, with and without a draft threshold</span><span id="pmin-read">outline: no threshold &middot; solid: threshold</span></div>
+  <svg viewBox="0 0 1000 400" role="img" aria-label="Energy relative to plain decoding for drafts with and without a confidence threshold"></svg>
+  <figcaption class="mono">Bars rise above the dashed 1x line when speculation costs more energy than plain decoding and fall below it when it saves. d8 .5 means drafts of up to 8 tokens with a 0.5 threshold. Log scale. Hover a bar to read it.</figcaption>
 </figure>""",
     "bat": """<figure class="chart" id="bat">
   <div class="chart-bar mono"><span>Decode energy per token and GPU power, by batch size</span><span id="bat-read">batch 1</span></div>
@@ -139,6 +147,8 @@ def chart_data():
     two = [{k: (round(v, 1) if isinstance(v, float) else v) for k, v in r.items()}
            for r in json.load(open(R / "summary-two-machines.json"))]
     kernels = json.load(open(R / "summary-kernels.json"))
+    pmin = [{k: (round(v, 4) if isinstance(v, float) else v) for k, v in r.items()}
+            for r in json.load(open(R / "summary-speculative-pmin.json"))]
     spec = [{k: (round(v, 4) if isinstance(v, float) else v) for k, v in r.items() if k != "soc_range"}
             for r in json.load(open(R / "summary-speculative.json"))]
     import csv
@@ -158,7 +168,7 @@ def chart_data():
         r["batch"] = int(r["batch"]) if r["batch"].isdigit() else r["batch"]
         r["note"] = int(r["note"])
         dataset.append(r)
-    return {"dataset": dataset, "formats": formats, "formats7": formats7, "two": two, "kernels": kernels, "width": width, "spec": spec, "mwh": mwh, "batch": {"q4_0": batch("q4_0"), "q4_k_m": batch("q4_k_m")},
+    return {"dataset": dataset, "formats": formats, "formats7": formats7, "two": two, "kernels": kernels, "width": width, "spec": spec, "mwh": mwh, "pmin": pmin, "batch": {"q4_0": batch("q4_0"), "q4_k_m": batch("q4_k_m")},
             "results": results, "roofline": roofline}
 
 
