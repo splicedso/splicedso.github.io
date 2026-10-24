@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Distillation: teaching a small model to imitate a big one &middot; Spliced</title>
+<meta name="description" content="Speculative decoding (primer 5) is only as good as its draft model's guesses. A draft that agrees with the big model 70% of the time saves energy; one that agrees 30% of the time wastes it ([note 7](../research/speculative-decoding/)). So the obvious question is: can you make a small model guess better? That is what distillation does, and it is how our first model, the Spliced drafter, is being built.">
+<meta property="og:title" content="Distillation: teaching a small model to imitate a big one &middot; Spliced">
+<meta property="og:description" content="Speculative decoding (primer 5) is only as good as its draft model's guesses. A draft that agrees with the big model 70% of the time saves energy; one that agrees 30% of the time wastes it ([note 7](../research/speculative-decoding/)). So the obvious question is: can you make a small model guess better? That is what distillation does, and it is how our first model, the Spliced drafter, is being built.">
+<meta property="og:image" content="https://splicedso.github.io/assets/og.png">
+<meta property="og:url" content="https://splicedso.github.io/learn/distillation-and-draft-models/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Spliced">
+<link rel="canonical" href="https://splicedso.github.io/learn/distillation-and-draft-models/">
+<meta name="color-scheme" content="light dark">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>try { const t = localStorage.getItem("theme"); if (t) document.documentElement.dataset.theme = t; } catch {}</script>
+<link rel="stylesheet" href="../../assets/style.css?v=202610241408">
+<link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
+</head>
+<body data-root="../../" data-page="learn">
+<a class="skip" href="#content">Skip to content</a>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="../../" aria-label="Spliced home">
+      <svg viewBox="0 0 500 659" aria-hidden="true"><path fill="currentColor" d="M0 192 L418 0 L418 205 L145 331 L145 449 L0 516 Z M197 385 L500 246 L500 520 L197 659 Z"/></svg>
+      Spliced
+    </a>
+    <div class="nav-right">
+      <ul>
+        <li><a href="../../research/" data-nav="research">Research</a></li>
+        <li><a href="../../learn/" data-nav="learn">Learn</a></li>
+        <li><a href="../../data/" data-nav="data">Data</a></li>
+        <li><a href="../../tools/phase/" data-nav="tools">Tools</a></li>
+        <li><a href="../../lab/" data-nav="lab">Lab</a></li>
+      </ul>
+      <a class="icon-link" href="https://github.com/splicedso" aria-label="Spliced on GitHub" title="GitHub"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a>
+      <a class="icon-link" href="https://www.linkedin.com/company/splicedso" aria-label="Spliced on LinkedIn" title="LinkedIn"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M0 1.15C0 .52.52 0 1.18 0h13.64C15.48 0 16 .52 16 1.15v13.7c0 .63-.52 1.15-1.18 1.15H1.18C.52 16 0 15.48 0 14.85V1.15zM4.75 13.39V6.17H2.35v7.22h2.4zM3.55 5.18c.84 0 1.36-.55 1.36-1.25-.02-.71-.52-1.25-1.34-1.25-.82 0-1.36.54-1.36 1.25 0 .7.52 1.25 1.33 1.25h.01zm4.91 8.21V9.36c0-.22.02-.43.08-.59.18-.43.57-.88 1.23-.88.87 0 1.22.66 1.22 1.64v3.86h2.4V9.25c0-2.22-1.18-3.25-2.76-3.25-1.27 0-1.84.7-2.16 1.19v.03h-.02l.02-.03V6.17h-2.4c.03.68 0 7.22 0 7.22h2.4z"/></svg></a>
+      <button class="theme" id="theme" type="button" aria-label="Dark mode" aria-pressed="false">
+        <svg class="moon" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M10.5 1.5a6.5 6.5 0 1 0 4 11.6A7 7 0 0 1 10.5 1.5Z"/></svg>
+        <svg class="sun" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="3.2" fill="currentColor"/><path stroke="currentColor" stroke-width="1.4" stroke-linecap="round" d="M8 1v1.6M8 13.4V15M1 8h1.6M13.4 8H15M3 3l1.1 1.1M11.9 11.9 13 13M3 13l1.1-1.1M11.9 4.1 13 3"/></svg>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<svg id="bus" aria-hidden="true"></svg>
+
+<div id="content">
+<header class="page-head">
+  <div class="wrap">
+    <span class="refdes mono" data-via><b>P7</b> Primer</span>
+    <h1>Distillation: teaching a small model to imitate a big one</h1>
+    <p class="lede">Primer 7. Builds on primer 5.</p>
+  </div>
+</header>
+<main><article class="wrap note-body"><p>Speculative decoding (primer 5) is only as good as its draft model's guesses. A draft that agrees with the big model 70% of the time saves energy; one that agrees 30% of the time wastes it (<a href="../../research/speculative-decoding/">note 7</a>). So the obvious question is: can you make a small model guess better? That is what <strong>distillation</strong> does, and it is how our first model, the Spliced drafter, is being built.</p>
+<h2 data-via>How a model is trained, in one paragraph</h2>
+<p>A model starts with random weights. Training shows it text and asks it to predict each next token. When it is wrong, a little arithmetic called <strong>gradient descent</strong> nudges every weight in the direction that would have made the right token more likely. Repeat over billions of tokens and the weights come to encode language. <strong>Fine-tuning</strong> is the same process started from an already trained model, on a much smaller, more specific set of text, to change what it does.</p>
+<h2 data-via>The idea of distillation</h2>
+<p>Normally a model learns from text written by people. In distillation, a small "student" model learns from text written by a big "teacher" model. The student is not trying to be right about the world; it is trying to <strong>write what the teacher would write</strong>.</p>
+<p>For a draft model, that is exactly the goal. The draft does not need to be a good model in general. It needs to predict one particular big model, as often as possible. A stock small model was trained on human text and so guesses the way people write; a distilled one guesses the way its teacher writes.</p>
+<h2 data-via>What we are doing</h2>
+<ol>
+<li><strong>Collect prompts.</strong> 3,600 varied requests, chat and code, from two public datasets (UltraChat, MIT licence; CodeAlpaca, CC-BY-4.0).</li>
+<li><strong>Let the teacher answer.</strong> Qwen2.5 7B writes an answer to every prompt, greedily, so the answers are exactly what it would produce. This is called sequence-level distillation.</li>
+<li><strong>Fine-tune the student.</strong> Qwen2.5 0.5B, the same small model notes 7 to 11 used as a draft, is trained on those answers. The prompt itself is masked out of the training signal, so the student learns only to reproduce the teacher's answers.</li>
+<li><strong>Measure, held out.</strong> On 80 prompts the student never saw, we compare the stock and the distilled drafter: how many of their guesses the 7B accepts, how much faster decoding gets, and how much energy each token costs.</li>
+</ol>
+<p>Both drafters go through exactly the same conversion and quantization, so the only difference between them is the training.</p>
+<h2 data-via>What could go wrong</h2>
+<ul>
+<li><strong>Over-fitting.</strong> A student trained too long memorizes its training answers and guesses worse on new prompts. That is why the evaluation uses held-out prompts, and why 5% of the training set is kept aside to watch the validation loss.</li>
+<li><strong>Narrow gains.</strong> It may help on chat and code, which it trained on, and not on edits, where copying from the prompt already works.</li>
+<li><strong>No gain at all.</strong> The stock model and the teacher come from the same family and already agree often. If the student does not beat the stock draft, the note will say so.</li>
+</ul>
+<h2 data-via>Why a small lab can do this</h2>
+<p>Training a large model from scratch takes thousands of GPUs. Distilling a 0.5 billion parameter drafter takes a few thousand prompts, an hour of the teacher's time and an hour or two of fine-tuning, on one laptop. It is a small model built for one job, and the job comes straight out of our measurements.</p>
+<p>Related: <a href="../../research/speculative-decoding/">note 7</a>, <a href="../../research/speculative-threshold/">note 9</a>, <a href="../../research/speculative-second-tool/">note 11</a>. The drafter's own note will follow when the measurement is done.</p></article></main>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="titleblock mono" data-via>
+      <div><svg viewBox="0 0 500 659" aria-hidden="true"><path fill="currentColor" d="M0 192 L418 0 L418 205 L145 331 L145 449 L0 516 Z M197 385 L500 246 L500 520 L197 659 Z"/></svg><span><span class="k">Title</span>P7 &middot; Distillation: teaching a small model to imitate a big one</span></div>
+      <div><span class="k">Drawn</span>2026-10</div>
+      <div><span class="k">Sheet</span>L</div>
+      <div><span class="k">Elsewhere</span><span class="foot-links"><a href="https://github.com/splicedso" aria-label="GitHub"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>GitHub</a><a href="https://www.linkedin.com/company/splicedso" aria-label="LinkedIn"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M0 1.15C0 .52.52 0 1.18 0h13.64C15.48 0 16 .52 16 1.15v13.7c0 .63-.52 1.15-1.18 1.15H1.18C.52 16 0 15.48 0 14.85V1.15zM4.75 13.39V6.17H2.35v7.22h2.4zM3.55 5.18c.84 0 1.36-.55 1.36-1.25-.02-.71-.52-1.25-1.34-1.25-.82 0-1.36.54-1.36 1.25 0 .7.52 1.25 1.33 1.25h.01zm4.91 8.21V9.36c0-.22.02-.43.08-.59.18-.43.57-.88 1.23-.88.87 0 1.22.66 1.22 1.64v3.86h2.4V9.25c0-2.22-1.18-3.25-2.76-3.25-1.27 0-1.84.7-2.16 1.19v.03h-.02l.02-.03V6.17h-2.4c.03.68 0 7.22 0 7.22h2.4z"/></svg>LinkedIn</a></span></div>
+    </div>
+  </div>
+</footer>
+
+<script src="../../assets/site.js?v=202610241408"></script>
+
+</body>
+</html>

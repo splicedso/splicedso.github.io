@@ -20,7 +20,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>try { const t = localStorage.getItem("theme"); if (t) document.documentElement.dataset.theme = t; } catch {}</script>
-<link rel="stylesheet" href="../../assets/style.css?v=202610241341">
+<link rel="stylesheet" href="../../assets/style.css?v=202610241408">
 <link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
 </head>
 <body data-root="../../" data-page="research">
@@ -184,7 +184,8 @@
 </tbody>
 </table>
 <p>The 8B model costs 5.6 times as much per parameter as the 70B. Note 6 found the same shape on a laptop: narrow models leave the hardware underused, so each weight costs more. It is the same physics at a thousand times the power.</p>
-<p>The 405B figure is the outlier, 60 times the 70B's energy per token for 5.8 times the parameters. The likely reason is the benchmark, not the model: MLPerf counts only output tokens, and the 405B task's prompts are drawn from long-context datasets (LongBench, GovReport, Ruler), so a large amount of prefill work is charged to relatively few output tokens. We have not verified the average input length, so this is a hypothesis, and the 405B figure should not be compared with the others as a cost of the model.</p>
+<p>The 405B figure is the outlier, 60 times the 70B's energy per token for 5.8 times the parameters. The reason is the benchmark's shape, not only the model. MLCommons states that the 405B task's prompts average about 9,400 input tokens against about 680 output tokens (<a href="https://mlcommons.org/2025/04/llm-inference-v5/">MLCommons, MLPerf Inference v5.0</a>), roughly 14 input tokens per output token, drawn from long-context datasets (LongBench, GovReport, Ruler). MLPerf counts only output tokens, so all of that work is charged to them.</p>
+<p>Long prefill alone cannot account for a 60-fold gap: prefill costs far less per token than decode (note 1 measured 20 to 35 times less on a laptop). The larger effect is likely what long contexts do to decode itself. Each sequence's key-value cache, its memory of the context, grows with every input token, so at 9,400 tokens far fewer sequences fit in memory at once, batching drops, and every decode step must also read that cache. We have not measured how much each effect contributes, and we could not find the 70B task's input length from an official source, so the 405B figure is a cost of long-context serving, not a cost of the model, and should not be compared with the others.</p>
 <h2 data-via>4. From the server to the building</h2>
 <p>Wall power excludes the building: cooling, power conversion and lighting, captured as PUE, the ratio of facility energy to IT energy. Google reports a fleet PUE of 1.09; the industry average in Uptime Institute's 2024 survey is 1.56. The same B200 server delivers 32.7 billion tokens per MWh of facility energy at Google's PUE and 22.8 billion at the industry average. Where a model runs changes its energy per token by 40% before any engineering.</p>
 <p>For scale, Google's 2025 report on Gemini put a median text prompt at 0.24 Wh including idle machines and cooling, with the accelerators alone 58% of it. That figure counts prompts, not tokens, and covers a production mix, so it cannot be compared directly with these benchmark tokens. It is the only first-party production figure that splits accelerator, host, idle and facility energy, and the split is worth knowing: the accelerators are only a little over half.</p>
@@ -198,12 +199,13 @@
 <li>Model size, benchmark design and building efficiency each move energy per token as much as the hardware does.</li>
 </ol>
 <h2 data-via>Limits</h2>
-<p>Two systems from two submitters, at different precisions and power levels. Tokens per second count output tokens only. The roofline bound uses 4 bits per weight and ignores quantization scales, so the true minimum batch is somewhat higher than 58. Wall power is what MLPerf's power rules measure; it excludes facility overhead, which we apply with published PUE figures, not measurements.</p>
+<p>Two systems from two submitters, at different precisions and power levels. Tokens per second count output tokens only. The 405B explanation is partly confirmed (input lengths) and partly reasoned (the key-value cache effect). The roofline bound uses 4 bits per weight and ignores quantization scales, so the true minimum batch is somewhat higher than 58. Wall power is what MLPerf's power rules measure; it excludes facility overhead, which we apply with published PUE figures, not measurements.</p>
 <h2 data-via>Sources</h2>
 <ul>
 <li>MLPerf Inference v5.0 and v5.1 results, <code>summary_results.json</code>: https://github.com/mlcommons/inference_results_v5.0, https://github.com/mlcommons/inference_results_v5.1</li>
 <li>B200 memory bandwidth (7.7 TB/s, HGX B200): https://www.nvidia.com/en-us/data-center/hgx/</li>
 <li>MLPerf 405B dataset sources: https://arxiv.org/pdf/2603.05692</li>
+<li>MLPerf 405B input and output lengths: https://mlcommons.org/2025/04/llm-inference-v5/</li>
 <li>Google fleet PUE: https://www.datacenters.google/efficiency</li>
 <li>Uptime Institute 2024 global survey: https://datacenter.uptimeinstitute.com/rs/711-RIA-145/images/2024.GlobalDataCenterSurvey.Report.pdf</li>
 <li>Google, measuring the environmental impact of AI inference (2025): https://arxiv.org/pdf/2508.15734</li>
@@ -225,7 +227,7 @@
   </div>
 </footer>
 
-<script src="../../assets/site.js?v=202610241341"></script>
-<script src="../../assets/charts.js?v=202610241341"></script>
+<script src="../../assets/site.js?v=202610241408"></script>
+<script src="../../assets/charts.js?v=202610241408"></script>
 </body>
 </html>
