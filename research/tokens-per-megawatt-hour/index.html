@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tokens per megawatt-hour &middot; Spliced</title>
+<meta name="description" content="Every MLPerf LLM result with measured wall power. A B200 server buys 2.7 times the tokens per joule of an H100 NVL one, and the roofline says it must batch 58 or more sequences per weight pass.">
+<meta property="og:title" content="Tokens per megawatt-hour &middot; Spliced">
+<meta property="og:description" content="Every MLPerf LLM result with measured wall power. A B200 server buys 2.7 times the tokens per joule of an H100 NVL one, and the roofline says it must batch 58 or more sequences per weight pass.">
+<meta property="og:image" content="https://splicedso.github.io/assets/og.png">
+<meta property="og:url" content="https://splicedso.github.io/research/tokens-per-megawatt-hour/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Spliced">
+<link rel="canonical" href="https://splicedso.github.io/research/tokens-per-megawatt-hour/">
+<meta name="color-scheme" content="light dark">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>try { const t = localStorage.getItem("theme"); if (t) document.documentElement.dataset.theme = t; } catch {}</script>
+<link rel="stylesheet" href="../../assets/style.css?v=202610241223">
+</head>
+<body data-root="../../" data-page="research">
+<a class="skip" href="#content">Skip to content</a>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="../../" aria-label="Spliced home">
+      <svg viewBox="0 0 500 659" aria-hidden="true"><path fill="currentColor" d="M0 192 L418 0 L418 205 L145 331 L145 449 L0 516 Z M197 385 L500 246 L500 520 L197 659 Z"/></svg>
+      Spliced
+    </a>
+    <div class="nav-right">
+      <ul>
+        <li><a href="../../research/" data-nav="research">Research</a></li>
+        <li><a href="../../tools/joule/" data-nav="tools">Tools</a></li>
+        <li><a href="../../lab/" data-nav="lab">Lab</a></li>
+        <li><a href="https://github.com/splicedso">GitHub</a></li>
+      </ul>
+      <button class="theme" id="theme" type="button" aria-label="Dark mode" aria-pressed="false">
+        <svg class="moon" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M10.5 1.5a6.5 6.5 0 1 0 4 11.6A7 7 0 0 1 10.5 1.5Z"/></svg>
+        <svg class="sun" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="3.2" fill="currentColor"/><path stroke="currentColor" stroke-width="1.4" stroke-linecap="round" d="M8 1v1.6M8 13.4V15M1 8h1.6M13.4 8H15M3 3l1.1 1.1M11.9 11.9 13 13M3 13l1.1-1.1M11.9 4.1 13 3"/></svg>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<svg id="bus" aria-hidden="true"></svg>
+
+<div id="content">
+<header class="page-head">
+  <div class="wrap">
+    <span class="refdes mono" data-via><b>N8</b> Research note &middot; 24 October 2026</span>
+    <h1>Tokens per megawatt-hour</h1>
+    <p class="lede">Spliced research note 8, 24 October 2026. An analysis of published datacenter measurements, set beside our own laptop data.</p>
+  </div>
+</header>
+<main><article class="wrap note-body"><p>Notes 1 to 7 measured inference on laptops. The AI build-out is happening in datacenters, where the question is the same one at a different scale: how many tokens does a unit of energy buy, and what decides it? This note answers it from measured wall power, not from spec sheets or estimates.</p>
+<h2 data-via>The data, and how little of it there is</h2>
+<p>MLCommons publishes every MLPerf Inference submission with a summary file. Submitters may also measure the whole system's power at the wall, under MLPerf's power rules, and a few do. We took the v5.0 and v5.1 summary files from <code>mlcommons/inference_results_v5.0</code> and <code>v5.1</code> and kept every closed-division datacenter LLM result with measured power (<code>results/mlperf-llm-power.csv</code>).</p>
+<p>There are two systems. In v5.0, Fujitsu's 8x NVIDIA H100 NVL server on Llama 2 70B. In v5.1, Lenovo's 8x NVIDIA B200 server on Llama 2 70B, Llama 3.1 8B and Llama 3.1 405B. Every other LLM result in those rounds reports speed only. That two systems are all the public, audited, wall-measured LLM inference energy data in the current rounds is itself a finding.</p>
+<p>The figures are tokens per second of <strong>output</strong> and watts at the <strong>wall</strong> for the whole server, accelerators, CPUs, memory, fans and power supplies, but not the building's cooling.</p>
+<h2 data-via>Results</h2>
+<table>
+<thead>
+<tr>
+<th>system</th>
+<th>model</th>
+<th>weights</th>
+<th>scenario</th>
+<th style="text-align: right;">tokens/s</th>
+<th style="text-align: right;">wall watts</th>
+<th style="text-align: right;">joules per token</th>
+<th style="text-align: right;">billion tokens per MWh</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>8x H100 NVL</td>
+<td>Llama 2 70B</td>
+<td>FP8</td>
+<td>Offline</td>
+<td style="text-align: right;">18,085</td>
+<td style="text-align: right;">4,952</td>
+<td style="text-align: right;">0.274</td>
+<td style="text-align: right;">13.1</td>
+</tr>
+<tr>
+<td>8x H100 NVL</td>
+<td>Llama 2 70B</td>
+<td>FP8</td>
+<td>Server</td>
+<td style="text-align: right;">16,849</td>
+<td style="text-align: right;">4,994</td>
+<td style="text-align: right;">0.296</td>
+<td style="text-align: right;">12.1</td>
+</tr>
+<tr>
+<td>8x B200</td>
+<td>Llama 2 70B</td>
+<td>FP4</td>
+<td>Offline</td>
+<td style="text-align: right;">102,909</td>
+<td style="text-align: right;">10,401</td>
+<td style="text-align: right;">0.101</td>
+<td style="text-align: right;">35.6</td>
+</tr>
+<tr>
+<td>8x B200</td>
+<td>Llama 2 70B</td>
+<td>FP4</td>
+<td>Server</td>
+<td style="text-align: right;">99,159</td>
+<td style="text-align: right;">10,442</td>
+<td style="text-align: right;">0.105</td>
+<td style="text-align: right;">34.2</td>
+</tr>
+<tr>
+<td>8x B200</td>
+<td>Llama 3.1 8B</td>
+<td>FP4</td>
+<td>Offline</td>
+<td style="text-align: right;">146,960</td>
+<td style="text-align: right;">9,436</td>
+<td style="text-align: right;">0.064</td>
+<td style="text-align: right;">56.1</td>
+</tr>
+<tr>
+<td>8x B200</td>
+<td>Llama 3.1 405B</td>
+<td>FP4</td>
+<td>Offline</td>
+<td style="text-align: right;">1,637</td>
+<td style="text-align: right;">9,892</td>
+<td style="text-align: right;">6.04</td>
+<td style="text-align: right;">0.6</td>
+</tr>
+</tbody>
+</table>
+<figure class="chart" id="mwh">
+  <div class="chart-bar mono"><span>Billion tokens per megawatt-hour, audited MLPerf systems, Offline</span>
+    <span class="toggle" role="group" aria-label="Where energy is counted"><button data-v="1" aria-pressed="true">wall</button><button data-v="1.09" aria-pressed="false">PUE 1.09</button><button data-v="1.56" aria-pressed="false">PUE 1.56</button></span></div>
+  <svg viewBox="0 0 1000 260" role="img" aria-label="Tokens per megawatt-hour for each audited system"></svg>
+  <figcaption class="mono">Output tokens per MWh from measured wall power. PUE 1.09 is Google's fleet; 1.56 is the 2024 industry average. The 405B row counts only output tokens of long-context prompts and is not comparable as a model cost.</figcaption>
+</figure>
+
+<h2 data-via>1. A generation of hardware bought 2.7 times the tokens per joule</h2>
+<p>On the same model and task, the B200 server used 0.101 J per token and the H100 NVL server 0.274: 2.7 times fewer joules, 35.6 billion tokens per megawatt-hour against 13.1 billion. It also drew twice the power and produced 5.7 times the tokens.</p>
+<p>This is not a clean comparison of chips, and should not be quoted as one. The H100 NVL is a 400 W card in a PCIe-style server; the B200 is NVIDIA's flagship at around 1,000 W. The H100 result used 8-bit weights and the B200 result 4-bit. The software stacks differ by a year. What it measures is what a buyer got: the best audited server of each generation, as submitted.</p>
+<h2 data-via>2. The efficiency comes from batching, and the roofline shows how much</h2>
+<p>Decode is memory bound (note 2). Each 8x B200 server has 8 x 7.7 TB/s of memory bandwidth. Llama 2 70B at 4 bits is at least 35 GB of weights. Decoding one sequence at a time, the server could produce at most 61.6 TB/s / 35 GB = <strong>1,760 tokens per second</strong>. It measured 102,909. So it must be generating, on average, at least <strong>58 tokens for every pass over the weights</strong>: serving 58 or more sequences at once.</p>
+<p>That is the same lever note 1 measured on a laptop, where serving 8 requests at once cut energy per token by 72%. In the datacenter it is pulled much further. Batching is the difference between the roofline's ceiling and what these systems achieve, and it is most of why a datacenter token costs so little energy.</p>
+<h2 data-via>3. The small-model penalty again, at datacenter scale</h2>
+<p>On the same B200 server, per billion parameters:</p>
+<table>
+<thead>
+<tr>
+<th>model</th>
+<th style="text-align: right;">joules per token</th>
+<th style="text-align: right;">millijoules per billion parameters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Llama 3.1 8B</td>
+<td style="text-align: right;">0.064</td>
+<td style="text-align: right;">8.0</td>
+</tr>
+<tr>
+<td>Llama 2 70B</td>
+<td style="text-align: right;">0.101</td>
+<td style="text-align: right;">1.4</td>
+</tr>
+<tr>
+<td>Llama 3.1 405B</td>
+<td style="text-align: right;">6.04</td>
+<td style="text-align: right;">14.9</td>
+</tr>
+</tbody>
+</table>
+<p>The 8B model costs 5.6 times as much per parameter as the 70B. Note 6 found the same shape on a laptop: narrow models leave the hardware underused, so each weight costs more. It is the same physics at a thousand times the power.</p>
+<p>The 405B figure is the outlier, 60 times the 70B's energy per token for 5.8 times the parameters. The likely reason is the benchmark, not the model: MLPerf counts only output tokens, and the 405B task's prompts are drawn from long-context datasets (LongBench, GovReport, Ruler), so a large amount of prefill work is charged to relatively few output tokens. We have not verified the average input length, so this is a hypothesis, and the 405B figure should not be compared with the others as a cost of the model.</p>
+<h2 data-via>4. From the server to the building</h2>
+<p>Wall power excludes the building: cooling, power conversion and lighting, captured as PUE, the ratio of facility energy to IT energy. Google reports a fleet PUE of 1.09; the industry average in Uptime Institute's 2024 survey is 1.56. The same B200 server delivers 32.7 billion tokens per MWh of facility energy at Google's PUE and 22.8 billion at the industry average. Where a model runs changes its energy per token by 40% before any engineering.</p>
+<p>For scale, Google's 2025 report on Gemini put a median text prompt at 0.24 Wh including idle machines and cooling, with the accelerators alone 58% of it. That figure counts prompts, not tokens, and covers a production mix, so it cannot be compared directly with these benchmark tokens. It is the only first-party production figure that splits accelerator, host, idle and facility energy, and the split is worth knowing: the accelerators are only a little over half.</p>
+<h2 data-via>5. A laptop next to a datacenter</h2>
+<p>On the M5 Pro, Qwen2.5 7B Q4_0 decoding one request at a time cost 1.15 J per token at the board (note 3): 151 mJ per billion parameters, about 100 times the B200 server's 1.4 on a 70B model. Most of that gap is not the chip. It is batch size (one sequence against at least 58), model size (7B against 70B, note 6) and what is counted (board DC input against the wall). A laptop serving one person is a different job from a server serving hundreds, and the comparison mostly measures that.</p>
+<h2 data-via>What to take from this</h2>
+<ol>
+<li>The public data on datacenter LLM energy is thin: two audited systems with wall power in the latest two MLPerf rounds.</li>
+<li>One hardware generation bought 2.7 times the tokens per joule, but it changed the chip, the number format and the software at once.</li>
+<li>Batching is the main reason datacenter tokens are cheap. The roofline says a B200 server must be processing 58 or more sequences per weight pass to reach its measured throughput.</li>
+<li>Model size, benchmark design and building efficiency each move energy per token as much as the hardware does.</li>
+</ol>
+<h2 data-via>Limits</h2>
+<p>Two systems from two submitters, at different precisions and power levels. Tokens per second count output tokens only. The roofline bound uses 4 bits per weight and ignores quantization scales, so the true minimum batch is somewhat higher than 58. Wall power is what MLPerf's power rules measure; it excludes facility overhead, which we apply with published PUE figures, not measurements.</p>
+<h2 data-via>Sources</h2>
+<ul>
+<li>MLPerf Inference v5.0 and v5.1 results, <code>summary_results.json</code>: https://github.com/mlcommons/inference_results_v5.0, https://github.com/mlcommons/inference_results_v5.1</li>
+<li>B200 memory bandwidth (7.7 TB/s, HGX B200): https://www.nvidia.com/en-us/data-center/hgx/</li>
+<li>MLPerf 405B dataset sources: https://arxiv.org/pdf/2603.05692</li>
+<li>Google fleet PUE: https://www.datacenters.google/efficiency</li>
+<li>Uptime Institute 2024 global survey: https://datacenter.uptimeinstitute.com/rs/711-RIA-145/images/2024.GlobalDataCenterSurvey.Report.pdf</li>
+<li>Google, measuring the environmental impact of AI inference (2025): https://arxiv.org/pdf/2508.15734</li>
+</ul>
+<h2 data-via>Reproduce</h2>
+<p><code>results/mlperf-llm-power.csv</code> holds every row used. It is extracted from the two summary files by filtering for closed datacenter results with <code>has_power</code> set and a Llama model.</p>
+<p class="source mono">Source, scripts and raw data: <a href="https://github.com/splicedso/joule/blob/main/notes/2026-10-tokens-per-megawatt-hour.md">joule/notes/2026-10-tokens-per-megawatt-hour.md</a></p>
+</article></main>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="titleblock mono" data-via>
+      <div><svg viewBox="0 0 500 659" aria-hidden="true"><path fill="currentColor" d="M0 192 L418 0 L418 205 L145 331 L145 449 L0 516 Z M197 385 L500 246 L500 520 L197 659 Z"/></svg><span><span class="k">Title</span>N8 &middot; Tokens per megawatt-hour</span></div>
+      <div><span class="k">Drawn</span>2026-10</div>
+      <div><span class="k">Sheet</span>12 of 12</div>
+      <div><span class="k">Source</span><a href="https://github.com/splicedso">github.com/splicedso</a></div>
+    </div>
+  </div>
+</footer>
+
+<script src="../../assets/site.js?v=202610241223"></script>
+<script src="../../assets/charts.js?v=202610241223"></script>
+</body>
+</html>

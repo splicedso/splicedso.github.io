@@ -42,6 +42,12 @@ NOTES = [
     {"slug": "model-width", "file": "2026-10-model-width.md", "n": 6,
      "summary": "Five formats across four model sizes. A weight in a 0.5B model costs up to 1.6 times one in a 7B; "
                 "Q4_0 is cheapest at every width; the Q5_K_M against Q6_K order flips with width."},
+    {"slug": "speculative-decoding", "file": "2026-10-speculative-decoding.md", "n": 7,
+     "summary": "Speculative decoding with a draft model and with n-gram copying, on code, prose and edits. It can be "
+                "faster and more expensive at once; copy-based drafting on an edit costs 32% of plain decoding."},
+    {"slug": "tokens-per-megawatt-hour", "file": "2026-10-tokens-per-megawatt-hour.md", "n": 8,
+     "summary": "Every MLPerf LLM result with measured wall power. A B200 server buys 2.7 times the tokens per joule "
+                "of an H100 NVL one, and the roofline says it must batch 58 or more sequences per weight pass."},
 ]
 
 FIGURES = {
@@ -71,6 +77,17 @@ FIGURES = {
   <div class="chart-bar mono"><span>Board energy per weight against model size, five formats</span><span id="width-read">0.5B</span></div>
   <svg viewBox="0 0 1000 400" role="img" aria-label="Energy per weight falls as models widen, for every format"></svg>
   <figcaption class="mono">Qwen2.5 0.5B to 7B, hidden size 896 to 3584. Board picojoules per weight read per decoded token, mean of two passes. Q4_0 is the heavy line. Hover or tap a size to read every format.</figcaption>
+</figure>""",
+    "spec": """<figure class="chart" id="spec">
+  <div class="chart-bar mono"><span>Speculative decoding: speed against chip energy, both relative to plain decoding</span><span id="spec-read">square: code &middot; triangle: prose &middot; circle: edit</span></div>
+  <svg viewBox="0 0 1000 440" role="img" aria-label="Speed-up against energy ratio for each speculative strategy and task"></svg>
+  <figcaption class="mono">Log scales. Each point starts at plain decoding (1x, 1x) and moves to where it measured. d2 to d16: a draft model guessing that many tokens; ngram: copying from the context. Hover a point to read it.</figcaption>
+</figure>""",
+    "mwh": """<figure class="chart" id="mwh">
+  <div class="chart-bar mono"><span>Billion tokens per megawatt-hour, audited MLPerf systems, Offline</span>
+    <span class="toggle" role="group" aria-label="Where energy is counted"><button data-v="1" aria-pressed="true">wall</button><button data-v="1.09" aria-pressed="false">PUE 1.09</button><button data-v="1.56" aria-pressed="false">PUE 1.56</button></span></div>
+  <svg viewBox="0 0 1000 260" role="img" aria-label="Tokens per megawatt-hour for each audited system"></svg>
+  <figcaption class="mono">Output tokens per MWh from measured wall power. PUE 1.09 is Google's fleet; 1.56 is the 2024 industry average. The 405B row counts only output tokens of long-context prompts and is not comparable as a model cost.</figcaption>
 </figure>""",
     "bat": """<figure class="chart" id="bat">
   <div class="chart-bar mono"><span>Decode energy per token and GPU power, by batch size</span><span id="bat-read">batch 1</span></div>
@@ -122,9 +139,18 @@ def chart_data():
     two = [{k: (round(v, 1) if isinstance(v, float) else v) for k, v in r.items()}
            for r in json.load(open(R / "summary-two-machines.json"))]
     kernels = json.load(open(R / "summary-kernels.json"))
+    spec = [{k: (round(v, 4) if isinstance(v, float) else v) for k, v in r.items() if k != "soc_range"}
+            for r in json.load(open(R / "summary-speculative.json"))]
+    import csv
+    names = {"NVIDIA H100-NVL-94GB": "8x H100 NVL", "NVIDIA B200-SXM-180GB": "8x B200"}
+    models = {"llama2-70b-99": "Llama 2 70B", "llama3.1-8b": "Llama 3.1 8B", "llama3.1-405b": "Llama 3.1 405B"}
+    mwh = [{"system": names[r["accelerator"]], "model": models[r["model"]], "dtype": r["dtype"].upper(),
+            "j_per_tok": float(r["j_per_tok"])}
+           for r in csv.DictReader(open(R / "mlperf-llm-power.csv"))
+           if r["scenario"] == "Offline" and r["model"] in models]
     width = [{k: (round(v, 2) if isinstance(v, float) else v) for k, v in r.items()}
              for r in json.load(open(R / "summary-width.json"))]
-    return {"formats": formats, "formats7": formats7, "two": two, "kernels": kernels, "width": width, "batch": {"q4_0": batch("q4_0"), "q4_k_m": batch("q4_k_m")},
+    return {"formats": formats, "formats7": formats7, "two": two, "kernels": kernels, "width": width, "spec": spec, "mwh": mwh, "batch": {"q4_0": batch("q4_0"), "q4_k_m": batch("q4_k_m")},
             "results": results, "roofline": roofline}
 
 

@@ -10,6 +10,8 @@ fetch(ROOT + "assets/data.json").then(r => r.json()).then(D => {
   twoChart(D.two);
   kernChart(D.kernels);
   widthChart(D.width);
+  specChart(D.spec);
+  mwhChart(D.mwh);
 });
 
 function resultsBars(rows) {
@@ -269,6 +271,91 @@ function widthChart(rows) {
       p.style.transition = "stroke-dashoffset 1.4s cubic-bezier(.2,.7,.1,1)";
       p.style.strokeDashoffset = 0;
     }, 120 * i));
+    o.disconnect();
+  }, { threshold: .3 }).observe(svg);
+}
+
+// Speed-up against energy ratio, both relative to plain decoding. Points right of the
+// vertical line are faster; points above the horizontal line cost more energy. The
+// upper-right quadrant is the trap: faster and more expensive.
+function specChart(rows) {
+  const svg = document.querySelector("#spec svg");
+  if (!svg) return;
+  const read = document.getElementById("spec-read");
+  const W = 1000, H = 440, L = 60, R = 30, T = 24, B = 44;
+  const X = v => L + Math.log2(v / .3) / Math.log2(5 / .3) * (W - L - R);
+  const Y = v => T + (1 - Math.log2(v / .25) / Math.log2(4.5 / .25)) * (H - T - B);
+  for (const v of [.5, 1, 2, 4]) {
+    el("line", { x1: X(v), x2: X(v), y1: T, y2: H - B, class: v === 1 ? "ink-line" : "gridline", "stroke-dasharray": v === 1 ? "4 3" : "" }, svg);
+    el("text", { x: X(v), y: H - B + 22, "text-anchor": "middle" }, svg).textContent = v + "x";
+  }
+  for (const v of [.25, .5, 1, 2, 4]) {
+    el("line", { x1: L, x2: W - R, y1: Y(v), y2: Y(v), class: v === 1 ? "ink-line" : "gridline", "stroke-dasharray": v === 1 ? "4 3" : "" }, svg);
+    el("text", { x: L - 10, y: Y(v) + 4, "text-anchor": "end" }, svg).textContent = v + "x";
+  }
+  el("text", { x: W - R, y: H - 6, "text-anchor": "end" }, svg).textContent = "speed vs plain decoding";
+  el("text", { x: L + 6, y: H - B - 10 }, svg).textContent = "energy vs plain (up is costlier)";
+  el("text", { x: W - R - 8, y: T + 14, "text-anchor": "end", class: "lbl" }, svg).textContent = "faster and costlier";
+  el("text", { x: W - R - 8, y: H - B - 10, "text-anchor": "end", class: "lbl" }, svg).textContent = "faster and cheaper";
+  const plain = {};
+  rows.filter(r => r.cond === "plain").forEach(r => plain[r.prompt] = r);
+  const shape = { code: "M-5 -5 h10 v10 h-10 Z", prose: "M0 -6 L6 5 L-6 5 Z", edit: "M0 -6 A6 6 0 1 0 0.01 -6 Z" };
+  rows.filter(r => r.cond !== "plain").forEach((r, i) => {
+    const sx = r.tok_s / plain[r.prompt].tok_s, ey = r.vs_plain;
+    const g = el("g", { class: "dot", style: `transform: translate(${X(1)}px, ${Y(1)}px)` }, svg);
+    el("path", { d: shape[r.prompt], class: "ink-fill" }, g);
+    el("text", { x: 9, y: 4 }, g).textContent = r.cond.replace("draft-", "d");
+    g.addEventListener("pointerenter", () => read.textContent =
+      `${r.prompt} ${r.cond}  ${sx.toFixed(2)}x speed  ${ey.toFixed(2)}x energy  accepted ${r.accept == null ? "-" : Math.round(r.accept * 100) + "%"}`);
+    setTimeout(() => g.style.transform = `translate(${X(sx)}px, ${Y(ey)}px)`, reduced ? 0 : 0);
+    g.dataset.to = `translate(${X(sx)}px, ${Y(ey)}px)`;
+  });
+  // Every point starts at plain decoding (1x, 1x) and moves to where it measured.
+  const pts = [...svg.querySelectorAll(".dot")];
+  pts.forEach(g => g.style.transform = `translate(${X(1)}px, ${Y(1)}px)`);
+  new IntersectionObserver((es, o) => {
+    if (!es[0].isIntersecting) return;
+    pts.forEach((g, i) => setTimeout(() => g.style.transform = g.dataset.to, reduced ? 0 : 300 + 40 * i));
+    o.disconnect();
+  }, { threshold: .3 }).observe(svg);
+}
+
+// Billion tokens per megawatt-hour per audited system, at the wall or at the building
+// for a chosen PUE. The bars resize when the PUE changes.
+function mwhChart(rows) {
+  const svg = document.querySelector("#mwh svg");
+  if (!svg) return;
+  const W = 1000, rowH = 52, L = 250, R = 110, T = 20;
+  const H = T + rows.length * rowH + 30;
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  const max = 60;
+  const X = v => L + v / max * (W - L - R);
+  for (let v = 0; v <= max; v += 10) {
+    el("line", { x1: X(v), x2: X(v), y1: T - 6, y2: H - 30, class: "gridline" }, svg);
+    el("text", { x: X(v), y: H - 10, "text-anchor": "middle" }, svg).textContent = v;
+  }
+  el("text", { x: W - 8, y: 12, "text-anchor": "end" }, svg).textContent = "billion tokens per MWh";
+  const bars = rows.map((r, i) => {
+    const y = T + i * rowH;
+    el("text", { x: L - 14, y: y + 18, "text-anchor": "end", class: "lbl" }, svg).textContent = r.system;
+    el("text", { x: L - 14, y: y + 34, "text-anchor": "end" }, svg).textContent = `${r.model}, ${r.dtype}`;
+    const b = el("rect", { x: L, y: y + 10, width: 0, height: 24, class: "ink-fill" }, svg);
+    const t = el("text", { x: L + 8, y: y + 27 }, svg);
+    return { r, b, t };
+  });
+  function show(pue) {
+    for (const { r, b, t } of bars) {
+      const v = 3.6e9 / r.j_per_tok / 1e9 / pue;
+      b.setAttribute("width", Math.max(1, X(v) - L));
+      t.setAttribute("x", X(v) + 8);
+      t.textContent = v < 1 ? v.toFixed(2) : v.toFixed(1);
+    }
+    document.querySelectorAll("#mwh .toggle button").forEach(x => x.setAttribute("aria-pressed", +x.dataset.v === pue));
+  }
+  document.querySelectorAll("#mwh .toggle button").forEach(x => x.onclick = () => show(+x.dataset.v));
+  new IntersectionObserver((es, o) => {
+    if (!es[0].isIntersecting) return;
+    show(1);
     o.disconnect();
   }, { threshold: .3 }).observe(svg);
 }
