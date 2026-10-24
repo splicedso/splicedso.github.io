@@ -1,0 +1,27 @@
+name: check
+on:
+  push:
+  pull_request:
+jobs:
+  site:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: site
+      - uses: actions/checkout@v4
+        with:
+          repository: splicedso/phase
+          path: phase
+      - uses: astral-sh/setup-uv@v5
+      - name: Rebuild from source
+        working-directory: site
+        run: uv run --with markdown python build.py
+      - name: Committed pages match a fresh build
+        working-directory: site
+        run: |
+          git diff --exit-code -I 'v=[0-9]{12}' -I '<lastmod>' -I '<updated>' -I 'class="k">Drawn' -- . ':!feed.xml' ':!sitemap.xml' \
+            || { echo "The committed site is out of date: run build.py and commit."; exit 1; }
+      - name: Internal links resolve
+        working-directory: site
+        run: python3 check_links.py

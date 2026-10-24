@@ -14,4 +14,6 @@ uv run --with markdown python build.py
 
 To move to a custom domain, set `"domain"` in `site.json` (for example `"spliced.ai"`) and rebuild: the build writes `CNAME` and switches every canonical URL, the sitemap and the link previews. Then point the domain's DNS at GitHub Pages.
 
+CI (`.github/workflows/check.yml`) checks out Phase beside the site, rebuilds, fails if the committed pages differ from a fresh build, and checks every internal link (`check_links.py`).
+
 Preview with `python3 -m http.server`.
