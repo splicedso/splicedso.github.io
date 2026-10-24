@@ -1,10 +1,10 @@
-"""Build the site from src/ and the research notes in the sibling joule checkout.
+"""Build the site from src/ and the research notes in the sibling phase checkout.
 
     uv run --with markdown python build.py
 
-Notes are written once, as markdown in joule/notes, and rendered here. A line
+Notes are written once, as markdown in phase/notes, and rendered here. A line
 `<!-- chart:NAME -->` in a note becomes the interactive figure of that name. Chart data is
-generated from joule/results, so the site cannot drift from the measurements.
+generated from phase/results, so the site cannot drift from the measurements.
 """
 
 import json
@@ -17,7 +17,7 @@ import markdown
 
 HERE = Path(__file__).parent
 SRC = HERE / "src"
-JOULE = HERE.parent / "joule"
+PHASE = HERE.parent / "phase"
 VERSION = time.strftime("%Y%m%d%H%M")
 CONFIG = json.loads((HERE / "site.json").read_text())
 SITE = ("https://" + CONFIG["domain"]) if CONFIG.get("domain") else CONFIG["url"].rstrip("/")
@@ -118,7 +118,7 @@ def mean(xs):
 
 
 def chart_data():
-    R = JOULE / "results"
+    R = PHASE / "results"
     ppl = {l.split()[0]: float(l.split("PPL = ")[1].split()[0]) for l in open(R / "quant-ppl-1.5b.txt")}
     runs = [{r["model"].split("-")[1].split(".")[0]: r for r in json.load(open(R / f))["results"] if r["phase"] == "decode"}
             for f in ("quant-energy-1.5b.json", "quant-energy-1.5b-run2.json")]
@@ -186,21 +186,75 @@ def notes_list(root):
 
 
 def note_meta(n):
-    text = (JOULE / "notes" / n["file"]).read_text()
+    text = (PHASE / "notes" / n["file"]).read_text()
     title = re.search(r"^# (.+)$", text, re.M).group(1)
     date = re.search(r"(\d{1,2} \w+ 20\d\d)", text).group(1)
     return title, date
 
 
 def note_body(n):
-    text = (JOULE / "notes" / n["file"]).read_text()
+    text = (PHASE / "notes" / n["file"]).read_text()
     text = re.sub(r"^# .+\n", "", text, count=1, flags=re.M)
     lede, _, rest = text.strip().partition("\n\n")
     html = markdown.markdown(rest, extensions=["tables", "fenced_code"])
     html = re.sub(r"<p><!-- chart:(\w+) --></p>|<!-- chart:(\w+) -->", lambda m: FIGURES[m.group(1) or m.group(2)], html)
     html = re.sub(r"<h2>(.+?)</h2>", lambda m: f'<h2 data-via>{m.group(1)}</h2>', html)
-    html = html.replace('href="../', 'href="https://github.com/splicedso/joule/blob/main/')
+    html = html.replace('href="../', 'href="https://github.com/splicedso/phase/blob/main/')
     return lede, html
+
+
+LEARN_DIR = SRC / "learn"
+
+
+def learn_items():
+    items = []
+    for f in sorted(LEARN_DIR.glob("*.md")):
+        n, slug = f.stem.split("-", 1)
+        text = f.read_text()
+        title = re.search(r"^# (.+)$", text, re.M).group(1)
+        first = [b for b in text.split("\n\n")[2:] if b and not b.startswith("#")][0]
+        items.append({"n": int(n), "slug": slug, "file": f, "title": title, "summary": re.sub(r"[*`]", "", first)})
+    return items
+
+
+def learn_list(root):
+    return '<div class="notes">' + "".join(
+        f'<a class="note-card" href="{root}learn/{i["slug"]}/"><span class="mono">P{i["n"]} &middot; Primer</span>'
+        f'<h3>{i["title"]}</h3><p>{i["summary"]}</p><span class="mono go">Read &rarr;</span></a>'
+        for i in learn_items()) + "</div>"
+
+
+def article(md_path, root, kicker):
+    text = md_path.read_text()
+    title = re.search(r"^# (.+)$", text, re.M).group(1)
+    text = re.sub(r"^# .+\n", "", text, count=1, flags=re.M)
+    lede, _, rest = text.strip().partition("\n\n")
+    body = markdown.markdown(rest, extensions=["tables", "fenced_code"])
+    body = re.sub(r"<h2>(.+?)</h2>", lambda m: f'<h2 data-via>{m.group(1)}</h2>', body)
+    body = body.replace('href="../', 'href="' + root)
+    content = f"""<header class="page-head">
+  <div class="wrap">
+    <span class="refdes mono" data-via><b>{kicker[0]}</b> {kicker[1]}</span>
+    <h1>{title}</h1>
+    <p class="lede">{markdown.markdown(lede)[3:-4]}</p>
+  </div>
+</header>
+<main><article class="wrap note-body">{body}</article></main>"""
+    return title, content
+
+
+def feed():
+    entries = []
+    for n in reversed(NOTES):
+        title, date = note_meta(n)
+        when = time.strftime("%Y-%m-%dT00:00:00Z", time.strptime(date, "%d %B %Y"))
+        url = f"{SITE}/research/{n['slug']}/"
+        entries.append(f"<entry><title>{title}</title><link href=\"{url}\"/><id>{url}</id><updated>{when}</updated>"
+                       f"<summary>{n['summary']}</summary></entry>")
+    (HERE / "feed.xml").write_text('<?xml version="1.0" encoding="utf-8"?>\n<feed xmlns="http://www.w3.org/2005/Atom">'
+        f'<title>Spliced research</title><link href="{SITE}/"/><link rel="self" href="{SITE}/feed.xml"/>'
+        f'<id>{SITE}/</id><updated>{time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())}</updated>'
+        '<author><name>Spliced</name></author>' + "".join(entries) + "</feed>\n")
 
 
 def page(path, content, *, title, description, page, sheet, sheetno, scripts="", root=None, ogtype="website"):
@@ -236,9 +290,9 @@ def main():
     page("research/index.html", (SRC / "pages/research.html").read_text().replace("{{notes}}", notes_list("../")),
          title="Research &middot; Spliced", description="Spliced research notes on inference energy, with method, code and raw data.",
          page="research", sheet="Research", sheetno=f"2 of {total}")
-    page("tools/joule/index.html", (SRC / "pages/joule.html").read_text(),
-         title="joule &middot; Spliced", description="Energy per token for local LLM inference, at the chip and the board.",
-         page="tools", sheet="Tools / joule", sheetno=f"3 of {total}", scripts=charts)
+    page("tools/phase/index.html", (SRC / "pages/phase.html").read_text(),
+         title="Phase &middot; Spliced", description="Energy per token for local LLM inference, at the chip and the board.",
+         page="tools", sheet="Tools / Phase", sheetno=f"3 of {total}", scripts=charts)
     page("data/index.html", (SRC / "pages/data.html").read_text(),
          title="Data &middot; Spliced", description="Every Spliced decode-energy measurement in one downloadable table, with a comparison tool.",
          page="data", sheet="Data", sheetno=f"5 of {total}", scripts='<script src="{{root}}assets/data.js?v=' + VERSION + '"></script>')
@@ -256,11 +310,27 @@ def main():
   </div>
 </header>
 <main><article class="wrap note-body">{body}
-<p class="source mono">Source, scripts and raw data: <a href="https://github.com/splicedso/joule/blob/main/notes/{n['file']}">joule/notes/{n['file']}</a></p>
+<p class="source mono">Source, scripts and raw data: <a href="https://github.com/splicedso/phase/blob/main/notes/{n['file']}">phase/notes/{n['file']}</a></p>
 </article></main>"""
         page(f"research/{n['slug']}/index.html", content, title=f"{title} &middot; Spliced", description=n["summary"],
              page="research", sheet=f"N{n['n']} &middot; {title}", sheetno=f"{6 + i} of {total}", scripts=charts,
              ogtype="article")
+    page("learn/index.html", (SRC / "pages/learn.html").read_text().replace("{{primers}}", learn_list("../")),
+         title="Learn &middot; Spliced", description="Primers on inference engineering: the ideas behind every Spliced result, in order.",
+         page="learn", sheet="Learn", sheetno="L")
+    for i in learn_items():
+        t, c = article(i["file"], "../../", (f"P{i['n']}", "Primer"))
+        page(f"learn/{i['slug']}/index.html", c, title=f"{t} &middot; Spliced", description=i["summary"],
+             page="learn", sheet=f"P{i['n']} &middot; {t}", sheetno="L", ogtype="article")
+    t, c = article(SRC / "methods.md", "../", ("M", "Methods"))
+    page("methods/index.html", c, title="Methods &middot; Spliced", description="The rules every Spliced measurement follows.",
+         page="methods", sheet="Methods", sheetno="M")
+    feed()
+    old = HERE / "tools/joule/index.html"
+    old.parent.mkdir(parents=True, exist_ok=True)
+    old.write_text('<!doctype html><meta charset="utf-8"><title>Phase</title>'
+                   '<link rel="canonical" href="' + SITE + '/tools/phase/">'
+                   '<meta http-equiv="refresh" content="0; url=../phase/"><a href="../phase/">Phase</a>\n')
     page("404.html", (SRC / "pages/404.html").read_text(), title="Not found &middot; Spliced",
          description="This page does not exist.", page="404", sheet="Not found", sheetno="&mdash;", root="/")
     (HERE / "sitemap.xml").write_text('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'

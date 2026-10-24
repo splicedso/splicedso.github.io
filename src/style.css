@@ -227,6 +227,7 @@ footer { padding: 40px 0 64px; }
 body[data-page="research"] [data-nav="research"],
 body[data-page="tools"] [data-nav="tools"],
 body[data-page="data"] [data-nav="data"],
+body[data-page="learn"] [data-nav="learn"],
 body[data-page="lab"] [data-nav="lab"] { color: var(--ink); text-decoration: underline; text-underline-offset: 6px; text-decoration-thickness: 1px; }
 
 .page-head { padding: 88px 0 40px; }

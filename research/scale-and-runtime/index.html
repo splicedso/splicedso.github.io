@@ -20,7 +20,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>try { const t = localStorage.getItem("theme"); if (t) document.documentElement.dataset.theme = t; } catch {}</script>
-<link rel="stylesheet" href="../../assets/style.css?v=202610241253">
+<link rel="stylesheet" href="../../assets/style.css?v=202610241309">
+<link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
 </head>
 <body data-root="../../" data-page="research">
 <a class="skip" href="#content">Skip to content</a>
@@ -34,8 +35,9 @@
     <div class="nav-right">
       <ul>
         <li><a href="../../research/" data-nav="research">Research</a></li>
+        <li><a href="../../learn/" data-nav="learn">Learn</a></li>
         <li><a href="../../data/" data-nav="data">Data</a></li>
-        <li><a href="../../tools/joule/" data-nav="tools">Tools</a></li>
+        <li><a href="../../tools/phase/" data-nav="tools">Tools</a></li>
         <li><a href="../../lab/" data-nav="lab">Lab</a></li>
       </ul>
       <a class="icon-link" href="https://github.com/splicedso" aria-label="Spliced on GitHub" title="GitHub"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a>
@@ -61,7 +63,7 @@
 <main><article class="wrap note-body"><p>Note 1 found that energy per token does not follow bit width, and that Q4_0 is the efficient 4-bit format on this machine. A finding from one model in one runtime might be a property of that model or that runtime. This note repeats the study on Qwen2.5 7B, and on Apple's own runtime, MLX. It also reports where the repeat runs did not agree, because that decides what can be claimed.</p>
 <h2 data-via>Method</h2>
 <ul>
-<li><strong>7B, llama.cpp.</strong> Qwen2.5 7B Instruct, the official F16 GGUF, quantized with <code>llama-quantize</code> into the same seven formats as note 1. Perplexity as before: WikiText-2 raw test, 512-token windows, 60 chunks. Energy: <code>joule --seconds 15</code>, two passes, the second in reverse order.</li>
+<li><strong>7B, llama.cpp.</strong> Qwen2.5 7B Instruct, the official F16 GGUF, quantized with <code>llama-quantize</code> into the same seven formats as note 1. Perplexity as before: WikiText-2 raw test, 512-token windows, 60 chunks. Energy: <code>phase --seconds 15</code>, two passes, the second in reverse order.</li>
 <li><strong>1.5B, MLX.</strong> The Hugging Face weights converted with <code>mlx_lm.convert</code> to bf16, fp16, and affine 8, 6, 4 and 3 bit (group size 64), plus mxfp4. Perplexity is computed to match <code>llama-perplexity</code> exactly: the same text, tokenizer, windows and scoring of the second half of each window (<code>experiments/mlx_formats.py</code>). Energy: one continuous decode of about 15 s with end-of-text ignored, two passes, the second in reverse order.</li>
 </ul>
 <h2 data-via>7B: the findings replicate</h2>
@@ -246,11 +248,11 @@
 <h2 data-via>Limits</h2>
 <p>One machine. MLX was measured at 1.5B only. The F16 7B run is affected by memory pressure. The MLX repeatability problem is not yet explained: candidates are Python-side scheduling in the decode loop and state carried between passes.</p>
 <h2 data-via>Reproduce</h2>
-<pre><code class="language-bash">uv run joule models/quant/7b-*.gguf --seconds 15 --out results/quant-energy-7b.json
+<pre><code class="language-bash">uv run phase models/quant/7b-*.gguf --seconds 15 --out results/quant-energy-7b.json
 uv run --extra mlx python experiments/mlx_formats.py models/mlx/1.5b-mlx-* results/mlx.json
 </code></pre>
 <p>Raw results: <code>results/quant-energy-7b*.json</code>, <code>results/quant-ppl-7b.txt</code>, <code>results/summary-7b.json</code>, <code>results/mlx-formats-1.5b-v2-run*.json</code>.</p>
-<p class="source mono">Source, scripts and raw data: <a href="https://github.com/splicedso/joule/blob/main/notes/2026-10-scale-and-runtime.md">joule/notes/2026-10-scale-and-runtime.md</a></p>
+<p class="source mono">Source, scripts and raw data: <a href="https://github.com/splicedso/phase/blob/main/notes/2026-10-scale-and-runtime.md">phase/notes/2026-10-scale-and-runtime.md</a></p>
 </article></main>
 </div>
 
@@ -265,7 +267,7 @@ uv run --extra mlx python experiments/mlx_formats.py models/mlx/1.5b-mlx-* resul
   </div>
 </footer>
 
-<script src="../../assets/site.js?v=202610241253"></script>
-<script src="../../assets/charts.js?v=202610241253"></script>
+<script src="../../assets/site.js?v=202610241309"></script>
+<script src="../../assets/charts.js?v=202610241309"></script>
 </body>
 </html>

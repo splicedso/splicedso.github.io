@@ -1,9 +1,9 @@
 <header class="page-head">
   <div class="wrap">
-    <span class="refdes mono" data-via><b>T1</b> Tools / joule</span>
-    <h1>joule</h1>
-    <p class="lede">Energy per token for local LLM inference, measured at the chip and at the board, with prefill and decode reported apart. No sudo, no extra hardware.</p>
-    <a class="cta" href="https://github.com/splicedso/joule">github.com/splicedso/joule <span aria-hidden="true">&rarr;</span></a>
+    <span class="refdes mono" data-via><b>T1</b> Tools / Phase</span>
+    <h1>Phase</h1>
+    <p class="lede">Energy per token for local LLM inference, with each phase of inference, prefill and decode, measured apart, at the chip and at the whole machine. Formerly named joule. No sudo, no extra hardware.</p>
+    <a class="cta" href="https://github.com/splicedso/phase">github.com/splicedso/phase <span aria-hidden="true">&rarr;</span></a>
   </div>
 </header>
 
@@ -14,7 +14,7 @@
         <div class="label"><span class="refdes mono" data-via><b>T2</b> Method</span></div>
         <h2>Small enough to read in one sitting.</h2>
         <pre><span class="c"># brew install macmon llama.cpp</span>
-uv run joule model.gguf --out results/run.json</pre>
+uv run phase model.gguf --out results/run.json</pre>
       </div>
       <ol class="steps">
         <li><div><b>Two test points.</b> TP2 is the chip, sampled every 100 to 200 ms. TP1 is the board's DC input, which includes memory, smoothed to about 1 Hz and so only used over long windows.</div></li>

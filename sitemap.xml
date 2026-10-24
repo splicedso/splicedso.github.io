@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://splicedso.github.io/</loc><lastmod>2026-10-24</lastmod></url>
   <url><loc>https://splicedso.github.io/research/</loc><lastmod>2026-10-24</lastmod></url>
-  <url><loc>https://splicedso.github.io/tools/joule/</loc><lastmod>2026-10-24</lastmod></url>
+  <url><loc>https://splicedso.github.io/tools/phase/</loc><lastmod>2026-10-24</lastmod></url>
   <url><loc>https://splicedso.github.io/data/</loc><lastmod>2026-10-24</lastmod></url>
   <url><loc>https://splicedso.github.io/lab/</loc><lastmod>2026-10-24</lastmod></url>
   <url><loc>https://splicedso.github.io/research/formats-and-batching/</loc><lastmod>2026-10-24</lastmod></url>
@@ -15,4 +15,12 @@
   <url><loc>https://splicedso.github.io/research/tokens-per-megawatt-hour/</loc><lastmod>2026-10-24</lastmod></url>
   <url><loc>https://splicedso.github.io/research/speculative-threshold/</loc><lastmod>2026-10-24</lastmod></url>
   <url><loc>https://splicedso.github.io/research/batching-without-a-step/</loc><lastmod>2026-10-24</lastmod></url>
+  <url><loc>https://splicedso.github.io/learn/</loc><lastmod>2026-10-24</lastmod></url>
+  <url><loc>https://splicedso.github.io/learn/what-happens-when-a-model-writes-a-token/</loc><lastmod>2026-10-24</lastmod></url>
+  <url><loc>https://splicedso.github.io/learn/why-decode-is-memory-bound/</loc><lastmod>2026-10-24</lastmod></url>
+  <url><loc>https://splicedso.github.io/learn/what-quantization-is/</loc><lastmod>2026-10-24</lastmod></url>
+  <url><loc>https://splicedso.github.io/learn/why-batching-is-cheap/</loc><lastmod>2026-10-24</lastmod></url>
+  <url><loc>https://splicedso.github.io/learn/speculative-decoding/</loc><lastmod>2026-10-24</lastmod></url>
+  <url><loc>https://splicedso.github.io/learn/measuring-energy-honestly/</loc><lastmod>2026-10-24</lastmod></url>
+  <url><loc>https://splicedso.github.io/methods/</loc><lastmod>2026-10-24</lastmod></url>
 </urlset>

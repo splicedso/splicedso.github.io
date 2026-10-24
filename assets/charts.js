@@ -1,5 +1,5 @@
 // Research charts. Each draws only if its figure is on the page. Data comes from
-// assets/data.json, which build.py generates from joule's results files.
+// assets/data.json, which build.py generates from phase's results files.
 
 fetch(ROOT + "assets/data.json").then(r => r.json()).then(D => {
   resultsBars(D.results);

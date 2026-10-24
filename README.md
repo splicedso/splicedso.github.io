@@ -6,7 +6,7 @@ The Spliced site: a static, multi-page site with no framework.
 uv run --with markdown python build.py
 ```
 
-`build.py` renders `src/pages/*` into `src/base.html`, turns each research note in the sibling `joule/notes` checkout into a page (a `<!-- chart:NAME -->` line becomes that interactive figure), and writes `assets/data.json` from `joule/results`, so the charts cannot drift from the measurements. Commit the built output; GitHub Pages serves the repository as is.
+`build.py` renders `src/pages/*` into `src/base.html`, turns each research note in the sibling `phase/notes` checkout into a page (a `<!-- chart:NAME -->` line becomes that interactive figure), and writes `assets/data.json` from `phase/results`, so the charts cannot drift from the measurements. Commit the built output; GitHub Pages serves the repository as is.
 
 - `src/`: page sources, `style.css` (light and dark themes from one set of tokens), `site.js` (theme toggle, the gutter bus), `home.js` (token replay, live schematic), `charts.js` (research figures).
 - `brand/`: the mark in every variant, generated from one geometry by `brand/build.py`, plus the LinkedIn banner.

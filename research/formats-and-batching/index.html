@@ -20,7 +20,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>try { const t = localStorage.getItem("theme"); if (t) document.documentElement.dataset.theme = t; } catch {}</script>
-<link rel="stylesheet" href="../../assets/style.css?v=202610241253">
+<link rel="stylesheet" href="../../assets/style.css?v=202610241309">
+<link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
 </head>
 <body data-root="../../" data-page="research">
 <a class="skip" href="#content">Skip to content</a>
@@ -34,8 +35,9 @@
     <div class="nav-right">
       <ul>
         <li><a href="../../research/" data-nav="research">Research</a></li>
+        <li><a href="../../learn/" data-nav="learn">Learn</a></li>
         <li><a href="../../data/" data-nav="data">Data</a></li>
-        <li><a href="../../tools/joule/" data-nav="tools">Tools</a></li>
+        <li><a href="../../tools/phase/" data-nav="tools">Tools</a></li>
         <li><a href="../../lab/" data-nav="lab">Lab</a></li>
       </ul>
       <a class="icon-link" href="https://github.com/splicedso" aria-label="Spliced on GitHub" title="GitHub"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a>
@@ -63,7 +65,7 @@
 <h2 data-via>Method</h2>
 <ul>
 <li>One model, Qwen2.5 1.5B Instruct, quantized from the same F16 GGUF with <code>llama-quantize</code> (no importance matrix) into Q2_K, Q3_K_M, Q4_0, Q4_K_M, Q5_K_M, Q6_K, Q8_0, plus F16.</li>
-<li>Energy: <code>joule</code> (this repository). Decode is 128 generated tokens per repetition, about 15 timed seconds per format, first quarter of the window dropped, idle baseline taken first. Two full passes, the second in reverse order to expose drift and order effects.</li>
+<li>Energy: <code>phase</code> (this repository). Decode is 128 generated tokens per repetition, about 15 timed seconds per format, first quarter of the window dropped, idle baseline taken first. Two full passes, the second in reverse order to expose drift and order effects.</li>
 <li>Quality: <code>llama-perplexity</code> on the WikiText-2 raw test set, 512-token context, 60 chunks.</li>
 <li>Batching: <code>experiments/batching.py</code> runs <code>llama-batched-bench</code> (64 prompt tokens, 512 generated per sequence) at batch 1 to 8, three passes, and aligns each decode window to the power samples. Chip power only, since the board reading is smoothed to about 1 Hz.</li>
 </ul>
@@ -209,11 +211,11 @@
 </ul>
 <h2 data-via>Reproduce</h2>
 <pre><code class="language-bash">brew install macmon llama.cpp
-uv run joule models/quant/1.5b-*.gguf --seconds 15 --out results/run.json
+uv run phase models/quant/1.5b-*.gguf --seconds 15 --out results/run.json
 uv run python experiments/batching.py model.gguf results/batch.json 1,2,3,4,5,6,7,8
 </code></pre>
 <p>Raw results: <code>results/quant-energy-1.5b*.json</code>, <code>results/quant-ppl-1.5b.txt</code>, <code>results/batching-gpu-1.5b-*.json</code>.</p>
-<p class="source mono">Source, scripts and raw data: <a href="https://github.com/splicedso/joule/blob/main/notes/2026-10-formats-and-batching.md">joule/notes/2026-10-formats-and-batching.md</a></p>
+<p class="source mono">Source, scripts and raw data: <a href="https://github.com/splicedso/phase/blob/main/notes/2026-10-formats-and-batching.md">phase/notes/2026-10-formats-and-batching.md</a></p>
 </article></main>
 </div>
 
@@ -228,7 +230,7 @@ uv run python experiments/batching.py model.gguf results/batch.json 1,2,3,4,5,6,
   </div>
 </footer>
 
-<script src="../../assets/site.js?v=202610241253"></script>
-<script src="../../assets/charts.js?v=202610241253"></script>
+<script src="../../assets/site.js?v=202610241309"></script>
+<script src="../../assets/charts.js?v=202610241309"></script>
 </body>
 </html>
