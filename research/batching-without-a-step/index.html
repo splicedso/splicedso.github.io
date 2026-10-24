@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Batching without a step: a discrete GPU on AC power &middot; Spliced</title>
+<meta name="description" content="The Windows laptop plugged in, and a batch sweep on CUDA. Its GPU is at a 100 W ceiling from batch 1, so the second request saves 43% where on the Mac it saved 1%.">
+<meta property="og:title" content="Batching without a step: a discrete GPU on AC power &middot; Spliced">
+<meta property="og:description" content="The Windows laptop plugged in, and a batch sweep on CUDA. Its GPU is at a 100 W ceiling from batch 1, so the second request saves 43% where on the Mac it saved 1%.">
+<meta property="og:image" content="https://splicedso.github.io/assets/og.png">
+<meta property="og:url" content="https://splicedso.github.io/research/batching-without-a-step/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Spliced">
+<link rel="canonical" href="https://splicedso.github.io/research/batching-without-a-step/">
+<meta name="color-scheme" content="light dark">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>try { const t = localStorage.getItem("theme"); if (t) document.documentElement.dataset.theme = t; } catch {}</script>
+<link rel="stylesheet" href="../../assets/style.css?v=202610241248">
+</head>
+<body data-root="../../" data-page="research">
+<a class="skip" href="#content">Skip to content</a>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="../../" aria-label="Spliced home">
+      <svg viewBox="0 0 500 659" aria-hidden="true"><path fill="currentColor" d="M0 192 L418 0 L418 205 L145 331 L145 449 L0 516 Z M197 385 L500 246 L500 520 L197 659 Z"/></svg>
+      Spliced
+    </a>
+    <div class="nav-right">
+      <ul>
+        <li><a href="../../research/" data-nav="research">Research</a></li>
+        <li><a href="../../data/" data-nav="data">Data</a></li>
+        <li><a href="../../tools/joule/" data-nav="tools">Tools</a></li>
+        <li><a href="../../lab/" data-nav="lab">Lab</a></li>
+      </ul>
+      <a class="icon-link" href="https://github.com/splicedso" aria-label="Spliced on GitHub" title="GitHub"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a>
+      <a class="icon-link" href="https://www.linkedin.com/company/splicedso" aria-label="Spliced on LinkedIn" title="LinkedIn"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M0 1.15C0 .52.52 0 1.18 0h13.64C15.48 0 16 .52 16 1.15v13.7c0 .63-.52 1.15-1.18 1.15H1.18C.52 16 0 15.48 0 14.85V1.15zM4.75 13.39V6.17H2.35v7.22h2.4zM3.55 5.18c.84 0 1.36-.55 1.36-1.25-.02-.71-.52-1.25-1.34-1.25-.82 0-1.36.54-1.36 1.25 0 .7.52 1.25 1.33 1.25h.01zm4.91 8.21V9.36c0-.22.02-.43.08-.59.18-.43.57-.88 1.23-.88.87 0 1.22.66 1.22 1.64v3.86h2.4V9.25c0-2.22-1.18-3.25-2.76-3.25-1.27 0-1.84.7-2.16 1.19v.03h-.02l.02-.03V6.17h-2.4c.03.68 0 7.22 0 7.22h2.4z"/></svg></a>
+      <button class="theme" id="theme" type="button" aria-label="Dark mode" aria-pressed="false">
+        <svg class="moon" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M10.5 1.5a6.5 6.5 0 1 0 4 11.6A7 7 0 0 1 10.5 1.5Z"/></svg>
+        <svg class="sun" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="3.2" fill="currentColor"/><path stroke="currentColor" stroke-width="1.4" stroke-linecap="round" d="M8 1v1.6M8 13.4V15M1 8h1.6M13.4 8H15M3 3l1.1 1.1M11.9 11.9 13 13M3 13l1.1-1.1M11.9 4.1 13 3"/></svg>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<svg id="bus" aria-hidden="true"></svg>
+
+<div id="content">
+<header class="page-head">
+  <div class="wrap">
+    <span class="refdes mono" data-via><b>N10</b> Research note &middot; 24 October 2026</span>
+    <h1>Batching without a step: a discrete GPU on AC power</h1>
+    <p class="lede">Spliced research note 10, 24 October 2026. Windows 11 laptop: Intel Core Ultra 9 285H, NVIDIA GeForce RTX 5070 Ti Laptop GPU (12 GB, Blackwell, compute 12.0), 32 GB RAM, on a battery. llama.cpp build 11851 (prebuilt CUDA 13.4 x64), CUDA backend, all layers on the GPU, no admin rights.</p>
+  </div>
+</header>
+<main><article class="wrap note-body"><p>This repeats note 1 (<code>notes/2026-10-formats-and-batching.md</code>, Apple M5 Pro) on different hardware, to see whether the format ranking and the batching step hold. Note 4 (<code>notes/2026-10-two-machines.md</code>) compared the two machines on battery; this note adds the machine plugged in, where its GPU is not power-capped, and the batch sweep. The format ranking mostly holds. The batching step does not, and neither does note 1's chip-only finding for F16.</p>
+<p>The llama.cpp build here is 11851, against 11669 on the Mac, because the prebuilt CUDA package for that build was what was available. Kernel changes between the two builds are possible and are a caveat on every cross-machine comparison below.</p>
+<h2 data-via>Question</h2>
+<p>Does a lower-bit format cost less energy per decoded token, and how much does serving several sequences at once save, on a discrete NVIDIA GPU instead of Apple unified memory? Note 1's sharpest claim was that a chip-only measurement misranks F16: on the M5 Pro the GPU drops to about 11 W while it waits on memory, so F16 looks as cheap as Q4_K_M on the chip while the board shows it is the most expensive format. We test that claim here.</p>
+<h2 data-via>Method, and what this machine cannot measure</h2>
+<p>The power backend is new (<code>joule/power_windows.py</code>), behind the same <code>Sampler</code> interface, so <code>measure.py</code> and <code>experiments/batching.py</code> are unchanged.</p>
+<ul>
+<li><strong>Chip reading (soc):</strong> GPU power from <code>nvidia-smi --query-gpu=power.draw -lms</code>. This is the nearest analog to the Mac's chip reading, but it is the GPU package only. There is no CPU+GPU+DRAM package counter to read on this platform.</li>
+<li><strong>Board reading (sys):</strong> whole-system DC power from the battery's <code>DischargeRate</code> (WMI <code>root/wmi</code> <code>BatteryStatus</code>), and <strong>only while unplugged</strong>. There is no board DC sensor readable on AC without a driver. Its real update rate on this machine is <strong>about every 3 s</strong> (measured), so it is a coarse mean over long windows only, and its idle baseline is too noisy to trust — board energy is reported <strong>gross</strong>, not net of idle.</li>
+<li><strong>CPU package power:</strong> not measured. Intel RAPL needs a kernel driver, i.e. admin rights, so it is left at 0, not estimated.</li>
+<li><code>nvidia-smi</code> intermittently reports a spurious ~11000 W power spike at idle; the sampler drops readings above a sane ceiling.</li>
+</ul>
+<p>Because board power needs the charger out and chip power is most stable on AC, the study runs at <strong>two operating points</strong>: chip energy on AC, and a second full set on battery that carries both chip and board together. On battery the GPU is held to a lower power ceiling (about 55–60 W, against about 90–105 W on AC), so it runs slower. The two are not the same operating point, and both are shown.</p>
+<p>Otherwise the method follows note 1: Qwen2.5 1.5B Instruct quantized from one F16 GGUF with <code>llama-quantize</code> (no imatrix) into the eight formats; decode is 128 tokens per repetition, <code>joule --seconds 15</code>, first quarter of each window dropped, two passes with the second in reverse order; perplexity is <code>llama-perplexity</code> on WikiText-2 raw, <code>-c 512 --chunks 60</code>; batching is <code>experiments/batching.py</code> at batch 1 to 8, three passes, chip power only.</p>
+<h2 data-via>Results: formats, batch 1</h2>
+<p>Decode. Energy is the mean of the two passes (they agreed within about 5%). Perplexity standard errors are about 0.21.</p>
+<table>
+<thead>
+<tr>
+<th>format</th>
+<th style="text-align: right;">perplexity</th>
+<th style="text-align: right;">AC chip mJ/tok</th>
+<th style="text-align: right;">AC chip net mJ/tok</th>
+<th style="text-align: right;">AC tok/s</th>
+<th style="text-align: right;">batt board mJ/tok</th>
+<th style="text-align: right;">batt chip mJ/tok</th>
+<th style="text-align: right;">batt tok/s</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>F16</td>
+<td style="text-align: right;">9.65</td>
+<td style="text-align: right;">753.0</td>
+<td style="text-align: right;">588.9</td>
+<td style="text-align: right;">128</td>
+<td style="text-align: right;">740.1</td>
+<td style="text-align: right;">614.1</td>
+<td style="text-align: right;">94</td>
+</tr>
+<tr>
+<td>Q8_0</td>
+<td style="text-align: right;">9.65</td>
+<td style="text-align: right;">475.1</td>
+<td style="text-align: right;">377.6</td>
+<td style="text-align: right;">214</td>
+<td style="text-align: right;">444.1</td>
+<td style="text-align: right;">358.0</td>
+<td style="text-align: right;">160</td>
+</tr>
+<tr>
+<td>Q6_K</td>
+<td style="text-align: right;">9.68</td>
+<td style="text-align: right;">385.8</td>
+<td style="text-align: right;">308.0</td>
+<td style="text-align: right;">268</td>
+<td style="text-align: right;">386.9</td>
+<td style="text-align: right;">301.8</td>
+<td style="text-align: right;">184</td>
+</tr>
+<tr>
+<td>Q5_K_M</td>
+<td style="text-align: right;">9.73</td>
+<td style="text-align: right;">342.5</td>
+<td style="text-align: right;">266.5</td>
+<td style="text-align: right;">275</td>
+<td style="text-align: right;">361.1</td>
+<td style="text-align: right;">263.9</td>
+<td style="text-align: right;">203</td>
+</tr>
+<tr>
+<td>Q4_K_M</td>
+<td style="text-align: right;">10.05</td>
+<td style="text-align: right;">326.4</td>
+<td style="text-align: right;">260.6</td>
+<td style="text-align: right;">317</td>
+<td style="text-align: right;">307.9</td>
+<td style="text-align: right;">248.0</td>
+<td style="text-align: right;">234</td>
+</tr>
+<tr>
+<td>Q4_0</td>
+<td style="text-align: right;">10.11</td>
+<td style="text-align: right;">294.8</td>
+<td style="text-align: right;">235.9</td>
+<td style="text-align: right;">354</td>
+<td style="text-align: right;">269.2</td>
+<td style="text-align: right;">222.2</td>
+<td style="text-align: right;">261</td>
+</tr>
+<tr>
+<td>Q3_K_M</td>
+<td style="text-align: right;">10.87</td>
+<td style="text-align: right;">396.2</td>
+<td style="text-align: right;">315.3</td>
+<td style="text-align: right;">258</td>
+<td style="text-align: right;">371.6</td>
+<td style="text-align: right;">301.9</td>
+<td style="text-align: right;">193</td>
+</tr>
+<tr>
+<td>Q2_K</td>
+<td style="text-align: right;">16.02</td>
+<td style="text-align: right;">291.3</td>
+<td style="text-align: right;">231.8</td>
+<td style="text-align: right;">351</td>
+<td style="text-align: right;">284.7</td>
+<td style="text-align: right;">224.7</td>
+<td style="text-align: right;">255</td>
+</tr>
+</tbody>
+</table>
+<ol>
+<li>
+<p><strong>Energy still does not fall with bit width.</strong> Q3_K_M costs more per token than Q4_K_M and Q5_K_M despite fewer bits, and Q2_K buys almost nothing over Q4_0 in energy while its perplexity collapses to 16. The cheapest formats are Q4_0 and Q2_K; the dividing line for quality is between Q4_0 (ppl 10.1) and Q3_K_M (10.9).</p>
+</li>
+<li>
+<p><strong>Chip-only does NOT misrank F16 here — note 1's headline finding is hardware-specific.</strong> On this discrete GPU the chip already names F16 the most expensive format, about 2.5x Q4_0 (753 vs 295 mJ/tok on AC). The reason is the opposite of the Mac's: this GPU holds roughly 90–105 W whether compute- or memory-bound rather than dropping to ~11 W, so chip energy per token is essentially power divided by throughput, and the slow formats are the expensive ones on the chip too. The whole-system reading adds only a near-constant overhead (board is about 1.15–1.38x chip across formats), so the board does not re-order anything. The effect that made package-only measurement misleading on Apple silicon does not appear on this dGPU. Note 4 gives the other half of the reason: NVIDIA's GPU reading includes the card's own memory, which Apple's chip reading leaves out.</p>
+</li>
+<li>
+<p><strong>Q4_0 is the efficient 4-bit format here, as on the Mac.</strong> Its perplexity is within error of Q4_K_M at lower chip and board energy and higher throughput. Nothing beats Q4_0 on both quality and board energy except by a margin inside the noise.</p>
+</li>
+<li>
+<p><strong>The ranking is stable across operating points.</strong> AC and battery disagree on absolute numbers (battery is slower under its power cap) but agree on the order: F16 worst, Q4_0 and Q2_K cheapest, Q3_K_M an out-of-order bump. That the ranking survives a ~45 W change in GPU power ceiling is some evidence it is about the formats, not the operating point.</p>
+</li>
+</ol>
+<p>Prefill is cheap by comparison: about 6 mJ/tok on AC for F16, roughly 100x less than its decode cost, the same prefill/decode split note 1 reports.</p>
+<h2 data-via>Results: batching</h2>
+<p>Decode energy per token against batch size, chip (GPU) power only, three passes, on AC. 64 prompt + 512 generated tokens per sequence.</p>
+<p>Q4_0:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">batch</th>
+<th style="text-align: right;">chip mJ/tok</th>
+<th style="text-align: right;">tok/s</th>
+<th style="text-align: right;">GPU W</th>
+<th style="text-align: right;">GPU MHz</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">267.5–294.0</td>
+<td style="text-align: right;">336–359</td>
+<td style="text-align: right;">96.9</td>
+<td style="text-align: right;">2279</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">152.7–172.1</td>
+<td style="text-align: right;">573–638</td>
+<td style="text-align: right;">99.4</td>
+<td style="text-align: right;">2094</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">120.6–130.4</td>
+<td style="text-align: right;">749–821</td>
+<td style="text-align: right;">100.0</td>
+<td style="text-align: right;">2092</td>
+</tr>
+<tr>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">104.2–109.5</td>
+<td style="text-align: right;">913–962</td>
+<td style="text-align: right;">100.1</td>
+<td style="text-align: right;">2139</td>
+</tr>
+<tr>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">86.9–94.2</td>
+<td style="text-align: right;">1068–1127</td>
+<td style="text-align: right;">99.6</td>
+<td style="text-align: right;">2218</td>
+</tr>
+<tr>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">83.5–84.7</td>
+<td style="text-align: right;">1149–1218</td>
+<td style="text-align: right;">99.9</td>
+<td style="text-align: right;">2170</td>
+</tr>
+<tr>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">79.4–82.0</td>
+<td style="text-align: right;">1200–1268</td>
+<td style="text-align: right;">100.0</td>
+<td style="text-align: right;">2144</td>
+</tr>
+<tr>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">71.4–75.1</td>
+<td style="text-align: right;">1347–1411</td>
+<td style="text-align: right;">101.9</td>
+<td style="text-align: right;">2236</td>
+</tr>
+</tbody>
+</table>
+<p>Q4_K_M:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">batch</th>
+<th style="text-align: right;">chip mJ/tok</th>
+<th style="text-align: right;">tok/s</th>
+<th style="text-align: right;">GPU W</th>
+<th style="text-align: right;">GPU MHz</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">330.5–340.7</td>
+<td style="text-align: right;">307–310</td>
+<td style="text-align: right;">103.7</td>
+<td style="text-align: right;">2178</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">187.9–195.2</td>
+<td style="text-align: right;">508–511</td>
+<td style="text-align: right;">97.1</td>
+<td style="text-align: right;">1943</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">145.3–148.2</td>
+<td style="text-align: right;">649–665</td>
+<td style="text-align: right;">96.3</td>
+<td style="text-align: right;">1909</td>
+</tr>
+<tr>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">123.4–127.9</td>
+<td style="text-align: right;">766–782</td>
+<td style="text-align: right;">97.0</td>
+<td style="text-align: right;">2024</td>
+</tr>
+<tr>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">109.7–111.0</td>
+<td style="text-align: right;">878–891</td>
+<td style="text-align: right;">97.5</td>
+<td style="text-align: right;">2003</td>
+</tr>
+<tr>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">80.1–82.2</td>
+<td style="text-align: right;">1203–1215</td>
+<td style="text-align: right;">97.7</td>
+<td style="text-align: right;">2337</td>
+</tr>
+<tr>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">74.5–76.1</td>
+<td style="text-align: right;">1287–1306</td>
+<td style="text-align: right;">97.2</td>
+<td style="text-align: right;">2373</td>
+</tr>
+<tr>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">60.4–62.3</td>
+<td style="text-align: right;">1601–1616</td>
+<td style="text-align: right;">98.3</td>
+<td style="text-align: right;">2522</td>
+</tr>
+</tbody>
+</table>
+<p>Batching saves about as much here as on the Mac — batch 8 cuts per-token energy by about 74% for Q4_0 and 82% for Q4_K_M — but by a different route. On the M5 Pro the GPU was memory-bound at batch 1 (18–24 W) and stepped to its ceiling at batch 2, so the second sequence paid for nearly the whole power step and batch 2 alone saved almost nothing. <strong>This GPU is already at its ~100 W ceiling at batch 1</strong>, so there is no step: power stays flat near 100 W across all batch sizes while throughput climbs, and energy per token falls smoothly with it from the first sequence on. The clock drifts between about 1900 and 2500 MHz without a clear trend, so it is throughput, not frequency, that drives the saving.</p>
+<h2 data-via>Limits</h2>
+<ul>
+<li>Two operating points, because board power is only readable unplugged and the GPU is power-capped there. Neither column is the Mac's "board DC input on AC"; the AC column has no board number at all, and the battery column is at a lower power ceiling.</li>
+<li>Board power is the battery discharge rate, updated about every 3 s, so it is a coarse mean and its idle-net is unreliable; only gross board energy is reported.</li>
+<li>No CPU package power on this machine without a driver, so there is no SoC-wide figure, only the GPU.</li>
+<li>One machine, one model size, one runtime, as in note 1. The cross-hardware contrast (finding 2) is exactly why a second machine was worth doing.</li>
+<li>Perplexity on WikiText-2 is a quality proxy, not a task score. The laptop was a working machine, not a thermally settled bench; passes agreed within about 5%.</li>
+</ul>
+<h2 data-via>Reproduce</h2>
+<p>Windows, no admin. Install <code>git</code>, Python and the GitHub CLI per user (e.g. with <code>winget</code>), and unzip a prebuilt llama.cpp CUDA build onto <code>PATH</code>. Then, from a clone:</p>
+<pre><code class="language-powershell">python -m venv .venv; .\.venv\Scripts\python -m pip install -e .
+# quantize 1.5b-f16.gguf into the eight formats with llama-quantize (no imatrix)
+.\.venv\Scripts\joule &lt;quant&gt;\1.5b-*.gguf --seconds 15 --out results\quant-energy-windows-ac-run1.json
+.\.venv\Scripts\python experiments\batching.py &lt;quant&gt;\1.5b-q4_0.gguf results\batching-windows-q4_0.json 1,2,3,4,5,6,7,8
+llama-perplexity -m &lt;quant&gt;\1.5b-q4_0.gguf -f wiki.test.raw -c 512 --chunks 60 -ngl 99
+</code></pre>
+<p>Run the energy study twice, the second with the formats reversed, and run the board-power pass unplugged. Raw results: <code>results/quant-ppl-windows.txt</code>, <code>results/quant-energy-windows-{ac,battery}-run{1,2}.json</code>, <code>results/batching-windows-*.json</code>.</p>
+<p class="source mono">Source, scripts and raw data: <a href="https://github.com/splicedso/joule/blob/main/notes/2026-10-windows-rtx5070ti.md">joule/notes/2026-10-windows-rtx5070ti.md</a></p>
+</article></main>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="titleblock mono" data-via>
+      <div><svg viewBox="0 0 500 659" aria-hidden="true"><path fill="currentColor" d="M0 192 L418 0 L418 205 L145 331 L145 449 L0 516 Z M197 385 L500 246 L500 520 L197 659 Z"/></svg><span><span class="k">Title</span>N10 &middot; Batching without a step: a discrete GPU on AC power</span></div>
+      <div><span class="k">Drawn</span>2026-10</div>
+      <div><span class="k">Sheet</span>15 of 15</div>
+      <div><span class="k">Elsewhere</span><span class="foot-links"><a href="https://github.com/splicedso" aria-label="GitHub"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>GitHub</a><a href="https://www.linkedin.com/company/splicedso" aria-label="LinkedIn"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M0 1.15C0 .52.52 0 1.18 0h13.64C15.48 0 16 .52 16 1.15v13.7c0 .63-.52 1.15-1.18 1.15H1.18C.52 16 0 15.48 0 14.85V1.15zM4.75 13.39V6.17H2.35v7.22h2.4zM3.55 5.18c.84 0 1.36-.55 1.36-1.25-.02-.71-.52-1.25-1.34-1.25-.82 0-1.36.54-1.36 1.25 0 .7.52 1.25 1.33 1.25h.01zm4.91 8.21V9.36c0-.22.02-.43.08-.59.18-.43.57-.88 1.23-.88.87 0 1.22.66 1.22 1.64v3.86h2.4V9.25c0-2.22-1.18-3.25-2.76-3.25-1.27 0-1.84.7-2.16 1.19v.03h-.02l.02-.03V6.17h-2.4c.03.68 0 7.22 0 7.22h2.4z"/></svg>LinkedIn</a></span></div>
+    </div>
+  </div>
+</footer>
+
+<script src="../../assets/site.js?v=202610241248"></script>
+<script src="../../assets/charts.js?v=202610241248"></script>
+</body>
+</html>
