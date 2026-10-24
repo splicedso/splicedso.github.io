@@ -54,11 +54,15 @@ section.dark { background: var(--ink); color: #fff; padding: 40px 0 60px; border
 .reel video { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
 .reel-cap p { max-width: 60ch; margin-top: 22px; }
 .hero { background: #000; color: #fff; overflow: hidden; }
-.hero h1 { font-weight: 500; font-size: clamp(42px, 7.4vw, 92px); line-height: .98; letter-spacing: -.045em; max-width: 11ch; }
-.hero h1 span { display: block; overflow: hidden; }
-.hero h1 span > i { display: block; font-style: normal; transform: translateY(105%); animation: rise 1s var(--ease) forwards; }
-.hero h1 span:nth-child(2) > i { animation-delay: .12s; color: #8c8c86; }
-.hero p.lede { margin-top: 30px; max-width: 520px; color: #c9c9c3; font-size: 18.5px; opacity: 0; animation: fade .9s .45s forwards; }
+.hero h1 { font-weight: 500; font-size: clamp(42px, 7.4vw, 92px); line-height: .98; letter-spacing: -.045em; max-width: 12ch; min-height: 2em; }
+.hero p.lede { margin-top: 30px; max-width: 520px; color: #c9c9c3; font-size: 18.5px; min-height: 4.7em; }
+.tok { position: relative; white-space: pre; }
+.tok::after { content: ""; position: absolute; left: 0; right: 0; bottom: -.08em; height: 1px; background: currentColor; opacity: .0; }
+.tok.fresh::after { opacity: .5; }
+.tok.fresh { color: #fff; }
+.hero h1 .tok:nth-child(n+4) { color: #8c8c86; }
+.meter { margin-top: 18px; color: #6f6f69; font-variant-numeric: tabular-nums; }
+.meter span { color: #e8e8e2; }
 .hero-top { display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 40px; }
 .hero-mark { width: clamp(90px, 13vw, 168px); }
 .hero-mark path { fill: #fff; }
@@ -103,7 +107,7 @@ h2 { font-weight: 500; font-size: clamp(30px, 4.2vw, 50px); line-height: 1.04; l
 .row.head { color: var(--mute); padding: 12px 0; }
 .row .m { font-weight: 500; }
 .bar { position: relative; height: 22px; }
-.bar i { position: absolute; left: 0; top: 0; bottom: 0; background: var(--ink); width: 0; transition: width 1.2s var(--ease); }
+.bar i { position: absolute; left: 0; top: 0; bottom: 0; background: var(--ink); width: 0; }
 .bar i.chip { background: var(--ink); z-index: 1; }
 .bar i.board { background: repeating-linear-gradient(-55deg, var(--ink) 0 1.5px, transparent 1.5px 6px); outline: 1px solid var(--ink); outline-offset: -1px; }
 .row .v { white-space: nowrap; text-align: right; font-variant-numeric: tabular-nums; }
@@ -111,6 +115,19 @@ h2 { font-weight: 500; font-size: clamp(30px, 4.2vw, 50px); line-height: 1.04; l
 .key i { display: inline-block; width: 14px; height: 10px; margin-right: 8px; vertical-align: -1px; background: var(--ink); }
 .key i.board { background: repeating-linear-gradient(-55deg, var(--ink) 0 1.5px, transparent 1.5px 6px); outline: 1px solid var(--ink); outline-offset: -1px; }
 .note { margin-top: 26px; color: var(--mute); max-width: 70ch; font-size: 15px; }
+
+/* charts */
+.chart { margin: 56px 0 0; border-top: 1px solid var(--ink); }
+.chart-bar { display: flex; justify-content: space-between; gap: 16px; padding: 14px 0; color: var(--mute); flex-wrap: wrap; }
+.chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+.chart figcaption { color: var(--mute); margin-top: 14px; max-width: 80ch; line-height: 1.6; }
+.chart text { font-family: var(--mono); font-size: 12px; fill: var(--mute); }
+.chart .lbl { fill: var(--ink); font-size: 12.5px; }
+.toggle { display: inline-flex; border: 1px solid var(--ink); }
+.toggle button { font: inherit; background: none; border: 0; padding: 4px 12px; cursor: pointer; color: var(--ink); }
+.toggle button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+.dot { transition: transform .9s var(--ease); }
+.col rect { transition: opacity .2s; }
 
 /* method */
 ol.steps { list-style: none; padding: 0; counter-reset: s; border-top: 1px solid var(--ink); }
@@ -132,8 +149,6 @@ pre .c { color: #7a7a74; }
 footer { padding: 48px 0 64px; color: var(--mute); }
 footer .wrap { display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
 
-.reveal { opacity: 0; transform: translateY(18px); transition: opacity .9s var(--ease), transform .9s var(--ease); }
-.reveal.in { opacity: 1; transform: none; }
 
 @media (max-width: 820px) {
   .cols, .limits, .facts { grid-template-columns: 1fr; gap: 40px; }
@@ -152,7 +167,6 @@ footer .wrap { display: flex; justify-content: space-between; gap: 20px; flex-wr
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
-  .hero h1 span > i, .hero p.lede, .reveal { transform: none; opacity: 1; }
 }
 </style>
 </head>
@@ -166,6 +180,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 20px; flex-wr
     </a>
     <ul>
       <li><a href="#results">Results</a></li>
+      <li><a href="#research">Research</a></li>
       <li><a href="#method">Method</a></li>
       <li><a href="https://github.com/splicedso">GitHub</a></li>
     </ul>
@@ -180,8 +195,9 @@ footer .wrap { display: flex; justify-content: space-between; gap: 20px; flex-wr
   <div class="shade"></div>
   <div class="wrap hero-copy">
     <p class="kicker mono">Spliced &middot; Efficient inference</p>
-    <h1><span><i>What does</i></span><span><i>a token cost?</i></span></h1>
-    <p class="lede">Spliced works on efficient inference. We start by measuring it: at the chip and at the board, with prefill and decode reported apart.</p>
+    <h1 id="h1" aria-label="What does a token cost?"></h1>
+    <p class="lede" id="lede" aria-label="Spliced works on efficient inference. We start by measuring it: at the chip and at the board, with prefill and decode reported apart."></p>
+    <p class="meter mono" id="meter" aria-hidden="true"><span id="m-tok">0</span> tokens &middot; <span id="m-j">0.00</span> J on the chip &middot; Qwen2.5 1.5B, Apple M5 Pro, replayed at 1/30 speed</p>
     <a class="scroll-cue mono" href="#trace-sec">Watch a token being paid for <span aria-hidden="true">&darr;</span></a>
   </div>
 </header>
@@ -216,19 +232,19 @@ footer .wrap { display: flex; justify-content: space-between; gap: 20px; flex-wr
     <div class="wrap">
       <div class="label mono">01 / First results</div>
       <div class="cols">
-        <h2 class="reveal">Most published numbers count the chip and stop.</h2>
-        <div class="prose reveal">
+        <h2>Most published numbers count the chip and stop.</h2>
+        <div class="prose">
           <p>Energy figures for local models rarely agree, because each one measures something different: package power, a TDP estimate, one device in one paper. We measure two things and say which is which.</p>
           <p>The first pass is one laptop and one runtime. It already shows two things a single blended number hides.</p>
         </div>
       </div>
 
       <div class="facts">
-        <div class="fact reveal"><div class="n"><span data-count="20">0</span>&ndash;<span data-count="35">0</span><small>&times;</small></div><p>more energy to generate a token than to read one. Chat is mostly decode, so this is the phase that sets the bill.</p></div>
-        <div class="fact reveal"><div class="n"><span data-count="2.4" data-dec="1">0</span><small>&times;</small></div><p>what the whole board draws compared to the chip alone, for Qwen2.5 1.5B decode. Package-only figures miss more than half the cost.</p></div>
+        <div class="fact"><div class="n">20&ndash;35<small>&times;</small></div><p>more energy to generate a token than to read one. Chat is mostly decode, so this is the phase that sets the bill.</p></div>
+        <div class="fact"><div class="n">2.4<small>&times;</small></div><p>what the whole board draws compared to the chip alone, for Qwen2.5 1.5B decode. Package-only figures miss more than half the cost.</p></div>
       </div>
 
-      <div class="table reveal" id="bars">
+      <div class="table" id="bars">
         <div class="row head mono"><span>model</span><span>phase</span><span class="bar-h">millijoules per token, chip and board</span><span class="v">tok/s</span></div>
       </div>
       <div class="key mono"><span><i></i>chip</span><span><i class="board"></i>board DC input</span></div>
@@ -236,14 +252,49 @@ footer .wrap { display: flex; justify-content: space-between; gap: 20px; flex-wr
     </div>
   </section>
 
+  <section id="research">
+    <div class="wrap">
+      <div class="label mono">02 / Research</div>
+      <div class="cols">
+        <h2>Fewer bits is not fewer joules.</h2>
+        <div class="prose">
+          <p>We quantized one model, Qwen2.5 1.5B, into eight formats from the same F16 weights and measured each one: decode energy at the chip and at the board, and perplexity on WikiText-2.</p>
+          <p>Measured at the chip, F16 looks as cheap as 4-bit. It is not. The chip sits waiting on memory, and the memory traffic shows up only at the board, where F16 costs 2.1 times what Q4_0 does. Q5_K_M costs more than Q6_K and is worse. Q4_0 matches Q4_K_M within error for 18% less energy.</p>
+        </div>
+      </div>
+      <figure class="chart" id="fmt">
+        <div class="chart-bar mono">
+          <span>Decode energy against perplexity, eight formats</span>
+          <span class="toggle" role="group" aria-label="Measurement point"><button data-v="board" aria-pressed="true">board</button><button data-v="soc" aria-pressed="false">chip only</button></span>
+        </div>
+        <svg viewBox="0 0 1000 440" role="img" aria-label="Scatter of decode energy per token against perplexity for eight quantization formats"></svg>
+        <figcaption class="mono">x: millijoules per decoded token. y: WikiText-2 perplexity, lower is better, so better is higher on the chart. The line joins the formats nothing else beats on both. Apple M5 Pro, llama.cpp b11669, batch 1.</figcaption>
+      </figure>
+
+      <div class="cols" style="margin-top:110px">
+        <h2>The second request is the expensive one.</h2>
+        <div class="prose">
+          <p>Serving several requests at once should spread the cost of reading the weights. It does, but not evenly. At batch 1 the GPU draws 17 to 24 W, waiting on memory. At batch 2 it jumps to its ceiling of 33 to 36 W and stays there. So the second sequence pays for almost the whole jump, and every sequence after it is close to free.</p>
+          <p>On Q4_0, batch 2 saves 1% per token. Batch 8 saves 72%.</p>
+        </div>
+      </div>
+      <figure class="chart" id="bat">
+        <div class="chart-bar mono"><span>Decode energy per token and GPU power, by batch size</span><span id="bat-read">batch 1</span></div>
+        <svg viewBox="0 0 1000 380" role="img" aria-label="Energy per token falls with batch size while GPU power plateaus from batch 2"></svg>
+        <figcaption class="mono">Lines: chip millijoules per token, Q4_0 solid and Q4_K_M dashed. Columns: GPU watts for Q4_0. Mean of three runs. Hover or tap a column.</figcaption>
+      </figure>
+      <a class="cta" href="https://github.com/splicedso/joule/blob/main/notes/2026-10-formats-and-batching.md">Read the note, method and raw data <span aria-hidden="true">&rarr;</span></a>
+    </div>
+  </section>
+
   <section id="method">
     <div class="wrap cols">
       <div>
-        <div class="label mono">02 / Method</div>
-        <h2 class="reveal">Small enough to read in one sitting.</h2>
+        <div class="label mono">03 / Method</div>
+        <h2>Small enough to read in one sitting.</h2>
         <a class="cta" href="https://github.com/splicedso/joule">joule on GitHub <span aria-hidden="true">&rarr;</span></a>
       </div>
-      <div class="reveal">
+      <div>
         <ol class="steps">
           <li><div><b>Baseline first.</b> Ten seconds of idle power before anything runs, so every figure can be reported gross and net.</div></li>
           <li><div><b>Phases apart.</b> Prefill (512 prompt tokens) and decode (128 generated tokens) run as separate llama-bench tests.</div></li>
@@ -260,10 +311,10 @@ uv run joule model.gguf --out results/run.json</pre>
   <section id="work">
     <div class="wrap cols">
       <div>
-        <div class="label mono">03 / How we work</div>
-        <h2 class="reveal">A company, with the research in the open.</h2>
+        <div class="label mono">04 / How we work</div>
+        <h2>A company, with the research in the open.</h2>
       </div>
-      <div class="prose reveal">
+      <div class="prose">
         <p>The methods, the code and the raw measurements are public. Anyone can rerun a number on this page and get the same answer or tell us why not.</p>
         <p>The company is the work around them: making a model run well on a specific board, and measuring it honestly when it does. If you build hardware or ship models to devices and want that done, write to us through GitHub.</p>
       </div>
@@ -272,12 +323,12 @@ uv run joule model.gguf --out results/run.json</pre>
 
   <section>
     <div class="wrap">
-      <div class="label mono">04 / What these numbers are not</div>
-      <h2 class="reveal">Known limits, stated up front.</h2>
+      <div class="label mono">05 / What these numbers are not</div>
+      <h2>Known limits, stated up front.</h2>
       <div class="limits">
-        <div class="reveal"><h3>Not wall power</h3><p>The board figure is DC input as the SMC reports it. It leaves out the adapter's own loss. A wall meter is next.</p></div>
-        <div class="reveal"><h3>Not fully settled</h3><p>0.5B decode drifted from 58 to 74 mJ per token across three runs while throughput held. The table shows what we measured, drift included.</p></div>
-        <div class="reveal"><h3>One machine so far</h3><p>Apple Silicon and llama.cpp only. MLX comes next, then boards with NPUs, which are the hardware served worst today.</p></div>
+        <div><h3>Not wall power</h3><p>The board figure is DC input as the SMC reports it. It leaves out the adapter's own loss. A wall meter is next.</p></div>
+        <div><h3>Not fully settled</h3><p>0.5B decode drifted from 58 to 74 mJ per token across three runs while throughput held. The table shows what we measured, drift included.</p></div>
+        <div><h3>One machine so far</h3><p>Apple Silicon and llama.cpp only. MLX comes next, then boards with NPUs, which are the hardware served worst today.</p></div>
       </div>
     </div>
   </section>
@@ -312,27 +363,114 @@ for (const [m, phase, chip, board, tps] of RESULTS) {
   table.appendChild(row);
 }
 
-function countUp(el) {
-  const target = parseFloat(el.dataset.count), dec = +(el.dataset.dec || 0);
-  if (reduced) { el.textContent = target.toFixed(dec); return; }
-  const t0 = performance.now(), dur = 1400;
-  (function step(t) {
-    const k = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - k, 4);
-    el.textContent = (target * e).toFixed(dec);
-    if (k < 1) requestAnimationFrame(step);
-  })(t0);
-}
+document.querySelectorAll(".bar i").forEach(b => b.style.width = b.dataset.w + "%");
 
-const io = new IntersectionObserver(entries => {
-  for (const e of entries) {
-    if (!e.isIntersecting) continue;
-    e.target.classList.add("in");
-    e.target.querySelectorAll("[data-count]").forEach(countUp);
-    e.target.querySelectorAll(".bar i").forEach((b, i) => setTimeout(() => b.style.width = b.dataset.w + "%", reduced ? 0 : 90 * Math.floor(i / 2)));
-    io.unobserve(e.target);
+// The hero is written one real Qwen2.5 token at a time. At the measured 198 tokens per
+// second it would be over in a fifth of a second, so it is replayed 30 times slower, and
+// the meter adds the measured 141.5 mJ per decoded token as it goes.
+const HEAD = ["What", " does", " a", " token", " cost", "?"];
+const LEDE = ["Sp", "liced", " works", " on", " efficient", " inference", ".", " We", " start", " by", " measuring", " it", ":", " at", " the", " chip", " and", " at", " the", " board", ",", " with", " pre", "fill", " and", " decode", " reported", " apart", "."];
+(function typeTokens() {
+  const h1 = document.getElementById("h1"), lede = document.getElementById("lede");
+  const mt = document.getElementById("m-tok"), mj = document.getElementById("m-j");
+  const all = [...HEAD.map(t => [h1, t]), ...LEDE.map(t => [lede, t])];
+  const step = reduced ? 0 : 1000 / 198 * 30;
+  let i = 0;
+  function put() {
+    const [el, t] = all[i];
+    const span = document.createElement("span");
+    span.className = "tok fresh"; span.textContent = t;
+    el.appendChild(span);
+    setTimeout(() => span.classList.remove("fresh"), 420);
+    i++;
+    mt.textContent = i; mj.textContent = (i * 0.1415).toFixed(2);
+    if (i < all.length) reduced ? put() : setTimeout(put, step + (i === HEAD.length ? 500 : 0));
   }
-}, { threshold: 0.2 });
-document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+  setTimeout(put, reduced ? 0 : 600);
+})();
+
+const FORMATS = [{"name": "Q2_K", "ppl": 15.9, "soc": 133.2, "board": 279.3}, {"name": "Q3_K_M", "ppl": 10.76, "soc": 160.8, "board": 332.1}, {"name": "Q4_0", "ppl": 10.09, "soc": 98.7, "board": 257.9}, {"name": "Q4_K_M", "ppl": 10.01, "soc": 134.0, "board": 314.2}, {"name": "Q5_K_M", "ppl": 9.7, "soc": 196.8, "board": 411.4}, {"name": "Q6_K", "ppl": 9.65, "soc": 152.2, "board": 369.5}, {"name": "Q8_0", "ppl": 9.63, "soc": 154.1, "board": 408.3}, {"name": "F16", "ppl": 9.63, "soc": 134.6, "board": 546.5}];
+const BATCH = {"q4_0": [{"batch": 1, "mj": 104.7, "gpu_w": 17.9}, {"batch": 2, "mj": 103.3, "gpu_w": 32.7}, {"batch": 3, "mj": 70.7, "gpu_w": 33.0}, {"batch": 4, "mj": 54.3, "gpu_w": 33.3}, {"batch": 5, "mj": 44.0, "gpu_w": 33.5}, {"batch": 6, "mj": 37.4, "gpu_w": 33.7}, {"batch": 7, "mj": 32.8, "gpu_w": 33.8}, {"batch": 8, "mj": 29.3, "gpu_w": 33.2}], "q4_k_m": [{"batch": 1, "mj": 135.6, "gpu_w": 24.4}, {"batch": 2, "mj": 120.9, "gpu_w": 36.4}, {"batch": 3, "mj": 81.3, "gpu_w": 35.0}, {"batch": 4, "mj": 62.0, "gpu_w": 35.0}, {"batch": 5, "mj": 51.0, "gpu_w": 35.1}, {"batch": 6, "mj": 43.2, "gpu_w": 35.2}, {"batch": 7, "mj": 37.9, "gpu_w": 35.1}, {"batch": 8, "mj": 33.7, "gpu_w": 34.6}]};
+const NS = "http://www.w3.org/2000/svg";
+const el = (tag, attrs, parent) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); parent && parent.appendChild(e); return e; };
+
+(function formatChart() {
+  const svg = document.querySelector("#fmt svg");
+  const W = 1000, H = 440, L = 56, R = 24, T = 20, B = 40;
+  const xs = FORMATS.flatMap(f => [f.soc, f.board]), xmax = Math.ceil(Math.max(...xs) / 100) * 100;
+  const ymin = 9.5, ymax = 11.0, OFF = { Q2_K: "15.9, off scale" };
+  const LBL = { F16: [10, -10], Q8_0: [10, 16], Q6_K: [-10, -10, "end"], Q5_K_M: [10, 18], Q4_K_M: [10, -10], Q4_0: [10, 18], Q3_K_M: [10, -10], Q2_K: [10, -10] };
+  const X = v => L + v / xmax * (W - L - R), Y = p => T + (Math.min(p, ymax) - ymin) / (ymax - ymin) * (H - T - B);
+  for (let v = 0; v <= xmax; v += 100) {
+    el("line", { x1: X(v), x2: X(v), y1: T, y2: H - B, stroke: "#dcdcd6" }, svg);
+    el("text", { x: X(v), y: H - B + 22, "text-anchor": "middle" }, svg).textContent = v;
+  }
+  for (const p of [9.5, 10, 10.5, 11]) {
+    el("line", { x1: L, x2: W - R, y1: Y(p), y2: Y(p), stroke: "#dcdcd6" }, svg);
+    el("text", { x: L - 10, y: Y(p) + 4, "text-anchor": "end" }, svg).textContent = p.toFixed(1);
+  }
+  el("text", { x: W - R, y: H - 6, "text-anchor": "end" }, svg).textContent = "mJ per decoded token";
+  const front = el("path", { fill: "none", stroke: "#0a0a0a", "stroke-width": 1.2, "stroke-dasharray": "3 4" }, svg);
+  const dots = FORMATS.map(f => {
+    const g = el("g", { class: "dot" }, svg);
+    el("line", { x1: 0, x2: 0, y1: 0, y2: 0, stroke: "#0a0a0a", "stroke-width": 1, opacity: .35, class: "ghost" }, g);
+    el("circle", { r: f.name === "Q4_0" ? 6 : 4.5, fill: "#0a0a0a" }, g);
+    const [dx, dy, anchor] = LBL[f.name] || [10, -10];
+    el("text", { x: dx, y: dy, class: "lbl", "text-anchor": anchor || "start" }, g).textContent = f.name + (OFF[f.name] ? "  " + OFF[f.name] : "");
+    return { f, g };
+  });
+  function frontier(key) {
+    const pts = FORMATS.map(f => ({ x: f[key], y: f.ppl })).sort((a, b) => a.x - b.x);
+    const out = []; let best = Infinity;
+    for (const p of pts) if (p.y < best) { out.push(p); best = p.y; }
+    return out;
+  }
+  function show(key) {
+    for (const { f, g } of dots) {
+      g.style.transform = `translate(${X(f[key])}px, ${Y(f.ppl)}px)`;
+      const other = key === "board" ? f.soc : f.board;
+      const gl = g.querySelector(".ghost");
+      gl.setAttribute("x2", X(other) - X(f[key]));
+    }
+    front.setAttribute("d", frontier(key).map((p, i) => (i ? "L" : "M") + X(p.x) + " " + Y(p.y)).join(" "));
+    document.querySelectorAll("#fmt .toggle button").forEach(b => b.setAttribute("aria-pressed", b.dataset.v === key));
+  }
+  document.querySelectorAll("#fmt .toggle button").forEach(b => b.onclick = () => show(b.dataset.v));
+  show("soc");
+  new IntersectionObserver((es, o) => { if (es[0].isIntersecting) { setTimeout(() => show("board"), 400); o.disconnect(); } }, { threshold: .25 }).observe(svg);
+})();
+
+(function batchChart() {
+  const svg = document.querySelector("#bat svg"), read = document.getElementById("bat-read");
+  const W = 1000, H = 380, L = 56, R = 56, T = 20, B = 40;
+  const n = BATCH.q4_0.length, ymax = 140, wmax = 40;
+  const X = i => L + (i + .5) * (W - L - R) / n, bw = (W - L - R) / n * .56;
+  const Y = v => H - B - v / ymax * (H - T - B), YW = w => H - B - w / wmax * (H - T - B);
+  for (const v of [0, 40, 80, 120]) {
+    el("line", { x1: L, x2: W - R, y1: Y(v), y2: Y(v), stroke: "#dcdcd6" }, svg);
+    el("text", { x: L - 10, y: Y(v) + 4, "text-anchor": "end" }, svg).textContent = v;
+  }
+  for (const w of [0, 20, 40]) el("text", { x: W - R + 10, y: YW(w) + 4 }, svg).textContent = w + " W";
+  el("text", { x: L - 10, y: T - 6, "text-anchor": "end" }, svg).textContent = "mJ/tok";
+  const cols = BATCH.q4_0.map((r, i) => {
+    const g = el("g", { class: "col" }, svg);
+    el("rect", { x: X(i) - bw / 2, y: YW(r.gpu_w), width: bw, height: H - B - YW(r.gpu_w), fill: "#0a0a0a", opacity: .08 }, g);
+    el("text", { x: X(i), y: H - B + 22, "text-anchor": "middle" }, g).textContent = r.batch;
+    el("rect", { x: X(i) - (W - L - R) / n / 2, y: T, width: (W - L - R) / n, height: H - T - B, fill: "transparent" }, g);
+    g.addEventListener("pointerenter", () => focus(i));
+    return g;
+  });
+  const line = (rows, dash) => el("path", { d: rows.map((r, i) => (i ? "L" : "M") + X(i) + " " + Y(r.mj)).join(" "), fill: "none", stroke: "#0a0a0a", "stroke-width": 1.8, "stroke-dasharray": dash }, svg);
+  line(BATCH.q4_0, ""); line(BATCH.q4_k_m, "5 4");
+  const cur = el("circle", { r: 5, fill: "#0a0a0a" }, svg);
+  function focus(i) {
+    cols.forEach((g, k) => g.querySelector("rect").setAttribute("opacity", k === i ? .22 : .08));
+    const a = BATCH.q4_0[i], b = BATCH.q4_k_m[i];
+    cur.setAttribute("cx", X(i)); cur.setAttribute("cy", Y(a.mj));
+    read.textContent = `batch ${a.batch}  Q4_0 ${a.mj.toFixed(0)} mJ/tok  Q4_K_M ${b.mj.toFixed(0)} mJ/tok  GPU ${a.gpu_w.toFixed(1)} W`;
+  }
+  focus(0);
+})();
 
 // Scroll-linked: the hero film eases in, the reel opens from inset to full bleed.
 const film = document.querySelector(".film"), reel = document.querySelector(".reel-frame");
