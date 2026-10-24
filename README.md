@@ -4,7 +4,7 @@ The Spliced site. Static HTML, no build step.
 
 - `index.html`: the page. The hero trace replays `assets/trace.json`, a real recording made with [joule](https://github.com/splicedso/joule).
 - `brand/`: the mark in every variant, generated from one geometry by `brand/build.py`, plus the LinkedIn banner.
-- `render/`: the Blender scenes behind the two films. Rebuild with Blender 5.2 and ffmpeg:
+- `render/`: Blender scenes for the brand films (not used on the current page). Rebuild with Blender 5.2 and ffmpeg:
 
 ```bash
 blender --background --factory-startup --python render/mark.py -- "$PWD/render/frames-mark/"
