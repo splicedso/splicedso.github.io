@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Where the joules go: a roofline and an energy model for decode &middot; Spliced</title>
+<meta name="description" content="A decode roofline from measured bandwidth, and a validated energy model whose residuals isolate the cost of unpacking each format. Two wrong first attempts, kept in.">
+<meta property="og:title" content="Where the joules go: a roofline and an energy model for decode &middot; Spliced">
+<meta property="og:description" content="A decode roofline from measured bandwidth, and a validated energy model whose residuals isolate the cost of unpacking each format. Two wrong first attempts, kept in.">
+<meta property="og:image" content="https://splicedso.github.io/assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>try { const t = localStorage.getItem("theme"); if (t) document.documentElement.dataset.theme = t; } catch {}</script>
+<link rel="stylesheet" href="../../assets/style.css?v=202610240046">
+</head>
+<body data-root="../../" data-page="research">
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="../../" aria-label="Spliced home">
+      <svg viewBox="0 0 500 659" aria-hidden="true"><path fill="currentColor" d="M0 192 L418 0 L418 205 L145 331 L145 449 L0 516 Z M197 385 L500 246 L500 520 L197 659 Z"/></svg>
+      Spliced
+    </a>
+    <div class="nav-right">
+      <ul>
+        <li><a href="../../research/" data-nav="research">Research</a></li>
+        <li><a href="../../tools/joule/" data-nav="tools">Tools</a></li>
+        <li><a href="../../lab/" data-nav="lab">Lab</a></li>
+        <li><a href="https://github.com/splicedso">GitHub</a></li>
+      </ul>
+      <button class="theme" id="theme" type="button" aria-label="Dark mode" aria-pressed="false">
+        <svg class="moon" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M10.5 1.5a6.5 6.5 0 1 0 4 11.6A7 7 0 0 1 10.5 1.5Z"/></svg>
+        <svg class="sun" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="3.2" fill="currentColor"/><path stroke="currentColor" stroke-width="1.4" stroke-linecap="round" d="M8 1v1.6M8 13.4V15M1 8h1.6M13.4 8H15M3 3l1.1 1.1M11.9 11.9 13 13M3 13l1.1-1.1M11.9 4.1 13 3"/></svg>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<svg id="bus" aria-hidden="true"></svg>
+
+<header class="page-head">
+  <div class="wrap">
+    <span class="refdes mono" data-via><b>N2</b> Research note &middot; 24 October 2026</span>
+    <h1>Where the joules go: a roofline and an energy model for decode</h1>
+    <p class="lede">Spliced research note 2, 24 October 2026. Apple M5 Pro, 24 GB, llama.cpp build 11669, MLX 0.32. Uses the format sweep from note 1.</p>
+  </div>
+</header>
+<main><article class="wrap note-body"><p>Note 1 measured that energy per token does not fall with bit width. This note asks why, with two standard tools: a roofline, which says how fast decode could possibly go, and a fitted model, which says what the energy is spent on. It is written to be followed step by step, mistakes included, because two of the three first attempts were wrong in instructive ways.</p>
+<h2 data-via>1. The roof: how fast can memory be read?</h2>
+<p>Decoding one token multiplies every weight matrix by one vector. Each weight is read once and used for two operations, so the arithmetic is tiny compared with the reading. That makes decode <strong>memory bound</strong>: the speed limit is memory bandwidth divided by the bytes read per token.</p>
+<p>So the first job is the real bandwidth, not the spec sheet. <code>experiments/bandwidth.py</code> times four patterns on 1 GiB of float16 with MLX:</p>
+<table>
+<thead>
+<tr>
+<th>pattern</th>
+<th style="text-align: right;">GB/s</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>matrix times vector (what decode does)</td>
+<td style="text-align: right;">265.7</td>
+</tr>
+<tr>
+<td>sum (pure read)</td>
+<td style="text-align: right;">269.3</td>
+</tr>
+<tr>
+<td>copy</td>
+<td style="text-align: right;">247.6</td>
+</tr>
+<tr>
+<td>add</td>
+<td style="text-align: right;">254.7</td>
+</tr>
+</tbody>
+</table>
+<p>Many smaller layer-shaped matrix-vector products in one batch reached the same 243 to 265 GB/s, so about <strong>266 GB/s</strong> is the roof.</p>
+<h2 data-via>2. Bytes per token, and the first mistake</h2>
+<p>The first attempt used the model file size as bytes per token. F16 then decoded at 298 GB/s, above the roof, which is impossible. The data was right and the byte count was wrong:</p>
+<ul>
+<li>The GGUF stores the <strong>output head as its own tensor</strong>. The 467 MB token-embedding table is only looked up, one row per token, so it does not count.</li>
+<li><code>llama-quantize</code> keeps that output head at <strong>Q6_K even in "Q4_0"</strong>. Format names describe most of the model, not all of it.</li>
+</ul>
+<p><code>experiments/roofline.py</code> counts every tensor except <code>token_embd</code>.</p>
+<h2 data-via>3. The roofline</h2>
+<table>
+<thead>
+<tr>
+<th>format</th>
+<th style="text-align: right;">GB read per token</th>
+<th style="text-align: right;">tok/s</th>
+<th style="text-align: right;">ceiling tok/s</th>
+<th style="text-align: right;">share of roof</th>
+<th style="text-align: right;">board nJ per byte</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>F16</td>
+<td style="text-align: right;">3.09</td>
+<td style="text-align: right;">83.8</td>
+<td style="text-align: right;">86.1</td>
+<td style="text-align: right;">97%</td>
+<td style="text-align: right;">0.18</td>
+</tr>
+<tr>
+<td>Q8_0</td>
+<td style="text-align: right;">1.64</td>
+<td style="text-align: right;">141.9</td>
+<td style="text-align: right;">162.0</td>
+<td style="text-align: right;">88%</td>
+<td style="text-align: right;">0.25</td>
+</tr>
+<tr>
+<td>Q6_K</td>
+<td style="text-align: right;">1.27</td>
+<td style="text-align: right;">171.0</td>
+<td style="text-align: right;">209.8</td>
+<td style="text-align: right;">82%</td>
+<td style="text-align: right;">0.29</td>
+</tr>
+<tr>
+<td>Q5_K_M</td>
+<td style="text-align: right;">1.12</td>
+<td style="text-align: right;">178.0</td>
+<td style="text-align: right;">237.4</td>
+<td style="text-align: right;">75%</td>
+<td style="text-align: right;">0.37</td>
+</tr>
+<tr>
+<td>Q4_K_M</td>
+<td style="text-align: right;">0.98</td>
+<td style="text-align: right;">204.5</td>
+<td style="text-align: right;">271.1</td>
+<td style="text-align: right;">75%</td>
+<td style="text-align: right;">0.32</td>
+</tr>
+<tr>
+<td>Q4_0</td>
+<td style="text-align: right;">0.93</td>
+<td style="text-align: right;">213.4</td>
+<td style="text-align: right;">286.0</td>
+<td style="text-align: right;">75%</td>
+<td style="text-align: right;">0.28</td>
+</tr>
+<tr>
+<td>Q3_K_M</td>
+<td style="text-align: right;">0.82</td>
+<td style="text-align: right;">204.4</td>
+<td style="text-align: right;">324.7</td>
+<td style="text-align: right;">63%</td>
+<td style="text-align: right;">0.41</td>
+</tr>
+<tr>
+<td>Q2_K</td>
+<td style="text-align: right;">0.67</td>
+<td style="text-align: right;">227.7</td>
+<td style="text-align: right;">396.4</td>
+<td style="text-align: right;">57%</td>
+<td style="text-align: right;">0.42</td>
+</tr>
+</tbody>
+</table>
+<figure class="chart" id="roof">
+  <div class="chart-bar mono"><span>Share of the memory-bandwidth roof each format's decode reaches</span><span>Qwen2.5 1.5B, llama.cpp</span></div>
+  <svg viewBox="0 0 1000 380" role="img" aria-label="Fraction of measured memory bandwidth reached by decode, per format"></svg>
+  <figcaption class="mono">The roof is the 266 GB/s an MLX matrix-vector kernel reaches on this machine. Bytes per token count every tensor except the token embedding table.</figcaption>
+</figure>
+
+<p>F16 runs at 97% of the roof: a textbook memory-bound kernel. Every step down in bits uses less of the bandwidth. Low-bit weights must be unpacked before they are multiplied, and as the bytes shrink that unpacking becomes the bottleneck. Q2_K reads 4.6 times fewer bytes than F16 but decodes only 2.7 times faster. The same effect shows in energy: each byte of Q2_K costs 2.4 times what a byte of F16 does.</p>
+<h2 data-via>4. An energy model, and the second mistake</h2>
+<p>The natural model is two terms: power the board draws regardless, paid for as long as a token takes, plus a cost per byte moved.</p>
+<pre><code>board energy per token = P_static x (seconds per token) + e_byte x (bytes per token)
+</code></pre>
+<p>Fitting both coefficients by least squares gave R² = 0.84, which looks fine, and <strong>P_static = 110 W with a negative cost per byte</strong>, which is impossible. The board never draws 110 W, and moving data does not create energy.</p>
+<p>The cause is <strong>collinearity</strong>. Because decode is memory bound, time per token and bytes per token rise together, so the fit cannot tell the two terms apart and trades them against each other. A good R² does not mean the coefficients mean anything. Check that they are physically possible.</p>
+<p>The fix is to measure what can be measured instead of asking the fit for it. Idle board power was measured before each sweep: 8.11 W. Every format holds the same 1.5 billion weights, so the arithmetic per token is roughly the same for all of them and enters as one constant:</p>
+<pre><code>board energy per token - P_idle x t = e_byte x bytes + e_tok
+</code></pre>
+<p><code>experiments/energy_model.py</code> fits this and validates it leave-one-out: fit on seven formats, predict the eighth.</p>
+<ul>
+<li>e_byte = <strong>0.083 nJ per byte</strong>, about 10 pJ per bit, in the range expected for LPDDR traffic.</li>
+<li>e_tok = 206 mJ per token for everything that is not moving weights or idling.</li>
+<li>Leave-one-out mean absolute error <strong>11.3%</strong>. Five of eight formats are predicted within 7%.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>format</th>
+<th style="text-align: right;">measured mJ</th>
+<th style="text-align: right;">held-out prediction</th>
+<th style="text-align: right;">error</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>F16</td>
+<td style="text-align: right;">546.5</td>
+<td style="text-align: right;">637.0</td>
+<td style="text-align: right;">+16.6%</td>
+</tr>
+<tr>
+<td>Q8_0</td>
+<td style="text-align: right;">408.3</td>
+<td style="text-align: right;">397.4</td>
+<td style="text-align: right;">-2.7%</td>
+</tr>
+<tr>
+<td>Q6_K</td>
+<td style="text-align: right;">369.5</td>
+<td style="text-align: right;">356.8</td>
+<td style="text-align: right;">-3.4%</td>
+</tr>
+<tr>
+<td>Q5_K_M</td>
+<td style="text-align: right;">411.4</td>
+<td style="text-align: right;">334.0</td>
+<td style="text-align: right;">-18.8%</td>
+</tr>
+<tr>
+<td>Q4_K_M</td>
+<td style="text-align: right;">314.2</td>
+<td style="text-align: right;">329.3</td>
+<td style="text-align: right;">+4.8%</td>
+</tr>
+<tr>
+<td>Q4_0</td>
+<td style="text-align: right;">257.9</td>
+<td style="text-align: right;">333.2</td>
+<td style="text-align: right;">+29.2%</td>
+</tr>
+<tr>
+<td>Q3_K_M</td>
+<td style="text-align: right;">332.1</td>
+<td style="text-align: right;">309.5</td>
+<td style="text-align: right;">-6.8%</td>
+</tr>
+<tr>
+<td>Q2_K</td>
+<td style="text-align: right;">279.3</td>
+<td style="text-align: right;">302.6</td>
+<td style="text-align: right;">+8.4%</td>
+</tr>
+</tbody>
+</table>
+<h2 data-via>5. What the model cannot explain is the finding</h2>
+<p>The residuals are not noise. They repeat across both passes and they sort by format family:</p>
+<ul>
+<li><strong>Q4_0 costs 29% less</strong> than its bytes predict. It is the simplest format: one scale per block of 32 weights, no nested scales.</li>
+<li><strong>Q5_K_M costs 19% more.</strong> K-quants pack 5-bit values across bit planes with two levels of scales, and the 5-bit case is the awkward one to unpack.</li>
+<li><strong>F16 is over-predicted</strong> because it is the one format with no unpacking at all, so the constant e_tok, an average over formats that do unpack, overstates it.</li>
+</ul>
+<p>So a bytes-plus-idle model gets within about 7% for most formats, and the rest is the energy of the unpacking kernel, which is specific to each format. That is the next measurement: per-kernel energy, by timing and power-sampling the matrix-vector kernel of each format in isolation.</p>
+<h2 data-via>What to take from this</h2>
+<ol>
+<li>Decode is memory bound, and you can check it: measure the roof, count the real bytes, compare.</li>
+<li>Fewer bytes is not fewer joules, because unpacking costs energy per byte, and that cost differs by format.</li>
+<li>When a fitted coefficient is impossible, the model is unidentifiable, not the physics wrong. Measure one term directly.</li>
+</ol>
+<h2 data-via>Limits</h2>
+<p>One model size and one machine. The bandwidth roof is what MLX kernels reach, and llama.cpp's own kernels might reach slightly more. Eight points are few for a two-parameter fit, so the coefficients are indicative, and leave-one-out is the honest test of them.</p>
+<h2 data-via>Reproduce</h2>
+<pre><code class="language-bash">uv run --extra mlx python experiments/bandwidth.py results/bandwidth-m5pro.json
+uv run --with gguf python experiments/roofline.py results/roofline-1.5b.json
+uv run --with numpy python experiments/energy_model.py results/energy-model-1.5b.json
+</code></pre>
+<p class="source mono">Source, scripts and raw data: <a href="https://github.com/splicedso/joule/blob/main/notes/2026-10-roofline-and-energy-model.md">joule/notes/2026-10-roofline-and-energy-model.md</a></p>
+</article></main>
+
+<footer>
+  <div class="wrap">
+    <div class="titleblock mono" data-via>
+      <div><svg viewBox="0 0 500 659" aria-hidden="true"><path fill="currentColor" d="M0 192 L418 0 L418 205 L145 331 L145 449 L0 516 Z M197 385 L500 246 L500 520 L197 659 Z"/></svg><span><span class="k">Title</span>N2 &middot; Where the joules go: a roofline and an energy model for decode</span></div>
+      <div><span class="k">Drawn</span>2026-10</div>
+      <div><span class="k">Sheet</span>6 of 6</div>
+      <div><span class="k">Source</span><a href="https://github.com/splicedso">github.com/splicedso</a></div>
+    </div>
+  </div>
+</footer>
+
+<script src="../../assets/site.js?v=202610240046"></script>
+<script src="../../assets/charts.js?v=202610240046"></script>
+</body>
+</html>

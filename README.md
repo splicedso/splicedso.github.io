@@ -1,14 +1,15 @@
 # splicedso.github.io
 
-The Spliced site. Static HTML, no build step.
-
-- `index.html`: the page. The hero trace replays `assets/trace.json`, a real recording made with [joule](https://github.com/splicedso/joule).
-- `brand/`: the mark in every variant, generated from one geometry by `brand/build.py`, plus the LinkedIn banner.
-- `render/`: Blender scenes for the brand films (not used on the current page). Rebuild with Blender 5.2 and ffmpeg:
+The Spliced site: a static, multi-page site with no framework.
 
 ```bash
-blender --background --factory-startup --python render/mark.py -- "$PWD/render/frames-mark/"
-ffmpeg -framerate 30 -i render/frames-mark/%04d.png -c:v libx264 -pix_fmt yuv420p -crf 20 assets/hero.mp4
+uv run --with markdown python build.py
 ```
 
-Preview locally with `python3 -m http.server`.
+`build.py` renders `src/pages/*` into `src/base.html`, turns each research note in the sibling `joule/notes` checkout into a page (a `<!-- chart:NAME -->` line becomes that interactive figure), and writes `assets/data.json` from `joule/results`, so the charts cannot drift from the measurements. Commit the built output; GitHub Pages serves the repository as is.
+
+- `src/`: page sources, `style.css` (light and dark themes from one set of tokens), `site.js` (theme toggle, the gutter bus), `home.js` (token replay, live schematic), `charts.js` (research figures).
+- `brand/`: the mark in every variant, generated from one geometry by `brand/build.py`, plus the LinkedIn banner.
+- `render/`: Blender scenes for the brand films (not used on the current pages).
+
+Preview with `python3 -m http.server`.

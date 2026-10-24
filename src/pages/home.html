@@ -1,0 +1,73 @@
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="refdes mono" data-via><b>U0</b> Spliced &middot; Efficient inference</span>
+      <h1 id="h1" aria-label="What does a token cost?"></h1>
+      <p class="lede" id="lede" aria-label="Spliced works on efficient inference. We start by measuring it: at the chip and at the board, with prefill and decode reported apart."></p>
+      <p class="meter mono" aria-hidden="true"><span id="m-tok">0</span> tokens &middot; <span id="m-j">0.00</span> J on the chip &middot; Qwen2.5 1.5B on an M5 Pro, replayed at 1/30 speed</p>
+    </div>
+
+    <figure class="schem" aria-label="Schematic of where a token's energy goes, animated from a real power recording">
+      <div class="schem-head mono"><span>SHEET 1 &middot; power path of one token</span><span>t <b id="rt">0.0</b> s &middot; <b id="rp">idle</b></span></div>
+      <svg id="schem" viewBox="0 0 560 310"></svg>
+      <canvas id="scope" aria-hidden="true"></canvas>
+      <div class="schem-foot mono"><span>TP1 board <b id="rs">0.0</b> W</span><span>TP2 chip <b id="rc">0.0</b> W</span><span>recorded with joule</span></div>
+    </figure>
+  </div>
+</header>
+
+<main>
+  <section>
+    <div class="wrap">
+      <div class="label"><span class="refdes mono" data-via><b>J1</b> The lab</span></div>
+      <div class="cols">
+        <h2>The engineering side of the AI build-out, measured.</h2>
+        <div class="prose">
+          <p>Spliced is a small research lab. We study what it costs to run a model, in watts and joules as well as seconds, from one laptop up to how inference clusters are designed.</p>
+          <p>Every result ships with its method, its code and its raw data, and every note says what it cannot show.</p>
+        </div>
+      </div>
+      <div class="areas">
+        <a class="area" href="research/"><span class="mono">A1</span><h3>Inference engineering</h3><p>Where decode time and energy go: memory bandwidth, kernels, quantization formats, batching, the KV cache, serving at cluster scale.</p></a>
+        <a class="area" href="research/"><span class="mono">A2</span><h3>Data science</h3><p>Measurement you can trust: repeated runs, held-out validation, and models whose coefficients have to make physical sense.</p></a>
+        <a class="area" href="tools/joule/"><span class="mono">A3</span><h3>Software engineering</h3><p>The tools that make the measurements repeatable, open source, small enough to read in one sitting.</p></a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="label"><span class="refdes mono" data-via><b>J2</b> Findings so far</span></div>
+      <div class="facts">
+        <div class="fact"><span class="mono">TP1 / TP2, F16 vs Q4_0</span><div class="n">2.1<small>&times;</small></div><p>what full precision really costs over 4-bit at the board. Measured at the chip alone, the two look the same: the memory energy is invisible there.</p></div>
+        <div class="fact"><span class="mono">batch 1 &rarr; 8, Q4_0</span><div class="n">72<small>%</small></div><p>less energy per token from serving eight requests at once. Batch 2 saves 1%: the GPU reaches its power ceiling at the second sequence.</p></div>
+        <div class="fact"><span class="mono">F16 decode / roof</span><div class="n">97<small>%</small></div><p>of the measured 266 GB/s memory bandwidth. Decode is memory bound, and each step down in bits uses less of the roof.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="label"><span class="refdes mono" data-via><b>J3</b> Notes</span></div>
+      <h2>Published research.</h2>
+      {{notes}}
+      <a class="cta" href="research/">All research <span aria-hidden="true">&rarr;</span></a>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap cols">
+      <div>
+        <div class="label"><span class="refdes mono" data-via><b>J4</b> In progress</span></div>
+        <h2>On the bench now.</h2>
+      </div>
+      <ol class="steps">
+        <li><div><b>A 7B model and MLX.</b> The format study on a model five times larger, and on Apple's own runtime.</div></li>
+        <li><div><b>A second machine.</b> The same study on a Windows laptop, to see which findings are Apple Silicon and which are physics.</div></li>
+        <li><div><b>Per-kernel energy.</b> Each format's matrix-vector kernel timed and power-sampled alone, to explain what the energy model cannot.</div></li>
+        <li><div><b>Cluster design.</b> Tokens per megawatt-hour across GPU generations, from public specs and a roofline, checked against published benchmarks.</div></li>
+        <li><div><b>Speculative decoding.</b> Does a draft model save joules, or only seconds?</div></li>
+      </ol>
+    </div>
+  </section>
+</main>

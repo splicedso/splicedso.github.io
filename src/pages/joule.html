@@ -1,0 +1,51 @@
+<header class="page-head">
+  <div class="wrap">
+    <span class="refdes mono" data-via><b>T1</b> Tools / joule</span>
+    <h1>joule</h1>
+    <p class="lede">Energy per token for local LLM inference, measured at the chip and at the board, with prefill and decode reported apart. No sudo, no extra hardware.</p>
+    <a class="cta" href="https://github.com/splicedso/joule">github.com/splicedso/joule <span aria-hidden="true">&rarr;</span></a>
+  </div>
+</header>
+
+<main>
+  <section class="tight">
+    <div class="wrap cols">
+      <div>
+        <div class="label"><span class="refdes mono" data-via><b>T2</b> Method</span></div>
+        <h2>Small enough to read in one sitting.</h2>
+        <pre><span class="c"># brew install macmon llama.cpp</span>
+uv run joule model.gguf --out results/run.json</pre>
+      </div>
+      <ol class="steps">
+        <li><div><b>Two test points.</b> TP2 is the chip, sampled every 100 to 200 ms. TP1 is the board's DC input, which includes memory, smoothed to about 1 Hz and so only used over long windows.</div></li>
+        <li><div><b>Baseline first.</b> Idle power before anything runs, so every figure can be reported gross and net.</div></li>
+        <li><div><b>Phases apart.</b> Prefill (512 prompt tokens) and decode (128 generated tokens) run as separate tests.</div></li>
+        <li><div><b>Sized runs.</b> A short probe sets the repetition count so each phase has about twenty timed seconds.</div></li>
+        <li><div><b>Steady window only.</b> The first quarter of the compute window is dropped for clock ramp and sensor lag.</div></li>
+        <li><div><b>Watts over throughput.</b> Mean power across the window divided by measured tokens per second gives joules per token.</div></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="tight">
+    <div class="wrap">
+      <div class="label"><span class="refdes mono" data-via><b>T3</b> Baseline results</span></div>
+      <div class="table" id="bars">
+        <div class="row head mono"><span>model</span><span>phase</span><span class="bar-h">millijoules per token, chip and board</span><span class="v">tok/s &middot; chip / board</span></div>
+      </div>
+      <div class="key mono"><span><i></i>TP2 chip</span><span><i class="board"></i>TP1 board DC input</span></div>
+      <p class="note">Apple M5 Pro, 24 GB, on AC power, llama.cpp build 11669, Q4_K_M, all layers on the GPU. The 7B rows are a single run.</p>
+    </div>
+  </section>
+
+  <section class="tight">
+    <div class="wrap">
+      <div class="label"><span class="refdes mono" data-via><b>T4</b> Limits</span></div>
+      <div class="limits">
+        <div><h3>Not wall power</h3><p>TP1 is DC input as the SMC reports it. It leaves out the adapter's own loss.</p></div>
+        <div><h3>Apple Silicon first</h3><p>macOS today. A Windows backend, reading battery discharge and GPU power, is being written.</p></div>
+        <div><h3>Laptop, not bench</h3><p>Runs happen on a working machine. Every note repeats its runs and reports how far they agree.</p></div>
+      </div>
+    </div>
+  </section>
+</main>

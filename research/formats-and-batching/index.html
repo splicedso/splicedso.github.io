@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fewer bits is not fewer joules &middot; Spliced</title>
+<meta name="description" content="Eight quantization formats and batch sizes 1 to 8, energy at the chip and at the board. Chip-only measurement misranks F16 by 2x; batch 2 saves 1% per token and batch 8 saves 72%.">
+<meta property="og:title" content="Fewer bits is not fewer joules &middot; Spliced">
+<meta property="og:description" content="Eight quantization formats and batch sizes 1 to 8, energy at the chip and at the board. Chip-only measurement misranks F16 by 2x; batch 2 saves 1% per token and batch 8 saves 72%.">
+<meta property="og:image" content="https://splicedso.github.io/assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>try { const t = localStorage.getItem("theme"); if (t) document.documentElement.dataset.theme = t; } catch {}</script>
+<link rel="stylesheet" href="../../assets/style.css?v=202610240046">
+</head>
+<body data-root="../../" data-page="research">
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="../../" aria-label="Spliced home">
+      <svg viewBox="0 0 500 659" aria-hidden="true"><path fill="currentColor" d="M0 192 L418 0 L418 205 L145 331 L145 449 L0 516 Z M197 385 L500 246 L500 520 L197 659 Z"/></svg>
+      Spliced
+    </a>
+    <div class="nav-right">
+      <ul>
+        <li><a href="../../research/" data-nav="research">Research</a></li>
+        <li><a href="../../tools/joule/" data-nav="tools">Tools</a></li>
+        <li><a href="../../lab/" data-nav="lab">Lab</a></li>
+        <li><a href="https://github.com/splicedso">GitHub</a></li>
+      </ul>
+      <button class="theme" id="theme" type="button" aria-label="Dark mode" aria-pressed="false">
+        <svg class="moon" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M10.5 1.5a6.5 6.5 0 1 0 4 11.6A7 7 0 0 1 10.5 1.5Z"/></svg>
+        <svg class="sun" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="3.2" fill="currentColor"/><path stroke="currentColor" stroke-width="1.4" stroke-linecap="round" d="M8 1v1.6M8 13.4V15M1 8h1.6M13.4 8H15M3 3l1.1 1.1M11.9 11.9 13 13M3 13l1.1-1.1M11.9 4.1 13 3"/></svg>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<svg id="bus" aria-hidden="true"></svg>
+
+<header class="page-head">
+  <div class="wrap">
+    <span class="refdes mono" data-via><b>N1</b> Research note &middot; 24 October 2026</span>
+    <h1>Fewer bits is not fewer joules</h1>
+    <p class="lede">Spliced research note 1, 24 October 2026. Apple M5 Pro, 24 GB, macOS on AC, llama.cpp build 11669 (Homebrew), Metal, all layers on the GPU.</p>
+  </div>
+</header>
+<main><article class="wrap note-body"><h2 data-via>Question</h2>
+<p>Does a lower-bit format cost less energy per decoded token on unified memory, and how much does serving several sequences at once save? Prior Apple Silicon energy work measures one format (Q4) with powermetrics, chip only, at about 2 s resolution, and names DRAM as the part it cannot see. Profiling work on Apple quantization reports latency, not energy. We measure both the chip (200 ms or faster) and the board's DC input, without sudo.</p>
+<h2 data-via>Method</h2>
+<ul>
+<li>One model, Qwen2.5 1.5B Instruct, quantized from the same F16 GGUF with <code>llama-quantize</code> (no importance matrix) into Q2_K, Q3_K_M, Q4_0, Q4_K_M, Q5_K_M, Q6_K, Q8_0, plus F16.</li>
+<li>Energy: <code>joule</code> (this repository). Decode is 128 generated tokens per repetition, about 15 timed seconds per format, first quarter of the window dropped, idle baseline taken first. Two full passes, the second in reverse order to expose drift and order effects.</li>
+<li>Quality: <code>llama-perplexity</code> on the WikiText-2 raw test set, 512-token context, 60 chunks.</li>
+<li>Batching: <code>experiments/batching.py</code> runs <code>llama-batched-bench</code> (64 prompt tokens, 512 generated per sequence) at batch 1 to 8, three passes, and aligns each decode window to the power samples. Chip power only, since the board reading is smoothed to about 1 Hz.</li>
+</ul>
+<h2 data-via>Results: formats, batch 1</h2>
+<table>
+<thead>
+<tr>
+<th>format</th>
+<th style="text-align: right;">perplexity</th>
+<th style="text-align: right;">chip mJ/tok</th>
+<th style="text-align: right;">board mJ/tok</th>
+<th style="text-align: right;">tok/s</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>F16</td>
+<td style="text-align: right;">9.63</td>
+<td style="text-align: right;">134.6</td>
+<td style="text-align: right;">546.5</td>
+<td style="text-align: right;">84</td>
+</tr>
+<tr>
+<td>Q8_0</td>
+<td style="text-align: right;">9.63</td>
+<td style="text-align: right;">154.1</td>
+<td style="text-align: right;">408.3</td>
+<td style="text-align: right;">142</td>
+</tr>
+<tr>
+<td>Q6_K</td>
+<td style="text-align: right;">9.65</td>
+<td style="text-align: right;">152.2</td>
+<td style="text-align: right;">369.5</td>
+<td style="text-align: right;">171</td>
+</tr>
+<tr>
+<td>Q5_K_M</td>
+<td style="text-align: right;">9.70</td>
+<td style="text-align: right;">196.8</td>
+<td style="text-align: right;">411.4</td>
+<td style="text-align: right;">178</td>
+</tr>
+<tr>
+<td>Q4_K_M</td>
+<td style="text-align: right;">10.01</td>
+<td style="text-align: right;">134.0</td>
+<td style="text-align: right;">314.2</td>
+<td style="text-align: right;">205</td>
+</tr>
+<tr>
+<td>Q4_0</td>
+<td style="text-align: right;">10.09</td>
+<td style="text-align: right;">98.7</td>
+<td style="text-align: right;">257.9</td>
+<td style="text-align: right;">214</td>
+</tr>
+<tr>
+<td>Q3_K_M</td>
+<td style="text-align: right;">10.76</td>
+<td style="text-align: right;">160.8</td>
+<td style="text-align: right;">332.1</td>
+<td style="text-align: right;">205</td>
+</tr>
+<tr>
+<td>Q2_K</td>
+<td style="text-align: right;">15.90</td>
+<td style="text-align: right;">133.2</td>
+<td style="text-align: right;">279.3</td>
+<td style="text-align: right;">228</td>
+</tr>
+</tbody>
+</table>
+<p>Energy is the mean of two passes, which agreed within 4% for every format. Perplexity standard errors are about 0.21.</p>
+<ol>
+<li><strong>Energy does not fall with bit width.</strong> Chip energy ranges from 98.7 (Q4_0) to 196.8 mJ (Q5_K_M), in no order of bits.</li>
+<li><strong>Chip-only measurement misranks F16.</strong> On the chip F16 matches Q4_K_M, because the GPU draws only about 11 W while it waits on memory. At the board F16 is the most expensive format, 2.1 times Q4_0. The memory traffic is real energy that a package measurement does not see.</li>
+<li><strong>Q4_0 is the efficient 4-bit format here.</strong> Its perplexity is within error of Q4_K_M at 18% less board energy and 26% less chip energy, at the same speed. The formats nothing else beats on both quality and board energy are Q4_0, Q4_K_M, Q6_K and Q8_0. Q5_K_M, Q3_K_M and Q2_K are each beaten on both.</li>
+</ol>
+<figure class="chart" id="fmt">
+  <div class="chart-bar mono"><span>Decode energy against perplexity, eight formats</span>
+    <span class="toggle" role="group" aria-label="Measurement point"><button data-v="board" aria-pressed="true">TP1 board</button><button data-v="soc" aria-pressed="false">TP2 chip only</button></span></div>
+  <svg viewBox="0 0 1000 440" role="img" aria-label="Decode energy per token against perplexity for eight quantization formats"></svg>
+  <figcaption class="mono">x: millijoules per decoded token. y: WikiText-2 perplexity, lower is better, so better is higher. The dashed line joins the formats nothing else beats on both. Toggle the test point to see how chip-only measurement moves every format.</figcaption>
+</figure>
+
+<h2 data-via>Results: batching</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">batch</th>
+<th style="text-align: right;">Q4_0 chip mJ/tok</th>
+<th style="text-align: right;">Q4_0 GPU W</th>
+<th style="text-align: right;">Q4_K_M chip mJ/tok</th>
+<th style="text-align: right;">Q4_K_M GPU W</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">104.7</td>
+<td style="text-align: right;">17.9</td>
+<td style="text-align: right;">135.6</td>
+<td style="text-align: right;">24.4</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">103.3</td>
+<td style="text-align: right;">32.7</td>
+<td style="text-align: right;">120.9</td>
+<td style="text-align: right;">36.4</td>
+</tr>
+<tr>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">54.3</td>
+<td style="text-align: right;">33.3</td>
+<td style="text-align: right;">62.0</td>
+<td style="text-align: right;">35.0</td>
+</tr>
+<tr>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">29.3</td>
+<td style="text-align: right;">33.2</td>
+<td style="text-align: right;">33.7</td>
+<td style="text-align: right;">34.6</td>
+</tr>
+</tbody>
+</table>
+<figure class="chart" id="bat">
+  <div class="chart-bar mono"><span>Decode energy per token and GPU power, by batch size</span><span id="bat-read">batch 1</span></div>
+  <svg viewBox="0 0 1000 380" role="img" aria-label="Energy per token falls with batch size while GPU power plateaus from batch 2"></svg>
+  <figcaption class="mono">Lines: chip millijoules per token, Q4_0 solid and Q4_K_M dashed. Columns: GPU watts for Q4_0. Mean of three runs. Hover or tap a column.</figcaption>
+</figure>
+
+<p>GPU power is a step, not a ramp. At batch 1 the GPU is memory-bound and draws 18 to 24 W. At batch 2 it reaches its ceiling and stays there through batch 8, while throughput keeps rising. So the second sequence pays for nearly the whole power step: batch 2 saves 1% per token on Q4_0. Batch 8 saves 72%.</p>
+<p>We first suspected llama.cpp's Metal kernel selection: its small-batch matrix-vector kernel covers batch 2 to 8 for Q4_0 but only 4 to 8 for K-quants (<code>ggml-metal-ops.cpp</code>). Q4_0 shows the same flat step at batch 2 despite getting that kernel, so the selection does not explain it. The GPU clock read 1620 MHz throughout, so frequency scaling does not either.</p>
+<h2 data-via>Limits</h2>
+<ul>
+<li>One machine, one model size, one runtime. The format ranking may change with model size, with MLX, and on other chips.</li>
+<li>Board power is DC input reported by the SMC, not wall power, and is smoothed. It is only used over windows of 10 s or more.</li>
+<li>Perplexity on WikiText-2 is a proxy for quality, not a task score.</li>
+<li>The machine was a working laptop, not a thermally settled bench. Repeat runs agreed within 4%.</li>
+</ul>
+<h2 data-via>Reproduce</h2>
+<pre><code class="language-bash">brew install macmon llama.cpp
+uv run joule models/quant/1.5b-*.gguf --seconds 15 --out results/run.json
+uv run python experiments/batching.py model.gguf results/batch.json 1,2,3,4,5,6,7,8
+</code></pre>
+<p>Raw results: <code>results/quant-energy-1.5b*.json</code>, <code>results/quant-ppl-1.5b.txt</code>, <code>results/batching-gpu-1.5b-*.json</code>.</p>
+<p class="source mono">Source, scripts and raw data: <a href="https://github.com/splicedso/joule/blob/main/notes/2026-10-formats-and-batching.md">joule/notes/2026-10-formats-and-batching.md</a></p>
+</article></main>
+
+<footer>
+  <div class="wrap">
+    <div class="titleblock mono" data-via>
+      <div><svg viewBox="0 0 500 659" aria-hidden="true"><path fill="currentColor" d="M0 192 L418 0 L418 205 L145 331 L145 449 L0 516 Z M197 385 L500 246 L500 520 L197 659 Z"/></svg><span><span class="k">Title</span>N1 &middot; Fewer bits is not fewer joules</span></div>
+      <div><span class="k">Drawn</span>2026-10</div>
+      <div><span class="k">Sheet</span>5 of 6</div>
+      <div><span class="k">Source</span><a href="https://github.com/splicedso">github.com/splicedso</a></div>
+    </div>
+  </div>
+</footer>
+
+<script src="../../assets/site.js?v=202610240046"></script>
+<script src="../../assets/charts.js?v=202610240046"></script>
+</body>
+</html>
