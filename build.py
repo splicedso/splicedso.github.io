@@ -63,6 +63,9 @@ NOTES = [
     {"slug": "context-depth", "file": "2026-10-windows-context.md", "n": 13,
      "summary": "What a long context costs per token on an RTX 5070 Ti: 1.3 times at 16k, too little to explain the datacenter's "
                 "60 times. And an 8-bit KV cache costs more energy, not less, when the full one already fits."},
+    {"slug": "batching-and-context", "file": "2026-10-windows-batch-context.md", "n": 14,
+     "summary": "Does a long context spend the batching saving? Not while the cache fits: batch 8 keeps 72 to 76% of its "
+                "energy saving at 4096 tokens, against 75 to 79% at 64. Note 8's 60 times needs memory to run out."},
 ]
 
 FIGURES = {
