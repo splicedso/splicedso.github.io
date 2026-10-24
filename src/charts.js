@@ -9,6 +9,7 @@ fetch(ROOT + "assets/data.json").then(r => r.json()).then(D => {
   rooflineChart(D.roofline);
   twoChart(D.two);
   kernChart(D.kernels);
+  widthChart(D.width);
 });
 
 function resultsBars(rows) {
@@ -214,6 +215,60 @@ function kernChart(rows) {
   new IntersectionObserver((es, o) => {
     if (!es[0].isIntersecting) return;
     bars.forEach(([b, w], i) => setTimeout(() => b.setAttribute("width", Math.max(0, w)), reduced ? 0 : 40 * i));
+    o.disconnect();
+  }, { threshold: .3 }).observe(svg);
+}
+
+// Board energy per weight against model width, one line per format. Lines draw in from the
+// left as the chart scrolls into view; hover a width to read every format at it.
+function widthChart(rows) {
+  const svg = document.querySelector("#width svg");
+  if (!svg) return;
+  const read = document.getElementById("width-read");
+  const W = 1000, H = 400, L = 56, R = 110, T = 20, B = 40;
+  const sizes = ["0.5b", "1.5b", "3b", "7b"], fmts = ["Q4_0", "Q4_K_M", "Q5_K_M", "Q6_K", "Q8_0"];
+  const dash = { Q4_0: "", Q4_K_M: "6 4", Q5_K_M: "2 4", Q6_K: "10 3 2 3", Q8_0: "1 3" };
+  const X = i => L + i * (W - L - R) / (sizes.length - 1);
+  const Y = v => H - B - (v - 100) / 250 * (H - T - B);
+  for (const v of [100, 150, 200, 250, 300, 350]) {
+    el("line", { x1: L, x2: W - R, y1: Y(v), y2: Y(v), class: "gridline" }, svg);
+    el("text", { x: L - 10, y: Y(v) + 4, "text-anchor": "end" }, svg).textContent = v;
+  }
+  el("text", { x: L - 10, y: T - 6, "text-anchor": "end" }, svg).textContent = "pJ/weight";
+  sizes.forEach((s, i) => el("text", { x: X(i), y: H - B + 22, "text-anchor": "middle" }, svg).textContent = s.toUpperCase());
+  const paths = fmts.map(f => {
+    const pts = sizes.map((s, i) => [X(i), Y(rows.find(r => r.size === s && r.format === f).board_pj_per_weight)]);
+    const p = el("path", { d: pts.map((p, i) => (i ? "L" : "M") + p.join(" ")).join(" "), class: "ink-line",
+                           "stroke-width": f === "Q4_0" ? 2.4 : 1.5, "stroke-dasharray": dash[f] }, svg);
+    const last = pts[pts.length - 1];
+    el("text", { x: last[0] + 10, y: last[1] + 4, class: "lbl" }, svg).textContent = f;
+    return p;
+  });
+  const cur = el("line", { y1: T, y2: H - B, class: "ink-line", opacity: .35 }, svg);
+  function focus(i) {
+    cur.setAttribute("x1", X(i)); cur.setAttribute("x2", X(i));
+    read.textContent = sizes[i].toUpperCase() + "  " + fmts.map(f =>
+      `${f} ${rows.find(r => r.size === sizes[i] && r.format === f).board_pj_per_weight.toFixed(0)}`).join("  ");
+  }
+  sizes.forEach((s, i) => {
+    const hit = el("rect", { x: X(i) - 40, y: T, width: 80, height: H - T - B, fill: "transparent" }, svg);
+    hit.addEventListener("pointerenter", () => focus(i));
+  });
+  focus(0);
+  // Draw each line in, as a pen would.
+  for (const p of paths) {
+    const len = p.getTotalLength();
+    p.style.strokeDashoffset = 0;
+    if (reduced || p.getAttribute("stroke-dasharray")) continue;
+    p.style.strokeDasharray = len;
+    p.style.strokeDashoffset = len;
+  }
+  new IntersectionObserver((es, o) => {
+    if (!es[0].isIntersecting) return;
+    paths.forEach((p, i) => setTimeout(() => {
+      p.style.transition = "stroke-dashoffset 1.4s cubic-bezier(.2,.7,.1,1)";
+      p.style.strokeDashoffset = 0;
+    }, 120 * i));
     o.disconnect();
   }, { threshold: .3 }).observe(svg);
 }

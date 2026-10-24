@@ -20,7 +20,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>try { const t = localStorage.getItem("theme"); if (t) document.documentElement.dataset.theme = t; } catch {}</script>
-<link rel="stylesheet" href="assets/style.css?v=202610240154">
+<link rel="stylesheet" href="assets/style.css?v=202610240245">
 </head>
 <body data-root="" data-page="home">
 <a class="skip" href="#content">Skip to content</a>
@@ -101,7 +101,7 @@
     <div class="wrap">
       <div class="label"><span class="refdes mono" data-via><b>J3</b> Notes</span></div>
       <h2>Published research.</h2>
-      <div class="notes"><a class="note-card" href="research/kernel-energy/"><span class="mono">N5 &middot; 24 October 2026</span><h3>The cost of unpacking</h3><p>Each format's matrix-vector kernel measured alone. Q4_0 and Q4_K read identical bytes at identical speed; Q4_K's unpacking costs 40% more chip energy. Explains note 2's largest residual and corrects its roof.</p><span class="mono go">Read note &rarr;</span></a><a class="note-card" href="research/two-machines/"><span class="mono">N4 &middot; 24 October 2026</span><h3>Two machines, one token</h3><p>The study on a Windows laptop with an RTX 5070 Ti, on battery. Q4_0 wins on both machines and a 4-bit token costs the same whole-machine energy on both; one Mac finding does not transfer.</p><span class="mono go">Read note &rarr;</span></a><a class="note-card" href="research/scale-and-runtime/"><span class="mono">N3 &middot; 24 October 2026</span><h3>Does it hold? A model five times larger, and a second runtime</h3><p>The format study at 7B, where every finding replicates and the hardware is used better, and in MLX, where repeat runs do not yet agree, so only claims that survive both passes are made.</p><span class="mono go">Read note &rarr;</span></a><a class="note-card" href="research/roofline-and-energy-model/"><span class="mono">N2 &middot; 24 October 2026</span><h3>Where the joules go: a roofline and an energy model for decode</h3><p>A decode roofline from measured bandwidth, and a validated energy model whose residuals isolate the cost of unpacking each format. Two wrong first attempts, kept in.</p><span class="mono go">Read note &rarr;</span></a><a class="note-card" href="research/formats-and-batching/"><span class="mono">N1 &middot; 24 October 2026</span><h3>Fewer bits is not fewer joules</h3><p>Eight quantization formats and batch sizes 1 to 8, energy at the chip and at the board. Chip-only measurement misranks F16 by 2x; batch 2 saves 1% per token and batch 8 saves 72%.</p><span class="mono go">Read note &rarr;</span></a></div>
+      <div class="notes"><a class="note-card" href="research/model-width/"><span class="mono">N6 &middot; 24 October 2026</span><h3>Small models pay more per weight</h3><p>Five formats across four model sizes. A weight in a 0.5B model costs up to 1.6 times one in a 7B; Q4_0 is cheapest at every width; the Q5_K_M against Q6_K order flips with width.</p><span class="mono go">Read note &rarr;</span></a><a class="note-card" href="research/kernel-energy/"><span class="mono">N5 &middot; 24 October 2026</span><h3>The cost of unpacking</h3><p>Each format's matrix-vector kernel measured alone. Q4_0 and Q4_K read identical bytes at identical speed; Q4_K's unpacking costs 40% more chip energy. Explains note 2's largest residual and corrects its roof.</p><span class="mono go">Read note &rarr;</span></a><a class="note-card" href="research/two-machines/"><span class="mono">N4 &middot; 24 October 2026</span><h3>Two machines, one token</h3><p>The study on a Windows laptop with an RTX 5070 Ti, on battery. Q4_0 wins on both machines and a 4-bit token costs the same whole-machine energy on both; one Mac finding does not transfer.</p><span class="mono go">Read note &rarr;</span></a><a class="note-card" href="research/scale-and-runtime/"><span class="mono">N3 &middot; 24 October 2026</span><h3>Does it hold? A model five times larger, and a second runtime</h3><p>The format study at 7B, where every finding replicates and the hardware is used better, and in MLX, where repeat runs do not yet agree, so only claims that survive both passes are made.</p><span class="mono go">Read note &rarr;</span></a><a class="note-card" href="research/roofline-and-energy-model/"><span class="mono">N2 &middot; 24 October 2026</span><h3>Where the joules go: a roofline and an energy model for decode</h3><p>A decode roofline from measured bandwidth, and a validated energy model whose residuals isolate the cost of unpacking each format. Two wrong first attempts, kept in.</p><span class="mono go">Read note &rarr;</span></a><a class="note-card" href="research/formats-and-batching/"><span class="mono">N1 &middot; 24 October 2026</span><h3>Fewer bits is not fewer joules</h3><p>Eight quantization formats and batch sizes 1 to 8, energy at the chip and at the board. Chip-only measurement misranks F16 by 2x; batch 2 saves 1% per token and batch 8 saves 72%.</p><span class="mono go">Read note &rarr;</span></a></div>
       <a class="cta" href="research/">All research <span aria-hidden="true">&rarr;</span></a>
     </div>
   </section>
@@ -114,7 +114,7 @@
       </div>
       <ol class="steps">
         <li><div><b>MLX repeatability.</b> Why two MLX passes disagree by up to 17% when llama.cpp repeats within 2%.</div></li>
-                <li><div><b>Matrix shape.</b> Where fixed per-kernel costs take over from bytes, sweeping the matrix size from phone-sized models to 70B layers.</div></li>
+                <li><div><b>Model shape.</b> Separating width from depth and vocabulary, to pin the small-model penalty on what actually causes it.</div></li>
         <li><div><b>Cluster design.</b> Tokens per megawatt-hour across GPU generations, from public specs and a roofline, checked against published benchmarks.</div></li>
         <li><div><b>Speculative decoding.</b> Does a draft model save joules, or only seconds?</div></li>
       </ol>
@@ -129,13 +129,13 @@
     <div class="titleblock mono" data-via>
       <div><svg viewBox="0 0 500 659" aria-hidden="true"><path fill="currentColor" d="M0 192 L418 0 L418 205 L145 331 L145 449 L0 516 Z M197 385 L500 246 L500 520 L197 659 Z"/></svg><span><span class="k">Title</span>Spliced &middot; Efficient inference</span></div>
       <div><span class="k">Drawn</span>2026-10</div>
-      <div><span class="k">Sheet</span>1 of 9</div>
+      <div><span class="k">Sheet</span>1 of 10</div>
       <div><span class="k">Source</span><a href="https://github.com/splicedso">github.com/splicedso</a></div>
     </div>
   </div>
 </footer>
 
-<script src="assets/site.js?v=202610240154"></script>
-<script src="assets/home.js?v=202610240154"></script>
+<script src="assets/site.js?v=202610240245"></script>
+<script src="assets/home.js?v=202610240245"></script>
 </body>
 </html>

@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Small models pay more per weight &middot; Spliced</title>
+<meta name="description" content="Five formats across four model sizes. A weight in a 0.5B model costs up to 1.6 times one in a 7B; Q4_0 is cheapest at every width; the Q5_K_M against Q6_K order flips with width.">
+<meta property="og:title" content="Small models pay more per weight &middot; Spliced">
+<meta property="og:description" content="Five formats across four model sizes. A weight in a 0.5B model costs up to 1.6 times one in a 7B; Q4_0 is cheapest at every width; the Q5_K_M against Q6_K order flips with width.">
+<meta property="og:image" content="https://splicedso.github.io/assets/og.png">
+<meta property="og:url" content="https://splicedso.github.io/research/model-width/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Spliced">
+<link rel="canonical" href="https://splicedso.github.io/research/model-width/">
+<meta name="color-scheme" content="light dark">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>try { const t = localStorage.getItem("theme"); if (t) document.documentElement.dataset.theme = t; } catch {}</script>
+<link rel="stylesheet" href="../../assets/style.css?v=202610240245">
+</head>
+<body data-root="../../" data-page="research">
+<a class="skip" href="#content">Skip to content</a>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="../../" aria-label="Spliced home">
+      <svg viewBox="0 0 500 659" aria-hidden="true"><path fill="currentColor" d="M0 192 L418 0 L418 205 L145 331 L145 449 L0 516 Z M197 385 L500 246 L500 520 L197 659 Z"/></svg>
+      Spliced
+    </a>
+    <div class="nav-right">
+      <ul>
+        <li><a href="../../research/" data-nav="research">Research</a></li>
+        <li><a href="../../tools/joule/" data-nav="tools">Tools</a></li>
+        <li><a href="../../lab/" data-nav="lab">Lab</a></li>
+        <li><a href="https://github.com/splicedso">GitHub</a></li>
+      </ul>
+      <button class="theme" id="theme" type="button" aria-label="Dark mode" aria-pressed="false">
+        <svg class="moon" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M10.5 1.5a6.5 6.5 0 1 0 4 11.6A7 7 0 0 1 10.5 1.5Z"/></svg>
+        <svg class="sun" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="3.2" fill="currentColor"/><path stroke="currentColor" stroke-width="1.4" stroke-linecap="round" d="M8 1v1.6M8 13.4V15M1 8h1.6M13.4 8H15M3 3l1.1 1.1M11.9 11.9 13 13M3 13l1.1-1.1M11.9 4.1 13 3"/></svg>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<svg id="bus" aria-hidden="true"></svg>
+
+<div id="content">
+<header class="page-head">
+  <div class="wrap">
+    <span class="refdes mono" data-via><b>N6</b> Research note &middot; 24 October 2026</span>
+    <h1>Small models pay more per weight</h1>
+    <p class="lede">Spliced research note 6, 24 October 2026. Apple M5 Pro, 24 GB, llama.cpp build 11669. Qwen2.5 0.5B, 1.5B, 3B and 7B, five formats each.</p>
+  </div>
+</header>
+<main><article class="wrap note-body"><p>Note 3 saw the 7B model use the memory system better than the 1.5B. Note 5 measured each format's kernel at one large matrix size and found Q5_K and Q6_K cost the same per weight, which left open why their order changes between models and between machines. This note sweeps model width to answer both: how much does matrix size matter, and where does it change the ranking?</p>
+<h2 data-via>Why real models, not one matrix</h2>
+<p>The obvious instrument, one matrix-vector kernel at several sizes, is the wrong one here. A 1536 x 1536 matrix is 1.3 to 4.7 MB depending on format. Repeated in a loop, it stays in the chip's cache, and the benchmark measures cache bandwidth, not memory: a first test reported 288 GB/s for it. Real decode streams every layer's weights once per token, far more than any cache holds.</p>
+<p>So the sweep uses real models whose layers have different widths: Qwen2.5 0.5B, 1.5B, 3B and 7B, with hidden sizes 896, 1536, 2048 and 3584. Each was quantized from its own F16 GGUF into Q4_0, Q4_K_M, Q5_K_M, Q6_K and Q8_0, and decoded with <code>joule --seconds 12</code>, two passes, the second in reverse order. 18 of the 20 models repeated within 3% at the board; the 0.5B Q4_0 and Q4_K_M, which decode fastest and so have the shortest windows, repeated within 8% and 5%.</p>
+<p>To compare models of different sizes, energy per token is divided by the weights read per token (every tensor except the token embedding table), giving <strong>energy per weight</strong>. Share of roof uses the 307 GB/s from note 5.</p>
+<h2 data-via>Results</h2>
+<p>Board energy per weight, picojoules, mean of two passes:</p>
+<table>
+<thead>
+<tr>
+<th>format</th>
+<th style="text-align: right;">0.5B (896)</th>
+<th style="text-align: right;">1.5B (1536)</th>
+<th style="text-align: right;">3B (2048)</th>
+<th style="text-align: right;">7B (3584)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Q4_0</td>
+<td style="text-align: right;">227.0</td>
+<td style="text-align: right;">165.2</td>
+<td style="text-align: right;">152.9</td>
+<td style="text-align: right;">138.0</td>
+</tr>
+<tr>
+<td>Q4_K_M</td>
+<td style="text-align: right;">273.9</td>
+<td style="text-align: right;">200.7</td>
+<td style="text-align: right;">182.7</td>
+<td style="text-align: right;">174.7</td>
+</tr>
+<tr>
+<td>Q5_K_M</td>
+<td style="text-align: right;">288.5</td>
+<td style="text-align: right;">258.1</td>
+<td style="text-align: right;">231.4</td>
+<td style="text-align: right;">229.7</td>
+</tr>
+<tr>
+<td>Q6_K</td>
+<td style="text-align: right;">319.9</td>
+<td style="text-align: right;">236.0</td>
+<td style="text-align: right;">229.5</td>
+<td style="text-align: right;">220.3</td>
+</tr>
+<tr>
+<td>Q8_0</td>
+<td style="text-align: right;">322.6</td>
+<td style="text-align: right;">263.4</td>
+<td style="text-align: right;">250.1</td>
+<td style="text-align: right;">234.0</td>
+</tr>
+</tbody>
+</table>
+<p>Share of the 307 GB/s bandwidth roof reached in decode:</p>
+<table>
+<thead>
+<tr>
+<th>format</th>
+<th style="text-align: right;">0.5B</th>
+<th style="text-align: right;">1.5B</th>
+<th style="text-align: right;">3B</th>
+<th style="text-align: right;">7B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Q4_0</td>
+<td style="text-align: right;">44%</td>
+<td style="text-align: right;">63%</td>
+<td style="text-align: right;">71%</td>
+<td style="text-align: right;">83%</td>
+</tr>
+<tr>
+<td>Q4_K_M</td>
+<td style="text-align: right;">45%</td>
+<td style="text-align: right;">64%</td>
+<td style="text-align: right;">72%</td>
+<td style="text-align: right;">84%</td>
+</tr>
+<tr>
+<td>Q5_K_M</td>
+<td style="text-align: right;">46%</td>
+<td style="text-align: right;">64%</td>
+<td style="text-align: right;">74%</td>
+<td style="text-align: right;">85%</td>
+</tr>
+<tr>
+<td>Q6_K</td>
+<td style="text-align: right;">52%</td>
+<td style="text-align: right;">69%</td>
+<td style="text-align: right;">76%</td>
+<td style="text-align: right;">85%</td>
+</tr>
+<tr>
+<td>Q8_0</td>
+<td style="text-align: right;">54%</td>
+<td style="text-align: right;">74%</td>
+<td style="text-align: right;">80%</td>
+<td style="text-align: right;">89%</td>
+</tr>
+</tbody>
+</table>
+<figure class="chart" id="width">
+  <div class="chart-bar mono"><span>Board energy per weight against model size, five formats</span><span id="width-read">0.5B</span></div>
+  <svg viewBox="0 0 1000 400" role="img" aria-label="Energy per weight falls as models widen, for every format"></svg>
+  <figcaption class="mono">Qwen2.5 0.5B to 7B, hidden size 896 to 3584. Board picojoules per weight read per decoded token, mean of two passes. Q4_0 is the heavy line. Hover or tap a size to read every format.</figcaption>
+</figure>
+
+<h2 data-via>1. A weight in a small model costs up to 1.6 times as much</h2>
+<p>The same arithmetic on the same hardware costs more in a small model. Q4_0 costs 227 pJ per weight in the 0.5B model and 138 in the 7B, 1.6 times more. Every format falls the same way as models widen, and the steepest drop is from 0.5B to 1.5B.</p>
+<p>The roof shares show why. The 0.5B model reaches only 44% to 54% of the memory bandwidth; the 7B reaches 83% to 89%. Every matrix-vector kernel has fixed costs that do not grow with the matrix: launching it, setting up the unpacking, threads that finish late, the small operations between layers. In a narrow model those fixed costs are a large share of each layer's work, the memory system sits idle for part of every token, and the board's power is spread over fewer weights.</p>
+<p>This matters most where small models are used most: phones, laptops, embedded devices. A benchmark run on a 7B model overstates how efficiently the same hardware runs a 0.5B one.</p>
+<h2 data-via>2. Q4_0 is the cheapest at every width</h2>
+<p>At 0.5B, 1.5B, 3B and 7B, Q4_0 costs the least per weight, between 16% and 21% below Q4_K_M, the format most models ship in. That makes four notes, four model sizes and two machines where it leads.</p>
+<h2 data-via>3. The Q5_K_M against Q6_K order depends on width</h2>
+<table>
+<thead>
+<tr>
+<th>width</th>
+<th style="text-align: right;">Q5_K_M</th>
+<th style="text-align: right;">Q6_K</th>
+<th>cheaper</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0.5B</td>
+<td style="text-align: right;">288.5</td>
+<td style="text-align: right;">319.9</td>
+<td>Q5_K_M, by 10%</td>
+</tr>
+<tr>
+<td>1.5B</td>
+<td style="text-align: right;">258.1</td>
+<td style="text-align: right;">236.0</td>
+<td>Q6_K, by 9%</td>
+</tr>
+<tr>
+<td>3B</td>
+<td style="text-align: right;">231.4</td>
+<td style="text-align: right;">229.5</td>
+<td>level, within 1%</td>
+</tr>
+<tr>
+<td>7B</td>
+<td style="text-align: right;">229.7</td>
+<td style="text-align: right;">220.3</td>
+<td>Q6_K, by 4%</td>
+</tr>
+</tbody>
+</table>
+<p>The order flips between 0.5B and 1.5B and closes up as models widen, which fits note 5's finding that the two kernels cost the same per weight on one large matrix. So note 1's "Q5_K_M is worse than Q6_K" holds for 1.5B on this machine and is not a general rule. Note 4 found the same pair in the opposite order on an NVIDIA GPU at 1.5B. This note shows the order is sensitive to shape on one machine; it does not show that shape is why it flipped on the other.</p>
+<h2 data-via>What to take from this</h2>
+<ol>
+<li>Energy per weight is not a constant of a format. It depends on how wide the model is, and small models pay up to 1.6 times more per weight.</li>
+<li>Some format rankings hold at every size (Q4_0 cheapest) and some do not (Q5_K_M against Q6_K). A ranking measured at one size should say which size.</li>
+<li>Choose the instrument for what the real workload does. A single matrix in a loop fits in cache at small sizes; real models stream their weights.</li>
+</ol>
+<h2 data-via>Limits</h2>
+<p>One machine, one model family. Width is not the only difference between these models: depth, attention heads and vocabulary size change too, so "width" here means "model size within this family", and the effect cannot be pinned on the hidden size alone. Perplexity was not measured for 0.5B and 3B.</p>
+<h2 data-via>Reproduce</h2>
+<pre><code class="language-bash">uv run joule models/quant/{0.5b,1.5b,3b,7b}-{Q4_0,Q4_K_M,Q5_K_M,Q6_K,Q8_0}.gguf --seconds 12 --out results/width.json
+uv run --with gguf python experiments/width.py results/width-run1.json results/width-run2.json results/summary-width.json
+</code></pre>
+<p>Raw results: <code>results/width-run1.json</code>, <code>results/width-run2.json</code>, <code>results/summary-width.json</code>.</p>
+<p class="source mono">Source, scripts and raw data: <a href="https://github.com/splicedso/joule/blob/main/notes/2026-10-model-width.md">joule/notes/2026-10-model-width.md</a></p>
+</article></main>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="titleblock mono" data-via>
+      <div><svg viewBox="0 0 500 659" aria-hidden="true"><path fill="currentColor" d="M0 192 L418 0 L418 205 L145 331 L145 449 L0 516 Z M197 385 L500 246 L500 520 L197 659 Z"/></svg><span><span class="k">Title</span>N6 &middot; Small models pay more per weight</span></div>
+      <div><span class="k">Drawn</span>2026-10</div>
+      <div><span class="k">Sheet</span>10 of 10</div>
+      <div><span class="k">Source</span><a href="https://github.com/splicedso">github.com/splicedso</a></div>
+    </div>
+  </div>
+</footer>
+
+<script src="../../assets/site.js?v=202610240245"></script>
+<script src="../../assets/charts.js?v=202610240245"></script>
+</body>
+</html>

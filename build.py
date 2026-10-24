@@ -39,6 +39,9 @@ NOTES = [
     {"slug": "kernel-energy", "file": "2026-10-kernel-energy.md", "n": 5,
      "summary": "Each format's matrix-vector kernel measured alone. Q4_0 and Q4_K read identical bytes at identical speed; "
                 "Q4_K's unpacking costs 40% more chip energy. Explains note 2's largest residual and corrects its roof."},
+    {"slug": "model-width", "file": "2026-10-model-width.md", "n": 6,
+     "summary": "Five formats across four model sizes. A weight in a 0.5B model costs up to 1.6 times one in a 7B; "
+                "Q4_0 is cheapest at every width; the Q5_K_M against Q6_K order flips with width."},
 ]
 
 FIGURES = {
@@ -63,6 +66,11 @@ FIGURES = {
   <div class="chart-bar mono"><span>Chip energy per weight, one 4096 x 14336 matrix-vector kernel per format</span><span>outline: streaming the bytes &middot; solid: unpacking them</span></div>
   <svg viewBox="0 0 1000 380" role="img" aria-label="Chip energy per weight for each format, split into streaming and unpacking"></svg>
   <figcaption class="mono">Streaming is the format's bytes at F16's energy per byte, since F16 needs no unpacking; unpacking is the rest. Q4_0 and Q4_K stream the same bytes, so the difference between them is all unpacking. Mean of two passes.</figcaption>
+</figure>""",
+    "width": """<figure class="chart" id="width">
+  <div class="chart-bar mono"><span>Board energy per weight against model size, five formats</span><span id="width-read">0.5B</span></div>
+  <svg viewBox="0 0 1000 400" role="img" aria-label="Energy per weight falls as models widen, for every format"></svg>
+  <figcaption class="mono">Qwen2.5 0.5B to 7B, hidden size 896 to 3584. Board picojoules per weight read per decoded token, mean of two passes. Q4_0 is the heavy line. Hover or tap a size to read every format.</figcaption>
 </figure>""",
     "bat": """<figure class="chart" id="bat">
   <div class="chart-bar mono"><span>Decode energy per token and GPU power, by batch size</span><span id="bat-read">batch 1</span></div>
@@ -114,7 +122,9 @@ def chart_data():
     two = [{k: (round(v, 1) if isinstance(v, float) else v) for k, v in r.items()}
            for r in json.load(open(R / "summary-two-machines.json"))]
     kernels = json.load(open(R / "summary-kernels.json"))
-    return {"formats": formats, "formats7": formats7, "two": two, "kernels": kernels, "batch": {"q4_0": batch("q4_0"), "q4_k_m": batch("q4_k_m")},
+    width = [{k: (round(v, 2) if isinstance(v, float) else v) for k, v in r.items()}
+             for r in json.load(open(R / "summary-width.json"))]
+    return {"formats": formats, "formats7": formats7, "two": two, "kernels": kernels, "width": width, "batch": {"q4_0": batch("q4_0"), "q4_k_m": batch("q4_k_m")},
             "results": results, "roofline": roofline}
 
 
