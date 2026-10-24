@@ -57,6 +57,9 @@ NOTES = [
     {"slug": "speculative-second-tool", "file": "2026-10-speculative-second-tool.md", "n": 11,
      "summary": "Notes 7 and 9 repeated through llama-server, the program real deployments use. Every finding holds. "
                 "Also why Windows Smart App Control blocked the same run on our Windows laptop."},
+    {"slug": "model-width-on-nvidia", "file": "2026-10-windows-width.md", "n": 12,
+     "summary": "Note 6's width sweep on an RTX 5070 Ti. Small models pay up to 2.2 times more energy per weight, more than "
+                "on the Mac for the 4-bit formats; Q4_0 is cheapest at every width; Q5_K_M beats Q6_K throughout."},
 ]
 
 FIGURES = {

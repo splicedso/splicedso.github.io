@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Small models pay more per weight, on a discrete GPU too &middot; Spliced</title>
+<meta name="description" content="Note 6's width sweep on an RTX 5070 Ti. Small models pay up to 2.2 times more energy per weight, more than on the Mac for the 4-bit formats; Q4_0 is cheapest at every width; Q5_K_M beats Q6_K throughout.">
+<meta property="og:title" content="Small models pay more per weight, on a discrete GPU too &middot; Spliced">
+<meta property="og:description" content="Note 6's width sweep on an RTX 5070 Ti. Small models pay up to 2.2 times more energy per weight, more than on the Mac for the 4-bit formats; Q4_0 is cheapest at every width; Q5_K_M beats Q6_K throughout.">
+<meta property="og:image" content="https://splicedso.github.io/assets/og.png">
+<meta property="og:url" content="https://splicedso.github.io/research/model-width-on-nvidia/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Spliced">
+<link rel="canonical" href="https://splicedso.github.io/research/model-width-on-nvidia/">
+<meta name="color-scheme" content="light dark">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>try { const t = localStorage.getItem("theme"); if (t) document.documentElement.dataset.theme = t; } catch {}</script>
+<link rel="stylesheet" href="../../assets/style.css?v=202610241445">
+<link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
+</head>
+<body data-root="../../" data-page="research">
+<a class="skip" href="#content">Skip to content</a>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="../../" aria-label="Spliced home">
+      <svg viewBox="0 0 500 659" aria-hidden="true"><path fill="currentColor" d="M0 192 L418 0 L418 205 L145 331 L145 449 L0 516 Z M197 385 L500 246 L500 520 L197 659 Z"/></svg>
+      Spliced
+    </a>
+    <div class="nav-right">
+      <ul>
+        <li><a href="../../research/" data-nav="research">Research</a></li>
+        <li><a href="../../learn/" data-nav="learn">Learn</a></li>
+        <li><a href="../../data/" data-nav="data">Data</a></li>
+        <li><a href="../../tools/phase/" data-nav="tools">Tools</a></li>
+        <li><a href="../../lab/" data-nav="lab">Lab</a></li>
+      </ul>
+      <a class="icon-link" href="https://github.com/splicedso" aria-label="Spliced on GitHub" title="GitHub"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a>
+      <a class="icon-link" href="https://www.linkedin.com/company/splicedso" aria-label="Spliced on LinkedIn" title="LinkedIn"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M0 1.15C0 .52.52 0 1.18 0h13.64C15.48 0 16 .52 16 1.15v13.7c0 .63-.52 1.15-1.18 1.15H1.18C.52 16 0 15.48 0 14.85V1.15zM4.75 13.39V6.17H2.35v7.22h2.4zM3.55 5.18c.84 0 1.36-.55 1.36-1.25-.02-.71-.52-1.25-1.34-1.25-.82 0-1.36.54-1.36 1.25 0 .7.52 1.25 1.33 1.25h.01zm4.91 8.21V9.36c0-.22.02-.43.08-.59.18-.43.57-.88 1.23-.88.87 0 1.22.66 1.22 1.64v3.86h2.4V9.25c0-2.22-1.18-3.25-2.76-3.25-1.27 0-1.84.7-2.16 1.19v.03h-.02l.02-.03V6.17h-2.4c.03.68 0 7.22 0 7.22h2.4z"/></svg></a>
+      <button class="theme" id="theme" type="button" aria-label="Dark mode" aria-pressed="false">
+        <svg class="moon" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M10.5 1.5a6.5 6.5 0 1 0 4 11.6A7 7 0 0 1 10.5 1.5Z"/></svg>
+        <svg class="sun" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="3.2" fill="currentColor"/><path stroke="currentColor" stroke-width="1.4" stroke-linecap="round" d="M8 1v1.6M8 13.4V15M1 8h1.6M13.4 8H15M3 3l1.1 1.1M11.9 11.9 13 13M3 13l1.1-1.1M11.9 4.1 13 3"/></svg>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<svg id="bus" aria-hidden="true"></svg>
+
+<div id="content">
+<header class="page-head">
+  <div class="wrap">
+    <span class="refdes mono" data-via><b>N12</b> Research note &middot; 24 October 2026</span>
+    <h1>Small models pay more per weight, on a discrete GPU too</h1>
+    <p class="lede">Spliced research note 12, 24 October 2026. Windows 11 laptop: Intel Core Ultra 9 285H, NVIDIA GeForce RTX 5070 Ti Laptop GPU (12 GB, Blackwell), 32 GB RAM, on AC. llama.cpp build 11851 (prebuilt CUDA 13.4 x64), CUDA backend, all layers on the GPU. Qwen2.5 0.5B, 1.5B, 3B and 7B, five formats each.</p>
+  </div>
+</header>
+<main><article class="wrap note-body"><p>Note 6 (<code>notes/2026-10-model-width.md</code>, Apple M5 Pro) found that the same format costs more energy per weight in a small model than a large one, and that some format rankings hold across widths while others do not. This note repeats the sweep on a discrete NVIDIA GPU. The effect is present here too, and for the 4-bit formats it is larger.</p>
+<h2 data-via>Method, and what this machine measures</h2>
+<p>Real models of four widths, as in note 6: a single matrix in a loop fits in cache and measures cache bandwidth, not memory; real decode streams every layer's weights once per token. Qwen2.5 0.5B, 1.5B, 3B and 7B (hidden sizes 896, 1536, 2048, 3584), each quantized from its own F16 GGUF into Q4_0, Q4_K_M, Q5_K_M, Q6_K and Q8_0, decoded with <code>phase --seconds 12</code>, two passes, the second in reverse order. All 20 models repeated within about 5% on chip energy per token between the two passes.</p>
+<p>Energy per token is divided by the weights read per token (every tensor except the token embedding table), giving <strong>energy per weight</strong>.</p>
+<ul>
+<li><strong>GPU (chip) energy only.</strong> As in note 4, the chip reading here is the GPU package via <code>nvidia-smi</code>, the nearest analog to the Mac's chip reading, and it includes the GPU's own memory. There is no whole-system (board) figure: on this machine the board can only be read from the battery while unplugged, and this study ran on AC. So note 6's board column has no counterpart here; the chip column is the measurement.</li>
+<li><strong>No bandwidth roof.</strong> Note 6 reports each run's share of a 307 GB/s roof (the Mac's F16 kernel from note 5). That constant is wrong for this GPU: applying it gives roof shares above 100% (up to 133% for the 7B), which only shows this GPU's memory bandwidth is far higher. This machine's roofline was not measured, so the share is omitted rather than printed against the wrong number.</li>
+</ul>
+<h2 data-via>Results</h2>
+<p>Chip (GPU) energy per weight, picojoules, mean of two passes:</p>
+<table>
+<thead>
+<tr>
+<th>format</th>
+<th style="text-align: right;">0.5B (896)</th>
+<th style="text-align: right;">1.5B (1536)</th>
+<th style="text-align: right;">3B (2048)</th>
+<th style="text-align: right;">7B (3584)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Q4_0</td>
+<td style="text-align: right;">310.7</td>
+<td style="text-align: right;">187.0</td>
+<td style="text-align: right;">165.6</td>
+<td style="text-align: right;">142.1</td>
+</tr>
+<tr>
+<td>Q4_K_M</td>
+<td style="text-align: right;">349.3</td>
+<td style="text-align: right;">207.0</td>
+<td style="text-align: right;">193.2</td>
+<td style="text-align: right;">165.5</td>
+</tr>
+<tr>
+<td>Q5_K_M</td>
+<td style="text-align: right;">331.5</td>
+<td style="text-align: right;">227.2</td>
+<td style="text-align: right;">215.5</td>
+<td style="text-align: right;">190.2</td>
+</tr>
+<tr>
+<td>Q6_K</td>
+<td style="text-align: right;">354.8</td>
+<td style="text-align: right;">243.5</td>
+<td style="text-align: right;">221.2</td>
+<td style="text-align: right;">202.7</td>
+</tr>
+<tr>
+<td>Q8_0</td>
+<td style="text-align: right;">361.5</td>
+<td style="text-align: right;">308.7</td>
+<td style="text-align: right;">261.0</td>
+<td style="text-align: right;">253.6</td>
+</tr>
+</tbody>
+</table>
+<p>Decode speed, tokens per second, mean of two passes:</p>
+<table>
+<thead>
+<tr>
+<th>format</th>
+<th style="text-align: right;">0.5B</th>
+<th style="text-align: right;">1.5B</th>
+<th style="text-align: right;">3B</th>
+<th style="text-align: right;">7B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Q4_0</td>
+<td style="text-align: right;">623.9</td>
+<td style="text-align: right;">334.8</td>
+<td style="text-align: right;">192.9</td>
+<td style="text-align: right;">98.1</td>
+</tr>
+<tr>
+<td>Q4_K_M</td>
+<td style="text-align: right;">566.3</td>
+<td style="text-align: right;">311.9</td>
+<td style="text-align: right;">167.2</td>
+<td style="text-align: right;">84.7</td>
+</tr>
+<tr>
+<td>Q5_K_M</td>
+<td style="text-align: right;">590.0</td>
+<td style="text-align: right;">284.0</td>
+<td style="text-align: right;">150.4</td>
+<td style="text-align: right;">75.2</td>
+</tr>
+<tr>
+<td>Q6_K</td>
+<td style="text-align: right;">550.8</td>
+<td style="text-align: right;">263.3</td>
+<td style="text-align: right;">145.7</td>
+<td style="text-align: right;">67.7</td>
+</tr>
+<tr>
+<td>Q8_0</td>
+<td style="text-align: right;">538.4</td>
+<td style="text-align: right;">211.2</td>
+<td style="text-align: right;">124.9</td>
+<td style="text-align: right;">53.7</td>
+</tr>
+</tbody>
+</table>
+<h2 data-via>1. A weight in a small model costs up to 2.2 times as much</h2>
+<p>Q4_0 costs 310.7 pJ per weight in the 0.5B model and 142.1 in the 7B, 2.2 times more; Q4_K_M is 2.1 times. Measured the same way on the Mac (note 6's chip column, not its board column), the same ratios are 1.9 and 1.6 times, so for the 4-bit formats the penalty is stronger on this GPU. The drop is steepest from 0.5B to 1.5B (310.7 to 187.0 for Q4_0) and continues to the 7B. Every format falls the same way as the model widens.</p>
+<p>The mechanism is the one note 6 gives: each matrix-vector kernel has fixed costs that do not grow with the matrix, launch, unpacking setup, threads finishing late, the small operations between layers. In a narrow model those are a large share of each layer's work, so the GPU's power is spread over fewer useful weights. For the 4-bit formats the gap between small and large is wider on this GPU than on the Mac: a benchmark run on a 7B model overstates how efficiently this hardware runs a 0.5B Q4_0 model by more than a factor of two.</p>
+<h2 data-via>2. The penalty is largest for the low-bit formats</h2>
+<p>The small-model penalty is not the same for every format: it is 2.2 times for Q4_0 and Q4_K_M, 1.7 times for Q5_K_M and Q6_K, and only 1.4 times for Q8_0. On this GPU, the fewer bytes a weight takes, the less memory traffic it is, so the fixed per-layer overheads are a larger fraction of its cost, and those overheads are what the small model cannot amortise. The cheapest format pays the steepest size penalty.</p>
+<p>This pattern is specific to this GPU. On the Mac's chip column the ordering is different: Q8_0's penalty is 1.7 times, larger than Q5_K_M's 1.2 times. So the explanation above fits this GPU's numbers but is not a general rule.</p>
+<h2 data-via>3. Q4_0 is the cheapest at every width</h2>
+<p>At 0.5B, 1.5B, 3B and 7B, Q4_0 costs the least per weight, 10% to 14% below Q4_K_M, the format most models ship in. That agrees with note 6 and note 4: Q4_0 leads on this GPU as on the Mac.</p>
+<h2 data-via>4. Q5_K_M beats Q6_K at every width here, with no flip</h2>
+<table>
+<thead>
+<tr>
+<th>width</th>
+<th style="text-align: right;">Q5_K_M</th>
+<th style="text-align: right;">Q6_K</th>
+<th>cheaper</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0.5B</td>
+<td style="text-align: right;">331.5</td>
+<td style="text-align: right;">354.8</td>
+<td>Q5_K_M, by 7%</td>
+</tr>
+<tr>
+<td>1.5B</td>
+<td style="text-align: right;">227.2</td>
+<td style="text-align: right;">243.5</td>
+<td>Q5_K_M, by 7%</td>
+</tr>
+<tr>
+<td>3B</td>
+<td style="text-align: right;">215.5</td>
+<td style="text-align: right;">221.2</td>
+<td>Q5_K_M, by 3%</td>
+</tr>
+<tr>
+<td>7B</td>
+<td style="text-align: right;">190.2</td>
+<td style="text-align: right;">202.7</td>
+<td>Q5_K_M, by 6%</td>
+</tr>
+</tbody>
+</table>
+<p>On the Mac this pair flipped with width (Q5_K_M cheaper at 0.5B, Q6_K cheaper at 1.5B and 7B). On this GPU Q5_K_M is cheaper at every width. At 1.5B, 3B and 7B per-weight energy rises monotonically with bit width (Q4_0 &lt; Q4_K_M &lt; Q5_K_M &lt; Q6_K &lt; Q8_0); at 0.5B it does not, since Q5_K_M (331.5) is cheaper than Q4_K_M (349.3). This matches note 4, which saw Q5_K_M below Q6_K on this GPU at 1.5B, the opposite of the Mac. The ranking of these two formats is a property of the kernel and the hardware, not of the bit width alone.</p>
+<h2 data-via>What to take from this</h2>
+<ol>
+<li>Energy per weight is not a constant of a format: small models pay up to 2.2 times more per weight on this GPU. For the 4-bit formats that is more than the Mac's 1.6 to 1.9 times, measured at the chip on both.</li>
+<li>On this GPU the size penalty is largest for the low-bit formats; on the Mac it is not, so that pattern belongs to this hardware.</li>
+<li>Q4_0 is cheapest at every width on both machines; the Q5_K_M against Q6_K order does not agree between machines, so a ranking of those two should name its hardware.</li>
+</ol>
+<h2 data-via>Limits</h2>
+<ul>
+<li>Chip (GPU) energy only. There is no whole-system figure on AC on this machine, so these are not directly comparable to note 6's board column; they are comparable to note 4's GPU column.</li>
+<li>This GPU's bandwidth roof was not measured, so no roof share is reported.</li>
+<li>Two machines used two llama.cpp builds (11851 here, 11669 on the Mac) and two backends (CUDA vs Metal); kernel differences between them are a caveat on every cross-machine comparison.</li>
+<li>One machine, one model family. Width is not the only thing that changes across these models, depth, heads and vocabulary change too, so "width" means "model size within this family". Perplexity was not measured here.</li>
+</ul>
+<h2 data-via>Reproduce</h2>
+<p>Windows, no admin, plugged in. With a clone of the repo and a prebuilt llama.cpp CUDA build on <code>PATH</code>:</p>
+<pre><code class="language-powershell">.\.venv\Scripts\python -m pip install -e . gguf
+# quantize each size's F16 GGUF into the five formats as models/quant/&lt;size&gt;-&lt;FORMAT&gt;.gguf
+.\.venv\Scripts\phase models/quant/0.5b-Q4_0.gguf ... models/quant/7b-Q8_0.gguf --seconds 12 --out results/width-windows-run1.json
+# then the same 20 paths reversed -&gt; results/width-windows-run2.json
+.\.venv\Scripts\python experiments/width.py results/width-windows-run1.json results/width-windows-run2.json results/summary-width-windows.json
+</code></pre>
+<p>Raw results: <code>results/width-windows-run1.json</code>, <code>results/width-windows-run2.json</code>, <code>results/summary-width-windows.json</code>.</p>
+<p class="source mono">Source, scripts and raw data: <a href="https://github.com/splicedso/phase/blob/main/notes/2026-10-windows-width.md">phase/notes/2026-10-windows-width.md</a></p>
+</article></main>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="titleblock mono" data-via>
+      <div><svg viewBox="0 0 500 659" aria-hidden="true"><path fill="currentColor" d="M0 192 L418 0 L418 205 L145 331 L145 449 L0 516 Z M197 385 L500 246 L500 520 L197 659 Z"/></svg><span><span class="k">Title</span>N12 &middot; Small models pay more per weight, on a discrete GPU too</span></div>
+      <div><span class="k">Drawn</span>2026-10</div>
+      <div><span class="k">Sheet</span>17 of 17</div>
+      <div><span class="k">Elsewhere</span><span class="foot-links"><a href="https://github.com/splicedso" aria-label="GitHub"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>GitHub</a><a href="https://www.linkedin.com/company/splicedso" aria-label="LinkedIn"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M0 1.15C0 .52.52 0 1.18 0h13.64C15.48 0 16 .52 16 1.15v13.7c0 .63-.52 1.15-1.18 1.15H1.18C.52 16 0 15.48 0 14.85V1.15zM4.75 13.39V6.17H2.35v7.22h2.4zM3.55 5.18c.84 0 1.36-.55 1.36-1.25-.02-.71-.52-1.25-1.34-1.25-.82 0-1.36.54-1.36 1.25 0 .7.52 1.25 1.33 1.25h.01zm4.91 8.21V9.36c0-.22.02-.43.08-.59.18-.43.57-.88 1.23-.88.87 0 1.22.66 1.22 1.64v3.86h2.4V9.25c0-2.22-1.18-3.25-2.76-3.25-1.27 0-1.84.7-2.16 1.19v.03h-.02l.02-.03V6.17h-2.4c.03.68 0 7.22 0 7.22h2.4z"/></svg>LinkedIn</a></span></div>
+    </div>
+  </div>
+</footer>
+
+<script src="../../assets/site.js?v=202610241445"></script>
+<script src="../../assets/charts.js?v=202610241445"></script>
+</body>
+</html>
