@@ -150,7 +150,15 @@ def chart_data():
            if r["scenario"] == "Offline" and r["model"] in models]
     width = [{k: (round(v, 2) if isinstance(v, float) else v) for k, v in r.items()}
              for r in json.load(open(R / "summary-width.json"))]
-    return {"formats": formats, "formats7": formats7, "two": two, "kernels": kernels, "width": width, "spec": spec, "mwh": mwh, "batch": {"q4_0": batch("q4_0"), "q4_k_m": batch("q4_k_m")},
+    import csv as _csv
+    dataset = []
+    for r in _csv.DictReader(open(R / "spliced-decode-energy.csv")):
+        for k in ("tok_s", "chip_mj", "board_mj", "params_b"):
+            r[k] = float(r[k]) if r[k] else ""
+        r["batch"] = int(r["batch"]) if r["batch"].isdigit() else r["batch"]
+        r["note"] = int(r["note"])
+        dataset.append(r)
+    return {"dataset": dataset, "formats": formats, "formats7": formats7, "two": two, "kernels": kernels, "width": width, "spec": spec, "mwh": mwh, "batch": {"q4_0": batch("q4_0"), "q4_k_m": batch("q4_k_m")},
             "results": results, "roofline": roofline}
 
 
@@ -202,10 +210,10 @@ def page(path, content, *, title, description, page, sheet, sheetno, scripts="",
 
 def main():
     assets = HERE / "assets"
-    for f in ("style.css", "site.js", "charts.js", "home.js"):
+    for f in ("style.css", "site.js", "charts.js", "home.js", "data.js"):
         shutil.copy(SRC / f, assets / f)
     (assets / "data.json").write_text(json.dumps(chart_data(), separators=(",", ":")))
-    total = len(NOTES) + 4
+    total = len(NOTES) + 5
     charts = '<script src="{{root}}assets/charts.js?v=' + VERSION + '"></script>'
 
     page("index.html", (SRC / "pages/home.html").read_text().replace("{{notes}}", notes_list("")),
@@ -218,6 +226,9 @@ def main():
     page("tools/joule/index.html", (SRC / "pages/joule.html").read_text(),
          title="joule &middot; Spliced", description="Energy per token for local LLM inference, at the chip and the board.",
          page="tools", sheet="Tools / joule", sheetno=f"3 of {total}", scripts=charts)
+    page("data/index.html", (SRC / "pages/data.html").read_text(),
+         title="Data &middot; Spliced", description="Every Spliced decode-energy measurement in one downloadable table, with a comparison tool.",
+         page="data", sheet="Data", sheetno=f"5 of {total}", scripts='<script src="{{root}}assets/data.js?v=' + VERSION + '"></script>')
     page("lab/index.html", (SRC / "pages/lab.html").read_text(),
          title="Lab &middot; Spliced", description="Spliced is a small research lab for efficient inference.",
          page="lab", sheet="Lab", sheetno=f"4 of {total}")
@@ -235,7 +246,7 @@ def main():
 <p class="source mono">Source, scripts and raw data: <a href="https://github.com/splicedso/joule/blob/main/notes/{n['file']}">joule/notes/{n['file']}</a></p>
 </article></main>"""
         page(f"research/{n['slug']}/index.html", content, title=f"{title} &middot; Spliced", description=n["summary"],
-             page="research", sheet=f"N{n['n']} &middot; {title}", sheetno=f"{5 + i} of {total}", scripts=charts,
+             page="research", sheet=f"N{n['n']} &middot; {title}", sheetno=f"{6 + i} of {total}", scripts=charts,
              ogtype="article")
     page("404.html", (SRC / "pages/404.html").read_text(), title="Not found &middot; Spliced",
          description="This page does not exist.", page="404", sheet="Not found", sheetno="&mdash;", root="/")

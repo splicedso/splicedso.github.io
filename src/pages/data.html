@@ -1,0 +1,56 @@
+<header class="page-head">
+  <div class="wrap">
+    <span class="refdes mono" data-via><b>D</b> Data</span>
+    <h1>Every measurement, in one table.</h1>
+    <p class="lede">The Spliced dataset holds every decode-energy figure behind our research notes: two laptops, two runtimes, four model sizes, eight number formats, batch sizes 1 to 8, and the audited datacenter servers from MLPerf. Nothing in it is interpolated or fitted. Each row names the note it comes from.</p>
+    <a class="cta" href="https://raw.githubusercontent.com/splicedso/joule/main/results/spliced-decode-energy.csv" download>Download the CSV <span aria-hidden="true">&darr;</span></a>
+  </div>
+</header>
+
+<main>
+  <section class="tight">
+    <div class="wrap">
+      <div class="label"><span class="refdes mono" data-via><b>D1</b> Compare</span></div>
+      <h2>Pick two, see the gap.</h2>
+      <div class="cmp">
+        <div class="cmp-pick">
+          <label class="mono" for="cmp-a">A</label><select id="cmp-a"></select>
+          <label class="mono" for="cmp-b">B</label><select id="cmp-b"></select>
+          <span class="toggle" role="group" aria-label="Measurement point"><button data-v="board_mj" aria-pressed="true">whole machine</button><button data-v="chip_mj" aria-pressed="false">chip or GPU</button></span>
+        </div>
+        <div class="cmp-out">
+          <div class="cmp-bars"><svg id="cmp-svg" viewBox="0 0 1000 150" role="img" aria-label="Energy per token for the two selections"></svg></div>
+          <div class="cmp-facts mono">
+            <div><span class="k">ratio</span><b id="cmp-ratio">-</b></div>
+            <div><span class="k">tokens per kWh, A</span><b id="cmp-kwh-a">-</b></div>
+            <div><span class="k">tokens per kWh, B</span><b id="cmp-kwh-b">-</b></div>
+            <div><span class="k">from one phone battery (15 Wh), A / B</span><b id="cmp-phone">-</b></div>
+          </div>
+          <p class="note" id="cmp-note"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="tight">
+    <div class="wrap">
+      <div class="label"><span class="refdes mono" data-via><b>D2</b> The table</span></div>
+      <div class="filters mono" id="filters"></div>
+      <div class="dtable-wrap"><table class="dtable" id="dtable"></table></div>
+      <p class="note">Millijoules per generated token at batch 1 unless the batch column says otherwise. Whole-machine means the Mac's board DC input, the Windows laptop's battery discharge, or a datacenter server at the wall: three different points, named in the CSV. The full method for each row is in its note.</p>
+    </div>
+  </section>
+
+  <section class="tight">
+    <div class="wrap cols">
+      <div>
+        <div class="label"><span class="refdes mono" data-via><b>D3</b> Raw files</span></div>
+        <h2>Everything else.</h2>
+      </div>
+      <div class="prose">
+        <p>Every pass of every experiment is in <a href="https://github.com/splicedso/joule/tree/main/results">joule/results</a> as JSON, including the ones the notes discard and why. The scripts that produced them are in <a href="https://github.com/splicedso/joule/tree/main/experiments">joule/experiments</a>.</p>
+        <p>The data is free to reuse with attribution. See <a href="https://github.com/splicedso/joule/blob/main/CITATION.cff">CITATION.cff</a>.</p>
+      </div>
+    </div>
+  </section>
+</main>
