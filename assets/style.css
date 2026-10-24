@@ -82,6 +82,8 @@ nav ul a.on { color: var(--ink); }
 .gridline { stroke: var(--rule); }
 .ink-line { stroke: var(--ink); fill: none; }
 .ink-fill { fill: var(--ink); }
+.hatch { fill: none; stroke: var(--ink); stroke-width: 1; }
+.chart rect { transition: width .9s var(--ease); }
 .on-fill { fill: #fff; mix-blend-mode: difference; }
 .dim { color: var(--mute); }
 

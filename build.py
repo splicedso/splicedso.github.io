@@ -30,6 +30,9 @@ NOTES = [
     {"slug": "scale-and-runtime", "file": "2026-10-scale-and-runtime.md", "n": 3,
      "summary": "The format study at 7B, where every finding replicates and the hardware is used better, and in MLX, "
                 "where repeat runs do not yet agree, so only claims that survive both passes are made."},
+    {"slug": "two-machines", "file": "2026-10-two-machines.md", "n": 4,
+     "summary": "The study on a Windows laptop with an RTX 5070 Ti, on battery. Q4_0 wins on both machines and a 4-bit token "
+                "costs the same whole-machine energy on both; one Mac finding does not transfer."},
 ]
 
 FIGURES = {
@@ -44,6 +47,11 @@ FIGURES = {
     <span class="toggle" role="group" aria-label="Measurement point"><button data-v="board" aria-pressed="true">TP1 board</button><button data-v="soc" aria-pressed="false">TP2 chip only</button></span></div>
   <svg viewBox="0 0 1000 440" role="img" aria-label="Decode energy per token against perplexity for eight quantization formats of the 7B model"></svg>
   <figcaption class="mono">Mean of two passes. F16 is plotted but did not repeat (memory pressure), so it is left out of the conclusions. Same layout as note 1: better is higher, cheaper is further left.</figcaption>
+</figure>""",
+    "two": """<figure class="chart" id="two">
+  <div class="chart-bar mono"><span>Whole-machine decode energy, Qwen2.5 1.5B, two laptops</span><span>solid: Windows, RTX 5070 Ti, battery &middot; outline: Mac, M5 Pro, board</span></div>
+  <svg viewBox="0 0 1000 400" role="img" aria-label="Whole-machine energy per token for eight formats on a Windows laptop and a Mac"></svg>
+  <figcaption class="mono">Mean of two passes per machine. The labels read Windows / Mac in millijoules per token. At 4 bits the two machines land within 5% of each other; at full precision they part.</figcaption>
 </figure>""",
     "bat": """<figure class="chart" id="bat">
   <div class="chart-bar mono"><span>Decode energy per token and GPU power, by batch size</span><span id="bat-read">batch 1</span></div>
@@ -92,7 +100,9 @@ def chart_data():
     s7 = json.load(open(R / "summary-7b.json"))["rows"]
     formats7 = [{"name": r["format"], "ppl": round(r["ppl"], 2), "soc": round(r["soc_mj"], 1), "board": round(r["board_mj"], 1),
                  **({"note": "(did not repeat)"} if r["spread_board"] > .05 else {})} for r in s7]
-    return {"formats": formats, "formats7": formats7, "batch": {"q4_0": batch("q4_0"), "q4_k_m": batch("q4_k_m")},
+    two = [{k: (round(v, 1) if isinstance(v, float) else v) for k, v in r.items()}
+           for r in json.load(open(R / "summary-two-machines.json"))]
+    return {"formats": formats, "formats7": formats7, "two": two, "batch": {"q4_0": batch("q4_0"), "q4_k_m": batch("q4_k_m")},
             "results": results, "roofline": roofline}
 
 
