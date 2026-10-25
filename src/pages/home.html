@@ -1,17 +1,20 @@
 <header class="hero">
   <div class="wrap hero-grid">
     <div>
-      <span class="refdes mono" data-via><b>U0</b> Spliced &middot; Research lab</span>
+      <span class="label">Research lab</span>
       <h1 id="h1" aria-label="The engineering of efficient inference."></h1>
-      <p class="lede" id="lede" aria-label="Spliced is a research lab for the engineering side of AI: what it takes to run models well, from the kernels on a laptop to the servers in a datacenter. We measure, publish the method and the data, and say what each result cannot show."></p>
-      <p class="meter mono" aria-hidden="true">This text as Qwen2.5 1.5B decodes it on an M5 Pro: <span id="m-tok">0</span> tokens, <span id="m-j">0.00</span> J on the chip, shown at 1/30 speed</p>
+      <p class="lede" id="lede" aria-label="We measure what it costs to run AI, and publish everything."></p>
+      <div class="actions">
+        <a class="cta" href="research/">Read the research <span aria-hidden="true">&rarr;</span></a>
+        <a class="cta ghost" href="https://github.com/splicedso/phase">View on GitHub</a>
+      </div>
     </div>
 
-    <figure class="schem" aria-label="Schematic of where a token's energy goes, animated from a real power recording">
-      <div class="schem-head mono"><span>SHEET 1 &middot; power path of one token</span><span>t <b id="rt">0.0</b> s &middot; <b id="rp">idle</b></span></div>
+    <figure class="schem" aria-label="Where a token's energy goes, replayed from a real power recording">
+      <div class="schem-head mono"><span>Power path of one token</span><span><b id="rt">0.0</b> s &middot; <b id="rp">idle</b></span></div>
       <svg id="schem" viewBox="0 0 560 310"></svg>
       <canvas id="scope" aria-hidden="true"></canvas>
-      <div class="schem-foot mono"><span>TP1 board <b id="rs">0.0</b> W</span><span>TP2 chip <b id="rc">0.0</b> W</span><span>recorded with phase</span></div>
+      <div class="schem-foot mono"><span>Board <b id="rs">0.0</b> W</span><span>Chip <b id="rc">0.0</b> W</span></div>
     </figure>
   </div>
 </header>
@@ -19,54 +22,52 @@
 <main>
   <section>
     <div class="wrap">
-      <div class="label"><span class="refdes mono" data-via><b>J1</b> The lab</span></div>
-      <div class="cols">
-        <h2>The engineering side of the AI build-out, measured.</h2>
-        <div class="prose">
-          <p>Spliced is a small research lab. We study what it costs to run a model, in watts and joules as well as seconds, from one laptop up to how inference clusters are designed.</p>
-          <p>Every result ships with its method, its code and its raw data, and every note says what it cannot show.</p>
-        </div>
-      </div>
+      <h2 class="center">Three questions, one standard.</h2>
       <div class="areas">
-        <a class="area" href="research/"><span class="mono">A1</span><h3>Inference engineering</h3><p>Where decode time and energy go: memory bandwidth, kernels, quantization formats, batching, the KV cache, serving at cluster scale.</p></a>
-        <a class="area" href="research/"><span class="mono">A2</span><h3>Data science</h3><p>Measurement you can trust: repeated runs, held-out validation, and models whose coefficients have to make physical sense.</p></a>
-        <a class="area" href="tools/phase/"><span class="mono">A3</span><h3>Software engineering</h3><p>The tools that make the measurements repeatable, open source, small enough to read in one sitting.</p></a>
+        <a class="area" href="research/">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>
+          <h3>Inference engineering</h3><p>Where the time and energy of every token go.</p></a>
+        <a class="area" href="data/">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>
+          <h3>Data science</h3><p>Repeated, held out, and honest about its limits.</p></a>
+        <a class="area" href="tools/phase/">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m8 6-6 6 6 6M16 6l6 6-6 6"/></svg>
+          <h3>Open tools</h3><p>Every result reruns from public code and data.</p></a>
       </div>
     </div>
   </section>
 
   <section class="band">
     <div class="wrap">
-      <div class="label"><span class="refdes mono" data-via><b>J2</b> Findings so far</span></div>
+      <h2 class="center">What we have measured.</h2>
       <div class="facts">
-        <div class="fact"><span class="mono">TP1 / TP2, F16 vs Q4_0</span><div class="n">2.1<small>&times;</small></div><p>what full precision really costs over 4-bit at the board. Measured at the chip alone, the two look the same: the memory energy is invisible there.</p></div>
-        <div class="fact"><span class="mono">batch 1 &rarr; 8, Q4_0</span><div class="n">72<small>%</small></div><p>less energy per token from serving eight requests at once. Batch 2 saves 1%: the GPU reaches its power ceiling at the second sequence.</p></div>
-        <div class="fact"><span class="mono">Q4_K / Q4_0, same bytes</span><div class="n">40<small>%</small></div><p>more chip energy for the same traffic at the same speed. The two formats read identical bytes; the difference is entirely how the bits are unpacked.</p></div>
+        <div class="fact"><div class="n" data-count="72">72<small>%</small></div><p>less energy per token when serving eight requests at once.</p></div>
+        <div class="fact"><div class="n" data-count="40">40<small>&times;</small></div><p>cheaper to read a prompt token than to write an answer token.</p></div>
+        <div class="fact"><div class="n" data-count="2.1">2.1<small>&times;</small></div><p>the true energy cost of full precision over 4-bit.</p></div>
       </div>
     </div>
   </section>
 
   <section>
     <div class="wrap">
-      <div class="label"><span class="refdes mono" data-via><b>J3</b> Notes</span></div>
-      <h2>Published research.</h2>
-      {{notes}}
-      <a class="cta" href="research/">All research <span aria-hidden="true">&rarr;</span></a>
+      <div class="split">
+        <h2>Latest research.</h2>
+        <a class="more" href="research/">All {{note_count}} notes <span aria-hidden="true">&rarr;</span></a>
+      </div>
+      {{latest}}
     </div>
   </section>
 
-  <section>
-    <div class="wrap cols">
-      <div>
-        <div class="label"><span class="refdes mono" data-via><b>J4</b> In progress</span></div>
-        <h2>On the bench now.</h2>
+  <section class="tight">
+    <div class="wrap">
+      <div class="closer">
+        <h2>Follow the lab.</h2>
+        <p>New research as it lands.</p>
+        <div class="actions">
+          <a class="cta" href="https://www.linkedin.com/company/splicedso">Follow on LinkedIn</a>
+          <a class="cta ghost" href="https://github.com/splicedso">GitHub</a>
+        </div>
       </div>
-      <ol class="steps">
-        <li><div><b>Our first model.</b> A 0.5B draft model distilled from Qwen2.5 7B, built to make the large model faster and cheaper on a PC. Training now; measured against the stock draft on prompts it has never seen. <a href="learn/distillation-and-draft-models/">How it works</a>.</div></li>
-        <li><div><b>Drafter v2.</b> A draft model trained on the 7B's full output distribution, aimed at the tokens the stock draft gets wrong.</div></li>
-        <li><div><b>Serving at batch.</b> Energy per token for a real serving engine under realistic load, to connect the laptop and the datacenter.</div></li>
-        <li><div><b>MLX repeatability.</b> Why two MLX passes disagree by up to 17% when llama.cpp repeats within 2%.</div></li>
-      </ol>
     </div>
   </section>
 </main>

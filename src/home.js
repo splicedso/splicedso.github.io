@@ -1,13 +1,11 @@
 // Home page: the token-by-token headline and the live power-path schematic.
 
 // Hero: the headline is written one real Qwen2.5 token at a time, as an example of what we measure. At the measured 198 tokens
-// per second it would be over in a fifth of a second, so it is replayed 30 times slower, and
-// the meter adds the measured 141.5 mJ per decoded token as it goes.
+// per second it would be over in a fifth of a second, so it is replayed 30 times slower.
 const HEAD = ["The", " engineering", " of", " efficient", " inference", "."];
-const LEDE = ["Sp", "liced", " is", " a", " research", " lab", " for", " the", " engineering", " side", " of", " AI", ":", " what", " it", " takes", " to", " run", " models", " well", ",", " from", " the", " kernels", " on", " a", " laptop", " to", " the", " servers", " in", " a", " data", "center", ".", " We", " measure", ",", " publish", " the", " method", " and", " the", " data", ",", " and", " say", " what", " each", " result", " cannot", " show", "."];
+const LEDE = ["We", " measure", " what", " it", " costs", " to", " run", " AI", ",", " and", " publish", " everything", "."];
 (function typeTokens() {
   const h1 = document.getElementById("h1"), lede = document.getElementById("lede");
-  const mt = document.getElementById("m-tok"), mj = document.getElementById("m-j");
   const all = [...HEAD.map(t => [h1, t]), ...LEDE.map(t => [lede, t])];
   const step = 1000 / 198 * 30;
   let i = 0;
@@ -18,7 +16,6 @@ const LEDE = ["Sp", "liced", " is", " a", " research", " lab", " for", " the", "
     el.appendChild(span);
     setTimeout(() => span.classList.remove("fresh"), 380);
     i++;
-    mt.textContent = i; mj.textContent = (i * 0.1415).toFixed(2);
     if (i < all.length) reduced ? put() : setTimeout(put, step + (i === HEAD.length ? 500 : 0));
   }
   setTimeout(put, reduced ? 0 : 500);

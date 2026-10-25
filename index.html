@@ -20,7 +20,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>document.documentElement.classList.add("js");</script>
-<link rel="stylesheet" href="assets/style.css?v=202610242247">
+<link rel="stylesheet" href="assets/style.css?v=202610242317">
 <link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
 </head>
 <body data-root="" data-page="home">
@@ -52,17 +52,20 @@
 <header class="hero">
   <div class="wrap hero-grid">
     <div>
-      <span class="refdes mono" data-via><b>U0</b> Spliced &middot; Research lab</span>
+      <span class="label">Research lab</span>
       <h1 id="h1" aria-label="The engineering of efficient inference."></h1>
-      <p class="lede" id="lede" aria-label="Spliced is a research lab for the engineering side of AI: what it takes to run models well, from the kernels on a laptop to the servers in a datacenter. We measure, publish the method and the data, and say what each result cannot show."></p>
-      <p class="meter mono" aria-hidden="true">This text as Qwen2.5 1.5B decodes it on an M5 Pro: <span id="m-tok">0</span> tokens, <span id="m-j">0.00</span> J on the chip, shown at 1/30 speed</p>
+      <p class="lede" id="lede" aria-label="We measure what it costs to run AI, and publish everything."></p>
+      <div class="actions">
+        <a class="cta" href="research/">Read the research <span aria-hidden="true">&rarr;</span></a>
+        <a class="cta ghost" href="https://github.com/splicedso/phase">View on GitHub</a>
+      </div>
     </div>
 
-    <figure class="schem" aria-label="Schematic of where a token's energy goes, animated from a real power recording">
-      <div class="schem-head mono"><span>SHEET 1 &middot; power path of one token</span><span>t <b id="rt">0.0</b> s &middot; <b id="rp">idle</b></span></div>
+    <figure class="schem" aria-label="Where a token's energy goes, replayed from a real power recording">
+      <div class="schem-head mono"><span>Power path of one token</span><span><b id="rt">0.0</b> s &middot; <b id="rp">idle</b></span></div>
       <svg id="schem" viewBox="0 0 560 310"></svg>
       <canvas id="scope" aria-hidden="true"></canvas>
-      <div class="schem-foot mono"><span>TP1 board <b id="rs">0.0</b> W</span><span>TP2 chip <b id="rc">0.0</b> W</span><span>recorded with phase</span></div>
+      <div class="schem-foot mono"><span>Board <b id="rs">0.0</b> W</span><span>Chip <b id="rc">0.0</b> W</span></div>
     </figure>
   </div>
 </header>
@@ -70,54 +73,52 @@
 <main>
   <section>
     <div class="wrap">
-      <div class="label"><span class="refdes mono" data-via><b>J1</b> The lab</span></div>
-      <div class="cols">
-        <h2>The engineering side of the AI build-out, measured.</h2>
-        <div class="prose">
-          <p>Spliced is a small research lab. We study what it costs to run a model, in watts and joules as well as seconds, from one laptop up to how inference clusters are designed.</p>
-          <p>Every result ships with its method, its code and its raw data, and every note says what it cannot show.</p>
-        </div>
-      </div>
+      <h2 class="center">Three questions, one standard.</h2>
       <div class="areas">
-        <a class="area" href="research/"><span class="mono">A1</span><h3>Inference engineering</h3><p>Where decode time and energy go: memory bandwidth, kernels, quantization formats, batching, the KV cache, serving at cluster scale.</p></a>
-        <a class="area" href="research/"><span class="mono">A2</span><h3>Data science</h3><p>Measurement you can trust: repeated runs, held-out validation, and models whose coefficients have to make physical sense.</p></a>
-        <a class="area" href="tools/phase/"><span class="mono">A3</span><h3>Software engineering</h3><p>The tools that make the measurements repeatable, open source, small enough to read in one sitting.</p></a>
+        <a class="area" href="research/">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>
+          <h3>Inference engineering</h3><p>Where the time and energy of every token go.</p></a>
+        <a class="area" href="data/">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>
+          <h3>Data science</h3><p>Repeated, held out, and honest about its limits.</p></a>
+        <a class="area" href="tools/phase/">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m8 6-6 6 6 6M16 6l6 6-6 6"/></svg>
+          <h3>Open tools</h3><p>Every result reruns from public code and data.</p></a>
       </div>
     </div>
   </section>
 
   <section class="band">
     <div class="wrap">
-      <div class="label"><span class="refdes mono" data-via><b>J2</b> Findings so far</span></div>
+      <h2 class="center">What we have measured.</h2>
       <div class="facts">
-        <div class="fact"><span class="mono">TP1 / TP2, F16 vs Q4_0</span><div class="n">2.1<small>&times;</small></div><p>what full precision really costs over 4-bit at the board. Measured at the chip alone, the two look the same: the memory energy is invisible there.</p></div>
-        <div class="fact"><span class="mono">batch 1 &rarr; 8, Q4_0</span><div class="n">72<small>%</small></div><p>less energy per token from serving eight requests at once. Batch 2 saves 1%: the GPU reaches its power ceiling at the second sequence.</p></div>
-        <div class="fact"><span class="mono">Q4_K / Q4_0, same bytes</span><div class="n">40<small>%</small></div><p>more chip energy for the same traffic at the same speed. The two formats read identical bytes; the difference is entirely how the bits are unpacked.</p></div>
+        <div class="fact"><div class="n" data-count="72">72<small>%</small></div><p>less energy per token when serving eight requests at once.</p></div>
+        <div class="fact"><div class="n" data-count="40">40<small>&times;</small></div><p>cheaper to read a prompt token than to write an answer token.</p></div>
+        <div class="fact"><div class="n" data-count="2.1">2.1<small>&times;</small></div><p>the true energy cost of full precision over 4-bit.</p></div>
       </div>
     </div>
   </section>
 
   <section>
     <div class="wrap">
-      <div class="label"><span class="refdes mono" data-via><b>J3</b> Notes</span></div>
-      <h2>Published research.</h2>
-      <div class="notes"><a class="note-card" href="research/prefill/"><span class="mono">N18 &middot; 24 October 2026</span><h3>Reading the prompt: what prefill costs, and when it dominates</h3><p>Reading the prompt: a prompt token costs about 40 times less than a generated one, yet at an 8000-token prompt prefill is 40% of a request's energy. Caching the prefix saves exactly that.</p><span class="mono go">Read note &rarr;</span></a><a class="note-card" href="research/longest-contexts/"><span class="mono">N17 &middot; 24 October 2026</span><h3>The 8-bit cache does not win even when it fits an extra sequence</h3><p>A prediction that failed: at 65536 tokens an 8-bit cache fits a third sequence where f16 fits two, and still costs 1.58 times as much. The context long enough to force the batch down also erases what batching saves.</p><span class="mono go">Read note &rarr;</span></a><a class="note-card" href="research/memory-bound/"><span class="mono">N16 &middot; 24 October 2026</span><h3>The memory-bound regime: when a long context caps the batch</h3><p>When a long context caps the batch: a 12 GB card fits only 8 sequences of a 7B at 8k or 16k tokens. An 8-bit cache buys at most one batch doubling, and here that never pays for its 1.5 times penalty.</p><span class="mono go">Read note &rarr;</span></a><a class="note-card" href="research/spliced-drafter/"><span class="mono">N15 &middot; 24 October 2026</span><h3>Our first model: a distilled draft model, and what it did not fix</h3><p>Our first model: a 0.5B draft distilled from a 7B on one laptop. Held-out loss 6% lower, acceptance about 3% higher. Real and small, and a higher confidence threshold did not help.</p><span class="mono go">Read note &rarr;</span></a><a class="note-card" href="research/batching-and-context/"><span class="mono">N14 &middot; 24 October 2026</span><h3>A long context does not spend the batching saving, where the cache still fits</h3><p>Does a long context spend the batching saving? Not while the cache fits: batch 8 keeps 72 to 76% of its energy saving at 4096 tokens, against 75 to 79% at 64. Note 8's 60 times needs memory to run out.</p><span class="mono go">Read note &rarr;</span></a><a class="note-card" href="research/context-depth/"><span class="mono">N13 &middot; 24 October 2026</span><h3>What a long context costs, and what an 8-bit KV cache does not save</h3><p>What a long context costs per token: 1.3 times at 16k on an RTX 5070 Ti, up to 1.9 times on an M5 Pro, too little to explain the datacenter's 60 times. An 8-bit KV cache saves no energy at batch 1 on either.</p><span class="mono go">Read note &rarr;</span></a><a class="note-card" href="research/model-width-on-nvidia/"><span class="mono">N12 &middot; 24 October 2026</span><h3>Small models pay more per weight, on a discrete GPU too</h3><p>Note 6's width sweep on an RTX 5070 Ti. Small models pay up to 2.2 times more energy per weight, more than on the Mac for the 4-bit formats; Q4_0 is cheapest at every width; Q5_K_M beats Q6_K throughout.</p><span class="mono go">Read note &rarr;</span></a><a class="note-card" href="research/speculative-second-tool/"><span class="mono">N11 &middot; 24 October 2026</span><h3>Same result, second tool: speculative decoding through llama-server</h3><p>Notes 7 and 9 repeated through llama-server, the program real deployments use. Every finding holds. Also why Windows Smart App Control blocked the same run on our Windows laptop.</p><span class="mono go">Read note &rarr;</span></a><a class="note-card" href="research/batching-without-a-step/"><span class="mono">N10 &middot; 24 October 2026</span><h3>The same token, plugged in, and under batching</h3><p>The Windows laptop plugged in, and a batch sweep on CUDA. Plugging in buys 34 to 46% more speed for 23 to 33% more energy per token, and with the GPU at its ceiling from batch 1 the second request saves 43%.</p><span class="mono go">Read note &rarr;</span></a><a class="note-card" href="research/speculative-threshold/"><span class="mono">N9 &middot; 24 October 2026</span><h3>One flag fixes speculative decoding's energy problem</h3><p>A draft confidence threshold removes speculative decoding's energy penalty on every task tested. At about 0.5, speculation on prose becomes a free 1.3x speed-up.</p><span class="mono go">Read note &rarr;</span></a><a class="note-card" href="research/tokens-per-megawatt-hour/"><span class="mono">N8 &middot; 24 October 2026</span><h3>Tokens per megawatt-hour</h3><p>Every MLPerf LLM result with measured wall power. A B200 server buys 2.7 times the tokens per joule of an H100 NVL one, and the roofline says it must batch 58 or more sequences per weight pass.</p><span class="mono go">Read note &rarr;</span></a><a class="note-card" href="research/speculative-decoding/"><span class="mono">N7 &middot; 24 October 2026</span><h3>Faster is not cheaper: the energy of speculative decoding</h3><p>Speculative decoding with a draft model and with n-gram copying, on code, prose and edits. It can be faster and more expensive at once; copy-based drafting on an edit costs 32% of plain decoding.</p><span class="mono go">Read note &rarr;</span></a><a class="note-card" href="research/model-width/"><span class="mono">N6 &middot; 24 October 2026</span><h3>Small models pay more per weight</h3><p>Five formats across four model sizes. A weight in a 0.5B model costs up to 1.6 times one in a 7B; Q4_0 is cheapest at every width; the Q5_K_M against Q6_K order flips with width.</p><span class="mono go">Read note &rarr;</span></a><a class="note-card" href="research/kernel-energy/"><span class="mono">N5 &middot; 24 October 2026</span><h3>The cost of unpacking</h3><p>Each format's matrix-vector kernel measured alone. Q4_0 and Q4_K read identical bytes at identical speed; Q4_K's unpacking costs 40% more chip energy. Explains note 2's largest residual and corrects its roof.</p><span class="mono go">Read note &rarr;</span></a><a class="note-card" href="research/two-machines/"><span class="mono">N4 &middot; 24 October 2026</span><h3>Two machines, one token</h3><p>The study on a Windows laptop with an RTX 5070 Ti, on battery. Q4_0 wins on both machines and a 4-bit token costs the same whole-machine energy on both; one Mac finding does not transfer.</p><span class="mono go">Read note &rarr;</span></a><a class="note-card" href="research/scale-and-runtime/"><span class="mono">N3 &middot; 24 October 2026</span><h3>Does it hold? A model five times larger, and a second runtime</h3><p>The format study at 7B, where every finding replicates and the hardware is used better, and in MLX, where repeat runs do not yet agree, so only claims that survive both passes are made.</p><span class="mono go">Read note &rarr;</span></a><a class="note-card" href="research/roofline-and-energy-model/"><span class="mono">N2 &middot; 24 October 2026</span><h3>Where the joules go: a roofline and an energy model for decode</h3><p>A decode roofline from measured bandwidth, and a validated energy model whose residuals isolate the cost of unpacking each format. Two wrong first attempts, kept in.</p><span class="mono go">Read note &rarr;</span></a><a class="note-card" href="research/formats-and-batching/"><span class="mono">N1 &middot; 24 October 2026</span><h3>Fewer bits is not fewer joules</h3><p>Eight quantization formats and batch sizes 1 to 8, energy at the chip and at the board. Chip-only measurement misranks F16 by 2x; batch 2 saves 1% per token and batch 8 saves 72%.</p><span class="mono go">Read note &rarr;</span></a></div>
-      <a class="cta" href="research/">All research <span aria-hidden="true">&rarr;</span></a>
+      <div class="split">
+        <h2>Latest research.</h2>
+        <a class="more" href="research/">All 18 notes <span aria-hidden="true">&rarr;</span></a>
+      </div>
+      <div class="notes"><a class="note-card" href="research/prefill/"><span class="meta">Note 18 &middot; 24 October 2026</span><h3>Reading the prompt: what prefill costs, and when it dominates</h3><p>Reading the prompt: a prompt token costs about 40 times less than a generated one, yet at an 8000-token prompt prefill is 40% of a request's energy. Caching the prefix saves exactly that.</p><span class="go" aria-hidden="true">&rarr;</span></a><a class="note-card" href="research/longest-contexts/"><span class="meta">Note 17 &middot; 24 October 2026</span><h3>The 8-bit cache does not win even when it fits an extra sequence</h3><p>A prediction that failed: at 65536 tokens an 8-bit cache fits a third sequence where f16 fits two, and still costs 1.58 times as much. The context long enough to force the batch down also erases what batching saves.</p><span class="go" aria-hidden="true">&rarr;</span></a><a class="note-card" href="research/memory-bound/"><span class="meta">Note 16 &middot; 24 October 2026</span><h3>The memory-bound regime: when a long context caps the batch</h3><p>When a long context caps the batch: a 12 GB card fits only 8 sequences of a 7B at 8k or 16k tokens. An 8-bit cache buys at most one batch doubling, and here that never pays for its 1.5 times penalty.</p><span class="go" aria-hidden="true">&rarr;</span></a></div>
     </div>
   </section>
 
-  <section>
-    <div class="wrap cols">
-      <div>
-        <div class="label"><span class="refdes mono" data-via><b>J4</b> In progress</span></div>
-        <h2>On the bench now.</h2>
+  <section class="tight">
+    <div class="wrap">
+      <div class="closer">
+        <h2>Follow the lab.</h2>
+        <p>New research as it lands.</p>
+        <div class="actions">
+          <a class="cta" href="https://www.linkedin.com/company/splicedso">Follow on LinkedIn</a>
+          <a class="cta ghost" href="https://github.com/splicedso">GitHub</a>
+        </div>
       </div>
-      <ol class="steps">
-        <li><div><b>Our first model.</b> A 0.5B draft model distilled from Qwen2.5 7B, built to make the large model faster and cheaper on a PC. Training now; measured against the stock draft on prompts it has never seen. <a href="learn/distillation-and-draft-models/">How it works</a>.</div></li>
-        <li><div><b>Drafter v2.</b> A draft model trained on the 7B's full output distribution, aimed at the tokens the stock draft gets wrong.</div></li>
-        <li><div><b>Serving at batch.</b> Energy per token for a real serving engine under realistic load, to connect the laptop and the datacenter.</div></li>
-        <li><div><b>MLX repeatability.</b> Why two MLX passes disagree by up to 17% when llama.cpp repeats within 2%.</div></li>
-      </ol>
     </div>
   </section>
 </main>
@@ -125,17 +126,20 @@
 </div>
 
 <footer>
-  <div class="wrap">
-    <div class="titleblock mono" data-via>
-      <div><svg viewBox="0 0 500 659" aria-hidden="true"><path fill="currentColor" d="M0 192 L418 0 L418 205 L145 331 L145 449 L0 516 Z M197 385 L500 246 L500 520 L197 659 Z"/></svg><span><span class="k">Title</span>Spliced &middot; Efficient inference</span></div>
-      <div><span class="k">Drawn</span>2026-10</div>
-      <div><span class="k">Sheet</span>1 of 23</div>
-      <div><span class="k">Elsewhere</span><span class="foot-links"><a href="https://github.com/splicedso" aria-label="GitHub"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>GitHub</a><a href="https://www.linkedin.com/company/splicedso" aria-label="LinkedIn"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M0 1.15C0 .52.52 0 1.18 0h13.64C15.48 0 16 .52 16 1.15v13.7c0 .63-.52 1.15-1.18 1.15H1.18C.52 16 0 15.48 0 14.85V1.15zM4.75 13.39V6.17H2.35v7.22h2.4zM3.55 5.18c.84 0 1.36-.55 1.36-1.25-.02-.71-.52-1.25-1.34-1.25-.82 0-1.36.54-1.36 1.25 0 .7.52 1.25 1.33 1.25h.01zm4.91 8.21V9.36c0-.22.02-.43.08-.59.18-.43.57-.88 1.23-.88.87 0 1.22.66 1.22 1.64v3.86h2.4V9.25c0-2.22-1.18-3.25-2.76-3.25-1.27 0-1.84.7-2.16 1.19v.03h-.02l.02-.03V6.17h-2.4c.03.68 0 7.22 0 7.22h2.4z"/></svg>LinkedIn</a></span></div>
+  <div class="wrap foot">
+    <a class="brand" href="" aria-label="Spliced home"><svg viewBox="0 0 500 659" aria-hidden="true"><path fill="currentColor" d="M0 192 L418 0 L418 205 L145 331 L145 449 L0 516 Z M197 385 L500 246 L500 520 L197 659 Z"/></svg>Spliced</a>
+    <nav class="foot-nav" aria-label="Footer">
+      <a href="research/">Research</a><a href="learn/">Learn</a><a href="data/">Data</a><a href="tools/phase/">Phase</a><a href="lab/">Lab</a>
+    </nav>
+    <div class="foot-social">
+      <a href="https://github.com/splicedso" aria-label="GitHub"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a>
+      <a href="https://www.linkedin.com/company/splicedso" aria-label="LinkedIn"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M0 1.15C0 .52.52 0 1.18 0h13.64C15.48 0 16 .52 16 1.15v13.7c0 .63-.52 1.15-1.18 1.15H1.18C.52 16 0 15.48 0 14.85V1.15zM4.75 13.39V6.17H2.35v7.22h2.4zM3.55 5.18c.84 0 1.36-.55 1.36-1.25-.02-.71-.52-1.25-1.34-1.25-.82 0-1.36.54-1.36 1.25 0 .7.52 1.25 1.33 1.25h.01zm4.91 8.21V9.36c0-.22.02-.43.08-.59.18-.43.57-.88 1.23-.88.87 0 1.22.66 1.22 1.64v3.86h2.4V9.25c0-2.22-1.18-3.25-2.76-3.25-1.27 0-1.84.7-2.16 1.19v.03h-.02l.02-.03V6.17h-2.4c.03.68 0 7.22 0 7.22h2.4z"/></svg></a>
     </div>
+    <p class="foot-small">&copy; 2026 Spliced. Research and data are open.</p>
   </div>
 </footer>
 
-<script src="assets/site.js?v=202610242247"></script>
-<script src="assets/home.js?v=202610242247"></script>
+<script src="assets/site.js?v=202610242317"></script>
+<script src="assets/home.js?v=202610242317"></script>
 </body>
 </html>

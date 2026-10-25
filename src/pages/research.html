@@ -1,27 +1,27 @@
 <header class="page-head">
   <div class="wrap">
-    <span class="refdes mono" data-via><b>R</b> Research</span>
+    <span class="label">Research</span>
     <h1>Notes from the bench.</h1>
-    <p class="lede">Each note asks one question, answers it with measurements anyone can rerun, and lists what it cannot show. The source of every note, its scripts and its raw data live in the <a href="https://github.com/splicedso/phase">phase</a> repository.</p>
+    <p class="lede">One question per note. Measured, rerunnable, with its limits stated.</p>
   </div>
 </header>
 
 <main>
   <section class="tight">
     <div class="wrap">
-      <div class="label"><span class="refdes mono" data-via><b>R1</b> Published</span></div>
+      <div class="label">Published</div>
       {{notes}}
     </div>
   </section>
 
   <section class="tight">
     <div class="wrap">
-      <div class="label"><span class="refdes mono" data-via><b>R2</b> Open questions</span></div>
+      <div class="label">Open questions</div>
       <h2>What we want to know next.</h2>
       <div class="limits">
-        <div><h3>Width or depth?</h3><p>Small models pay up to 1.6 times more per weight, but the models that show it differ in width, depth and vocabulary at once. Separating them says which fixed cost to attack.</p></div>
-        <div><h3>Why so little data?</h3><p>Two servers in the latest MLPerf rounds report LLM energy at the wall. A reproducible way to measure serving energy under realistic load would be worth more than another speed record.</p></div>
-        <div><h3>One setting everywhere?</h3><p>On this Mac the best draft threshold lies between 0.5 and 0.8, and lower is worse. Whether the same setting holds on an NVIDIA GPU and for other model pairs is the next test.</p></div>
+        <div><h3>Width or depth?</h3><p>Small models pay more per weight. Which part of their shape costs it?</p></div>
+        <div><h3>Serving under load</h3><p>What a token costs on a real server, with real traffic.</p></div>
+        <div><h3>70B on one desk</h3><p>Large models on a single workstation, measured end to end.</p></div>
       </div>
     </div>
   </section>

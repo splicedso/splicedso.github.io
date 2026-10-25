@@ -199,13 +199,13 @@ def chart_data():
             "results": results, "roofline": roofline}
 
 
-def notes_list(root):
+def notes_list(root, limit=None):
     items = []
-    for n in reversed(NOTES):
+    for n in list(reversed(NOTES))[:limit]:
         title, date = note_meta(n)
         items.append(f'<a class="note-card" href="{root}research/{n["slug"]}/">'
-                     f'<span class="mono">N{n["n"]} &middot; {date}</span><h3>{title}</h3><p>{n["summary"]}</p>'
-                     f'<span class="mono go">Read note &rarr;</span></a>')
+                     f'<span class="meta">Note {n["n"]} &middot; {date}</span><h3>{title}</h3><p>{n["summary"]}</p>'
+                     f'<span class="go" aria-hidden="true">&rarr;</span></a>')
     return '<div class="notes">' + "".join(items) + "</div>"
 
 
@@ -258,7 +258,7 @@ def article(md_path, root, kicker):
     body = body.replace('href="../', 'href="' + root)
     content = f"""<header class="page-head">
   <div class="wrap">
-    <span class="refdes mono" data-via><b>{kicker[0]}</b> {kicker[1]}</span>
+    <span class="label">{kicker[1]}</span>
     <h1>{title}</h1>
     <p class="lede">{markdown.markdown(lede)[3:-4]}</p>
   </div>
@@ -307,7 +307,7 @@ def main():
     total = len(NOTES) + 5
     charts = '<script src="{{root}}assets/charts.js?v=' + VERSION + '"></script>'
 
-    page("index.html", (SRC / "pages/home.html").read_text().replace("{{notes}}", notes_list("")),
+    page("index.html", (SRC / "pages/home.html").read_text().replace("{{latest}}", notes_list("", 3)).replace("{{note_count}}", str(len(NOTES))),
          title="Spliced", description="A research lab for efficient inference. We measure what a token costs, at the chip and at the board.",
          page="home", sheet="Spliced &middot; Efficient inference", sheetno=f"1 of {total}",
          scripts='<script src="{{root}}assets/home.js?v=' + VERSION + '"></script>')
@@ -328,9 +328,10 @@ def main():
         lede, body = note_body(n)
         content = f"""<header class="page-head">
   <div class="wrap">
-    <span class="refdes mono" data-via><b>N{n['n']}</b> Research note &middot; {date}</span>
+    <span class="label">Note {n['n']} &middot; {date}</span>
     <h1>{title}</h1>
-    <p class="lede">{markdown.markdown(lede)[3:-4]}</p>
+    <p class="lede">{n["summary"]}</p>
+    <p class="setup">{markdown.markdown(lede)[3:-4]}</p>
   </div>
 </header>
 <main><article class="wrap note-body">{body}

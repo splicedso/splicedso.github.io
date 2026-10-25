@@ -87,3 +87,22 @@ const cssVar = name => getComputedStyle(document.documentElement).getPropertyVal
   addEventListener("scroll", set, { passive: true });
   set();
 })();
+
+// Numbers count up the first time they are seen.
+(function countUp() {
+  const nums = document.querySelectorAll("[data-count]");
+  if (reduced || !nums.length || !("IntersectionObserver" in window)) return;
+  const io = new IntersectionObserver(entries => entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    io.unobserve(e.target);
+    const node = e.target.firstChild, end = parseFloat(e.target.dataset.count);
+    const dp = (e.target.dataset.count.split(".")[1] || "").length, t0 = performance.now(), dur = 1400;
+    const tick = now => {
+      const p = Math.min(1, (now - t0) / dur), eased = 1 - Math.pow(1 - p, 4);
+      node.textContent = (end * eased).toFixed(dp);
+      if (p < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }), { threshold: .6 });
+  nums.forEach(n => io.observe(n));
+})();
