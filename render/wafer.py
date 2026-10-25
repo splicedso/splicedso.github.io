@@ -97,9 +97,11 @@ if "--stand" in args:
     # The face is a mirror, so what the camera sees on it is whatever sits along the reflected ray.
     # One very large softbox placed on that ray, so its reflection spans the whole face as one smooth
     # gradient (no hotspot), a weak fill from the other side, and a brighter HDRI so the rest is not black.
-    S.area((9.5, -9.5, R + 4.5), 2200, 18, target=(0, 0, R))
-    S.area((-9.0, -7.0, R + 1.0), 180, 8, target=(0, 0, R))
-    sc.world.node_tree.nodes["Background"].inputs["Strength"].default_value = 0.4
+    # dimmer, and set off the mirror ray so its reflection grades across the face from bright to dark,
+    # the way a polished wafer photographs: a dark disc with one soft window of light in it
+    S.area((12.0, -6.5, R + 8.5), 700, 16, target=(0, 0, R))
+    S.area((-9.0, -7.0, R + 1.0), 120, 8, target=(0, 0, R))
+    sc.world.node_tree.nodes["Background"].inputs["Strength"].default_value = 0.18
     sc.cycles.samples = 640
     S.camera((3.0, -16.0, R + 2.4), (0, 0, R * 0.95), lens=70, fstop=11)
 else:

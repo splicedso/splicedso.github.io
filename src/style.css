@@ -1212,3 +1212,6 @@ pre { border: 0 !important; border-left: 1px solid #d4d4d4 !important; }
   -webkit-mask-image: radial-gradient(ellipse 58% 58% at 50% 50%, #000 68%, transparent 100%) !important;
   mask-image: radial-gradient(ellipse 58% 58% at 50% 50%, #000 68%, transparent 100%) !important; }
 .note-card .go { background: transparent !important; }
+/* The Foundry icon is a still, and the label starts under it on every width. */
+.app-icon { animation: none !important; opacity: 1 !important; position: relative; z-index: 1; }
+.page-head .app-icon + .label { margin-top: 0; }
