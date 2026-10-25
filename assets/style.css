@@ -1145,3 +1145,4 @@ body { background: transparent; } html { background: #eee; }
 .announce a span { color: #8a8a8a; margin-left: 6px; }
 .announce a:hover span { color: #eee; }
 .tok { transition: opacity .45s var(--ease), filter .45s var(--ease); background: none !important; box-shadow: none !important; border: 0 !important; outline: 0 !important; } .tok.fresh { opacity: 0; filter: blur(4px); }
+.tok::before { display: none; }
