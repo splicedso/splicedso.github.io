@@ -119,6 +119,9 @@ if "--stand" in args:
         # square on, the face mirrors what is in front of it: a soft window high and to one side, a weak fill
         S.area((7.0, -14.0, R + 10.0), 650, 11, target=(0, 0, R))
         S.area((-10.0, -9.0, R - 1.0), 50, 8, target=(0, 0, R))
+        # a wide, high softbox from the front: the wafer's shadow becomes a short soft pool at its foot,
+        # not a long hard wedge off to one side
+        S.area((0.0, -6.0, R + 16.0), 400, 20, target=(0, 0, R * 0.5))
     else:
         S.area((11.0, -8.0, R + 7.0), 420, 7, target=(0, 0, R))
         S.area((-9.0, -7.0, R + 1.0), 60, 8, target=(0, 0, R))
