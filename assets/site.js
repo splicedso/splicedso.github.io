@@ -85,3 +85,27 @@ const cssVar = name => getComputedStyle(document.documentElement).getPropertyVal
   // Charts render after load and change the page height.
   addEventListener("load", () => setTimeout(build, 300));
 })();
+
+// Content rises into place as it scrolls into view; siblings follow one another.
+(function reveal() {
+  const items = document.querySelectorAll("section .wrap > *, .page-head .wrap > *, .area, .note-card, .fact, .chart, .limits > div");
+  if (reduced || !("IntersectionObserver" in window)) return;
+  const seen = new IntersectionObserver(entries => entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add("in"); seen.unobserve(e.target); }
+  }), { rootMargin: "0px 0px -8% 0px" });
+  items.forEach(item => {
+    if (item.closest(".reveal")) return;
+    const i = [...item.parentElement.children].indexOf(item);
+    item.style.setProperty("--d", `${Math.min(i, 6) * 70}ms`);
+    item.classList.add("reveal");
+    seen.observe(item);
+  });
+})();
+
+// The nav gains a hairline once the page has moved under it.
+(function navShadow() {
+  const nav = document.querySelector("nav");
+  const set = () => nav.classList.toggle("scrolled", scrollY > 8);
+  addEventListener("scroll", set, { passive: true });
+  set();
+})();
