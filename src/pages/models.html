@@ -18,6 +18,7 @@
             <div><dt>v0</dt><dd>0.5B, distilled from Qwen2.5 7B. +3% accepted tokens.</dd></div>
             <div><dt>v1</dt><dd>Trained on the 7B's probabilities: +0.7 points agreement, no faster. Scaling to 35,000 prompts next.</dd></div>
             <div><dt>Bar</dt><dd>+3 points top-1 agreement over the stock draft.</dd></div>
+            <div><dt>Now</dt><dd>The 35,000-prompt harvest is running; the retrain and its eval follow. A 72B target comes only if 7B clears the bar.</dd></div>
           </dl>
           <a class="more" href="../research/trace-v1/">Note 21 <span aria-hidden="true">&rarr;</span></a>
         </div>
@@ -30,6 +31,7 @@
             <div><dt>32B</dt><dd>Calibrated Q2_K beats Q4_0 per correct answer by 16% at equal accuracy. At 7B it still loses by 21%.</dd></div>
             <div><dt>v1</dt><dd>Quantization-aware training, next.</dd></div>
             <div><dt>Bar</dt><dd>At least 60% at Q2_K size, cheaper per answer than Q4_0.</dd></div>
+            <div><dt>Now</dt><dd>Quantization-aware fine-tuning of the 1.5B is being written; prediction first, then the run.</dd></div>
           </dl>
           <a class="more" href="../research/lattice-large/">Note 22 <span aria-hidden="true">&rarr;</span></a>
         </div>
@@ -41,6 +43,7 @@
             <div><dt>Status</dt><dd>Planned. Nothing trained yet; the training data is prepared.</dd></div>
             <div><dt>Shape</dt><dd>Four shapes at about 72M parameters, the same 1B tokens.</dd></div>
             <div><dt>Bar</dt><dd>Beat a same-size Qwen per correct answer, on both machines.</dd></div>
+            <div><dt>Now</dt><dd>Data complete and verified, trainer smoke-tested; the four shapes queue after the Trace retrain.</dd></div>
           </dl>
           <a class="more" href="https://github.com/splicedso/phase/blob/main/docs/program.md">The plan <span aria-hidden="true">&rarr;</span></a>
         </div>
