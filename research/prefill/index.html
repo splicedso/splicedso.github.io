@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reading the prompt: what prefill costs, and when it dominates &middot; Spliced</title>
+<meta name="description" content="Reading the prompt: a prompt token costs about 40 times less than a generated one, yet at an 8000-token prompt prefill is 40% of a request's energy. Caching the prefix saves exactly that.">
+<meta property="og:title" content="Reading the prompt: what prefill costs, and when it dominates &middot; Spliced">
+<meta property="og:description" content="Reading the prompt: a prompt token costs about 40 times less than a generated one, yet at an 8000-token prompt prefill is 40% of a request's energy. Caching the prefix saves exactly that.">
+<meta property="og:image" content="https://splicedso.github.io/assets/og.png">
+<meta property="og:url" content="https://splicedso.github.io/research/prefill/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Spliced">
+<link rel="canonical" href="https://splicedso.github.io/research/prefill/">
+<meta name="color-scheme" content="light dark">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>try { const t = localStorage.getItem("theme"); if (t) document.documentElement.dataset.theme = t; } catch {}</script>
+<link rel="stylesheet" href="../../assets/style.css?v=202610241944">
+<link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
+</head>
+<body data-root="../../" data-page="research">
+<a class="skip" href="#content">Skip to content</a>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="../../" aria-label="Spliced home">
+      <svg viewBox="0 0 500 659" aria-hidden="true"><path fill="currentColor" d="M0 192 L418 0 L418 205 L145 331 L145 449 L0 516 Z M197 385 L500 246 L500 520 L197 659 Z"/></svg>
+      Spliced
+    </a>
+    <div class="nav-right">
+      <ul>
+        <li><a href="../../research/" data-nav="research">Research</a></li>
+        <li><a href="../../learn/" data-nav="learn">Learn</a></li>
+        <li><a href="../../data/" data-nav="data">Data</a></li>
+        <li><a href="../../tools/phase/" data-nav="tools">Tools</a></li>
+        <li><a href="../../lab/" data-nav="lab">Lab</a></li>
+      </ul>
+      <a class="icon-link" href="https://github.com/splicedso" aria-label="Spliced on GitHub" title="GitHub"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a>
+      <a class="icon-link" href="https://www.linkedin.com/company/splicedso" aria-label="Spliced on LinkedIn" title="LinkedIn"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M0 1.15C0 .52.52 0 1.18 0h13.64C15.48 0 16 .52 16 1.15v13.7c0 .63-.52 1.15-1.18 1.15H1.18C.52 16 0 15.48 0 14.85V1.15zM4.75 13.39V6.17H2.35v7.22h2.4zM3.55 5.18c.84 0 1.36-.55 1.36-1.25-.02-.71-.52-1.25-1.34-1.25-.82 0-1.36.54-1.36 1.25 0 .7.52 1.25 1.33 1.25h.01zm4.91 8.21V9.36c0-.22.02-.43.08-.59.18-.43.57-.88 1.23-.88.87 0 1.22.66 1.22 1.64v3.86h2.4V9.25c0-2.22-1.18-3.25-2.76-3.25-1.27 0-1.84.7-2.16 1.19v.03h-.02l.02-.03V6.17h-2.4c.03.68 0 7.22 0 7.22h2.4z"/></svg></a>
+      <button class="theme" id="theme" type="button" aria-label="Dark mode" aria-pressed="false">
+        <svg class="moon" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M10.5 1.5a6.5 6.5 0 1 0 4 11.6A7 7 0 0 1 10.5 1.5Z"/></svg>
+        <svg class="sun" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="3.2" fill="currentColor"/><path stroke="currentColor" stroke-width="1.4" stroke-linecap="round" d="M8 1v1.6M8 13.4V15M1 8h1.6M13.4 8H15M3 3l1.1 1.1M11.9 11.9 13 13M3 13l1.1-1.1M11.9 4.1 13 3"/></svg>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<svg id="bus" aria-hidden="true"></svg>
+
+<div id="content">
+<header class="page-head">
+  <div class="wrap">
+    <span class="refdes mono" data-via><b>N18</b> Research note &middot; 24 October 2026</span>
+    <h1>Reading the prompt: what prefill costs, and when it dominates</h1>
+    <p class="lede">Spliced research note 18 (Windows half), 24 October 2026. Windows 11 laptop: Intel Core Ultra 9 285H, NVIDIA GeForce RTX 5070 Ti Laptop GPU (12 GB, Blackwell), 32 GB RAM, on AC. llama.cpp build 11851 (prebuilt CUDA 13.4 x64), CUDA backend, all layers on the GPU. Qwen2.5 1.5B and 7B, Q4_0.</p>
+  </div>
+</header>
+<main><article class="wrap note-body"><p>Notes 13, 14, 16 and 17 measured decode, the tokens a model writes. A real request first reads a prompt, and that prefill costs energy too. This note measures prefill energy per prompt token across prompt lengths, then combines it with note 13's decode-at-depth figures for the same machine to answer a practical question: for a request with a short answer, what share of the energy is the prompt?</p>
+<h2 data-via>Method</h2>
+<p>Prefill energy per prompt token from <code>phase</code> (llama-bench with <code>-p N -n 0</code>), batch 1, f16 cache with flash attention, prompt lengths 128, 512, 2048, 8192 and 16384 tokens. <code>--seconds 15</code> so even the fast short prefills fill a long enough window. Three passes per cell; all cells repeated within 2.3%. GPU (chip) energy only, as in note 4. The share calculation below combines these prefill figures with note 13's decode-at-depth figures (same machine, same build), decode interpolated to the prompt length; it is a calculation from two measured sources, not a single measurement.</p>
+<h2 data-via>Prefill energy per prompt token</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">prompt tokens</th>
+<th style="text-align: right;">1.5B mJ/tok</th>
+<th style="text-align: right;">7B mJ/tok</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">128</td>
+<td style="text-align: right;">9.14</td>
+<td style="text-align: right;">28.80</td>
+</tr>
+<tr>
+<td style="text-align: right;">512</td>
+<td style="text-align: right;">6.55</td>
+<td style="text-align: right;">24.29</td>
+</tr>
+<tr>
+<td style="text-align: right;">2048</td>
+<td style="text-align: right;">7.04</td>
+<td style="text-align: right;">24.88</td>
+</tr>
+<tr>
+<td style="text-align: right;">8192</td>
+<td style="text-align: right;">8.51</td>
+<td style="text-align: right;">27.38</td>
+</tr>
+<tr>
+<td style="text-align: right;">16384</td>
+<td style="text-align: right;">10.37</td>
+<td style="text-align: right;">31.68</td>
+</tr>
+</tbody>
+</table>
+<p>Two things. First, a prompt token is cheap next to a generated one: at 512 tokens the 7B reads a token for 24.3 mJ and, from note 13, writes one for about 1030 mJ at low depth, roughly 42 times more. Reading is far cheaper than writing. Second, prefill per token is not flat. It falls to a minimum near 512 tokens, where the fixed cost of launching the pass is spread over enough tokens, then rises as the prompt grows and attention over the prompt becomes a larger part of each token. From 512 to 16384 tokens, a 32-fold increase, the per-token cost rose 58% on the 1.5B (6.55 to 10.37) and 30% on the 7B (24.29 to 31.68). Attention makes it grow, but slowly: even at 16384 tokens it is still a minority of the per-token cost.</p>
+<h2 data-via>What share of a request is the prompt</h2>
+<p>Combining the prefill figures above with note 13's decode-at-depth, for a request with a 300-token answer:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">prompt tokens</th>
+<th style="text-align: right;">1.5B prefill share</th>
+<th style="text-align: right;">7B prefill share</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">500</td>
+<td style="text-align: right;">3.6%</td>
+<td style="text-align: right;">3.8%</td>
+</tr>
+<tr>
+<td style="text-align: right;">2000</td>
+<td style="text-align: right;">13.1%</td>
+<td style="text-align: right;">13.4%</td>
+</tr>
+<tr>
+<td style="text-align: right;">8000</td>
+<td style="text-align: right;">40.6%</td>
+<td style="text-align: right;">39.9%</td>
+</tr>
+<tr>
+<td style="text-align: right;">8000, cached prefix</td>
+<td style="text-align: right;">0%</td>
+<td style="text-align: right;">0%</td>
+</tr>
+</tbody>
+</table>
+<p>The share is almost the same on both models, because both prefill and decode scale with model size in step, so their ratio does not. With a short answer, the prompt is a few percent of the energy for a chat-sized request, about an eighth for a 2000-token prompt, and about 40% once the prompt reaches 8000 tokens. A long-context request, a RAG prompt or a long chat history, spends nearly as much energy reading as writing, even though each prompt token is 40 times cheaper, because there are so many more of them against a fixed 300-token answer.</p>
+<h2 data-via>The cached prefix</h2>
+<p>When the prompt is served from a cached prefix, its prefill is already done and costs about nothing. For the 8000-token request that turns the 40% prefill share into zero: on the 7B it cuts the request from about 549 J to about 330 J, a 40% saving, for the same output. This is the energy case for prompt caching in long-context serving: the saving is not a rounding error once prompts are long, it is the largest single lever on a long-prompt short-answer request.</p>
+<h2 data-via>What to take from this</h2>
+<ol>
+<li>A prompt token costs about 40 times less energy than a generated token on this machine, so for short prompts the answer dominates and prefill is a few percent.</li>
+<li>Prefill per token is lowest near 512 tokens and grows about 30 to 58% out to 16384 as attention builds, so a very long prompt is dearer per token as well as having more tokens.</li>
+<li>By 8000 prompt tokens with a short answer, prefill is about 40% of the energy, and a cached prefix removes essentially all of it. Prompt caching is a large energy lever for long-context serving, not a small one.</li>
+</ol>
+<h2 data-via>Limits</h2>
+<p>Batch 1 only; prefill and decode batch differently, so these shares are for single-stream serving. The share is a calculation combining this note's prefill with note 13's decode, measured in separate runs; decode was interpolated to the prompt length from note 13's depths, and the 500, 2000 and 8000 prompts used the prefill figures measured at 512, 2048 and 8192. GPU (chip) energy only; no whole-system figure on AC. Two models, one quantization, one card. Build 11851 (CUDA).</p>
+<h2 data-via>Reproduce</h2>
+<p>Windows, no admin, plugged in. With a clone and a prebuilt llama.cpp CUDA build on <code>PATH</code>:</p>
+<pre><code class="language-powershell">.\.venv\Scripts\python -m pip install -e .
+# prefill energy per token at a prompt length, batch 1, three passes:
+.\.venv\Scripts\phase models/quant/7b-Q4_0.gguf --prefill 8192 --decode 16 --seconds 15 --out results/prefill-windows-7b-p8192-run1.json -- -fa on
+</code></pre>
+<p>Raw results: <code>results/prefill-windows-{1.5b,7b}-p{128,512,2048,8192,16384}-run{1,2,3}.json</code>, <code>results/summary-prefill-windows.json</code>. The share figures combine these with note 13's <code>results/depth-windows-*.json</code>.</p>
+<p class="source mono">Source, scripts and raw data: <a href="https://github.com/splicedso/phase/blob/main/notes/2026-10-windows-prefill.md">phase/notes/2026-10-windows-prefill.md</a></p>
+</article></main>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="titleblock mono" data-via>
+      <div><svg viewBox="0 0 500 659" aria-hidden="true"><path fill="currentColor" d="M0 192 L418 0 L418 205 L145 331 L145 449 L0 516 Z M197 385 L500 246 L500 520 L197 659 Z"/></svg><span><span class="k">Title</span>N18 &middot; Reading the prompt: what prefill costs, and when it dominates</span></div>
+      <div><span class="k">Drawn</span>2026-10</div>
+      <div><span class="k">Sheet</span>23 of 23</div>
+      <div><span class="k">Elsewhere</span><span class="foot-links"><a href="https://github.com/splicedso" aria-label="GitHub"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>GitHub</a><a href="https://www.linkedin.com/company/splicedso" aria-label="LinkedIn"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M0 1.15C0 .52.52 0 1.18 0h13.64C15.48 0 16 .52 16 1.15v13.7c0 .63-.52 1.15-1.18 1.15H1.18C.52 16 0 15.48 0 14.85V1.15zM4.75 13.39V6.17H2.35v7.22h2.4zM3.55 5.18c.84 0 1.36-.55 1.36-1.25-.02-.71-.52-1.25-1.34-1.25-.82 0-1.36.54-1.36 1.25 0 .7.52 1.25 1.33 1.25h.01zm4.91 8.21V9.36c0-.22.02-.43.08-.59.18-.43.57-.88 1.23-.88.87 0 1.22.66 1.22 1.64v3.86h2.4V9.25c0-2.22-1.18-3.25-2.76-3.25-1.27 0-1.84.7-2.16 1.19v.03h-.02l.02-.03V6.17h-2.4c.03.68 0 7.22 0 7.22h2.4z"/></svg>LinkedIn</a></span></div>
+    </div>
+  </div>
+</footer>
+
+<script src="../../assets/site.js?v=202610241944"></script>
+<script src="../../assets/charts.js?v=202610241944"></script>
+</body>
+</html>

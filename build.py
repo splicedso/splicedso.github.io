@@ -75,6 +75,9 @@ NOTES = [
     {"slug": "longest-contexts", "file": "2026-10-windows-longctx.md", "n": 17,
      "summary": "A prediction that failed: at 65536 tokens an 8-bit cache fits a third sequence where f16 fits two, and still "
                 "costs 1.58 times as much. The context long enough to force the batch down also erases what batching saves."},
+    {"slug": "prefill", "file": "2026-10-windows-prefill.md", "n": 18,
+     "summary": "Reading the prompt: a prompt token costs about 40 times less than a generated one, yet at an 8000-token "
+                "prompt prefill is 40% of a request's energy. Caching the prefix saves exactly that."},
 ]
 
 FIGURES = {
