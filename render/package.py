@@ -77,7 +77,7 @@ if "--fall" in args:
     # the package stands facing the camera, then falls flat onto the floor (scrubbed by scroll on the site)
     from mathutils import Vector, Quaternion
     frames = int(args[args.index("--fall") + 1])
-    sc.cycles.samples = 32
+    sc.cycles.samples = 20
     sc.frame_start, sc.frame_end = 1, frames
     pivot = bpy.data.objects.new("pivot", None); sc.collection.objects.link(pivot)
     for o in list(sc.objects):
