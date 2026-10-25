@@ -34,19 +34,31 @@ bump = nt.nodes.new("ShaderNodeBump"); bump.inputs["Strength"].default_value = 0
 nt.links.new(nz.outputs["Fac"], bump.inputs["Height"]); nt.links.new(bump.outputs["Normal"], p.inputs["Normal"])
 
 # Braided sleeve: a woven pattern from two crossed wave textures along the cable's length.
-braid, p = principled("braid", (0.035, 0.035, 0.035), rough=0.55)
+braid, p = principled("braid", (0.03, 0.03, 0.032), rough=0.62)
+p.inputs["Sheen Weight"].default_value = 0.6; p.inputs["Sheen Roughness"].default_value = 0.4
 nt = braid.node_tree
 tc = nt.nodes.new("ShaderNodeTexCoord")
+# Woven PET sleeve: two sets of fine diagonal strands in object space, crossed, with fibre noise.
 waves = []
-for rot in (0.6, -0.6):
-    mp = nt.nodes.new("ShaderNodeMapping"); mp.inputs["Rotation"].default_value = (0, 0, rot); mp.inputs["Scale"].default_value = (40, 40, 40)
-    wv = nt.nodes.new("ShaderNodeTexWave"); wv.inputs["Scale"].default_value = 3
-    nt.links.new(tc.outputs["UV"], mp.inputs["Vector"]); nt.links.new(mp.outputs["Vector"], wv.inputs["Vector"])
+for rot in (0.75, -0.75):
+    mp = nt.nodes.new("ShaderNodeMapping"); mp.inputs["Rotation"].default_value = (rot, 0, 0); mp.inputs["Scale"].default_value = (1, 1, 1)
+    wv = nt.nodes.new("ShaderNodeTexWave"); wv.inputs["Scale"].default_value = 55; wv.wave_type = "BANDS"; wv.bands_direction = "Z"
+    wv.inputs["Distortion"].default_value = 0.6
+    nt.links.new(tc.outputs["Object"], mp.inputs["Vector"]); nt.links.new(mp.outputs["Vector"], wv.inputs["Vector"])
     waves.append(wv)
-mul = nt.nodes.new("ShaderNodeMath"); mul.operation = "MULTIPLY"
+mul = nt.nodes.new("ShaderNodeMath"); mul.operation = "MAXIMUM"
 nt.links.new(waves[0].outputs["Fac"], mul.inputs[0]); nt.links.new(waves[1].outputs["Fac"], mul.inputs[1])
-bump = nt.nodes.new("ShaderNodeBump"); bump.inputs["Strength"].default_value = 0.9
-nt.links.new(mul.outputs[0], bump.inputs["Height"]); nt.links.new(bump.outputs["Normal"], p.inputs["Normal"])
+fib = nt.nodes.new("ShaderNodeTexNoise"); fib.inputs["Scale"].default_value = 400; fib.inputs["Detail"].default_value = 8
+nt.links.new(tc.outputs["Object"], fib.inputs["Vector"])
+h = nt.nodes.new("ShaderNodeMath"); h.operation = "MULTIPLY_ADD"; h.inputs[2].default_value = 0.0
+nt.links.new(fib.outputs["Fac"], h.inputs[0]); h.inputs[1].default_value = 0.25
+hs = nt.nodes.new("ShaderNodeMath"); hs.operation = "ADD"
+nt.links.new(mul.outputs[0], hs.inputs[0]); nt.links.new(h.outputs[0], hs.inputs[1])
+col = nt.nodes.new("ShaderNodeMix"); col.data_type = "RGBA"
+col.inputs["A"].default_value = (0.012, 0.012, 0.013, 1); col.inputs["B"].default_value = (0.06, 0.06, 0.062, 1)
+nt.links.new(hs.outputs[0], col.inputs["Factor"]); nt.links.new(col.outputs["Result"], p.inputs["Base Color"])
+bump = nt.nodes.new("ShaderNodeBump"); bump.inputs["Strength"].default_value = 0.7; bump.inputs["Distance"].default_value = 0.01
+nt.links.new(hs.outputs[0], bump.inputs["Height"]); nt.links.new(bump.outputs["Normal"], p.inputs["Normal"])
 
 steel, _ = principled("steel", (0.6, 0.6, 0.6), metal=1.0, rough=0.28)
 plate, _ = principled("plate", (0.82, 0.82, 0.8), metal=1.0, rough=0.35)
@@ -90,11 +102,11 @@ o = bpy.data.objects.new("mark", me); sc.collection.objects.link(o); o.data.mate
 # Braided cables: loops out of the bottom face, hanging under gravity, each slightly different.
 for i in range(26):
     x = -3.5 + i * 0.28 + random.uniform(-0.03, 0.03)
-    drop = 2.2 + random.uniform(-0.25, 0.35)
+    drop = 0.85 + random.uniform(-0.08, 0.1)
     cu = bpy.data.curves.new("c", "CURVE"); cu.dimensions = "3D"
-    cu.bevel_depth = 0.075; cu.bevel_resolution = 6; cu.use_fill_caps = True
+    cu.bevel_depth = 0.07; cu.bevel_resolution = 6; cu.use_fill_caps = True
     sp = cu.splines.new("BEZIER"); sp.bezier_points.add(2)
-    pts = [(x, -1.2, 0.1), (x + random.uniform(-0.05, 0.05), -1.55, 0.1 - drop), (x, -0.4, 0.1)]
+    pts = [(x, -1.2, 0.1), (x + random.uniform(-0.02, 0.02), -1.35, 0.1 - drop), (x, -0.7, 0.1)]
     for bp, co in zip(sp.bezier_points, pts):
         bp.co = co; bp.handle_left_type = bp.handle_right_type = "AUTO"
     ob = bpy.data.objects.new("cable", cu); sc.collection.objects.link(ob)

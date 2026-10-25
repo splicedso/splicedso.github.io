@@ -23,7 +23,7 @@ random.seed(21)
 sc = S.setup(W, H)
 S.floor(0.0)
 
-pcb = S.mat("pcb", (0.008, 0.022, 0.014), rough=0.5, coat=0.15, micro=0.05)
+pcb = S.pcb_mat("pcb", (0.008, 0.022, 0.014))
 interposer = S.mat("interposer", (0.25, 0.26, 0.3), metal=1.0, rough=0.18)
 die = S.mat("die", (0.08, 0.08, 0.1), metal=0.6, rough=0.12)
 hbm = S.mat("hbm", (0.05, 0.05, 0.06), metal=0.4, rough=0.3)
