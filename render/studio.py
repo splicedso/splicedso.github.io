@@ -133,21 +133,30 @@ def render(out):
     bpy.ops.render.render(write_still=True)
 
 
-def turntable(out, frames, samples=96):
-    """Orbit the camera once around the origin over `frames` and render PNG frames to `out`."""
+def turntable(out, frames, samples=96, sway=None):
+    """Orbit the camera once around the origin over `frames`, or with sway=degrees swing it gently
+    back and forth across the front (for objects whose back is not modelled). Renders PNG frames."""
     sc = bpy.context.scene
     sc.cycles.samples = samples
     sc.frame_start, sc.frame_end = 1, frames
     sc.render.fps = 30
     pivot = bpy.data.objects.new("pivot", None); sc.collection.objects.link(pivot)
     sc.camera.parent = pivot
-    pivot.rotation_euler = (0, 0, 0); pivot.keyframe_insert("rotation_euler", index=2, frame=1)
-    pivot.rotation_euler = (0, 0, 2 * math.pi); pivot.keyframe_insert("rotation_euler", index=2, frame=frames + 1)
-    act = pivot.animation_data.action
+    if sway:
+        a = math.radians(sway)
+        for f, z in ((1, -a), (frames // 2 + 1, a), (frames + 1, -a)):
+            pivot.rotation_euler = (0, 0, z); pivot.keyframe_insert("rotation_euler", index=2, frame=f)
+        act = pivot.animation_data.action
+    else:
+        pivot.rotation_euler = (0, 0, 0); pivot.keyframe_insert("rotation_euler", index=2, frame=1)
+        pivot.rotation_euler = (0, 0, 2 * math.pi); pivot.keyframe_insert("rotation_euler", index=2, frame=frames + 1)
+        act = pivot.animation_data.action
     curves = getattr(act, "fcurves", None) or [c for l in act.layers for st in l.strips for bag in st.channelbags for c in bag.fcurves]
     for fc in curves:
         for k in fc.keyframe_points:
-            k.interpolation = "LINEAR"
+            k.interpolation = "SINE" if sway else "LINEAR"
+            if sway:
+                k.easing = "EASE_IN_OUT"
     r = sc.render
     r.image_settings.file_format = "PNG"; r.image_settings.color_mode = "RGBA"; r.filepath = out
     bpy.ops.render.render(animation=True)

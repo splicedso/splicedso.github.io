@@ -4,7 +4,7 @@ cd "$(dirname "$0")/.."
 B="$HOME/Library/Application Support/Steam/steamapps/common/Blender/Blender.app/Contents/MacOS/Blender"
 NAME=${1:-package}
 rm -f render/frames-turn/*
-"$B" -b -P render/$NAME.py -- "$PWD/render/frames-turn/" 1600x900 --turntable 180 >/dev/null 2>&1
+"$B" -b -P render/$NAME.py -- "$PWD/render/frames-turn/" 1600x900 --turntable 240 >/dev/null 2>&1
 uv run --with pillow python -I -c "
 import glob
 from PIL import Image
