@@ -365,6 +365,9 @@ def main():
     page("data/index.html", (SRC / "pages/data.html").read_text().replace("{{quality}}", quality_table()),
          title="Data &middot; Spliced", description="Every Spliced decode-energy measurement in one downloadable table, with a comparison tool.",
          page="data", sheet="Data", sheetno=f"5 of {total}", scripts='<script src="{{root}}assets/data.js?v=' + VERSION + '"></script>')
+    page("foundry/index.html", (SRC / "pages/foundry.html").read_text(),
+         title="Foundry &middot; Spliced", description="Foundry runs AI models on your own machine and shows what every answer costs.",
+         page="foundry", sheet="Foundry", sheetno="F")
     page("models/index.html", (SRC / "pages/models.html").read_text(),
          title="Models &middot; Spliced", description="Spliced models: Trace draft models, Lattice low-bit models, Kinetic.",
          page="models", sheet="Models", sheetno="M")
