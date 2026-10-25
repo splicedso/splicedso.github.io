@@ -27,10 +27,11 @@
           <p class="sub">Models that keep their accuracy when compressed below 4 bits per weight.</p>
           <dl class="specs">
             <div><dt>v0</dt><dd>Calibrated Q2_K. GSM8K 21% &rarr; 42% at the same size.</dd></div>
-            <div><dt>v1</dt><dd>Quantization-aware training, and 7B to 32B on the Strix Halo.</dd></div>
+            <div><dt>32B</dt><dd>Calibrated Q2_K beats Q4_0 per correct answer by 16% at equal accuracy. At 7B it still loses by 21%.</dd></div>
+            <div><dt>v1</dt><dd>Quantization-aware training, next.</dd></div>
             <div><dt>Bar</dt><dd>At least 60% at Q2_K size, cheaper per answer than Q4_0.</dd></div>
           </dl>
-          <a class="more" href="../research/lattice-v0/">Note 20 <span aria-hidden="true">&rarr;</span></a>
+          <a class="more" href="../research/lattice-large/">Note 22 <span aria-hidden="true">&rarr;</span></a>
         </div>
         <div class="model-box">
           <span class="label">Kinetic</span>

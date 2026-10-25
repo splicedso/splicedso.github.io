@@ -20,7 +20,7 @@
         <h3>{{note_count}} notes so far</h3>
         <p>Each note asks one question: what a quantization format costs, when batching pays, whether speculative decoding saves energy or only time. The prediction is written down before the run and stays in the record when it turns out wrong.</p>
         <h3>Two model families, both early</h3>
-        <p>Trace is a draft model trained to predict a larger one, for speculative decoding. Lattice is a model kept accurate below 4 bits per weight. Each has a first version and a measured result, and neither has beaten the stock model on our bar yet. The Models page says exactly where they stand.</p>
+        <p>Trace is a draft model trained to predict a larger one, for speculative decoding. Lattice is a model kept accurate below 4 bits per weight. Each has a first version and a measured result. Neither has cleared its bar yet, though calibrated 2-bit already beats 4-bit per correct answer on a 32B model. The Models page says exactly where they stand.</p>
         <h3>Two tools</h3>
         <p>Phase is the open-source power meter behind every number here. Foundry is a desktop app, still in development, that runs a model on your own machine and shows the speed and energy of each answer.</p>
       </div>

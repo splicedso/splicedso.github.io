@@ -88,6 +88,9 @@ NOTES = [
     {"slug": "trace-v1", "file": "2026-10-trace-v1.md", "n": 21,
      "summary": "Trace v1, trained on a 7B's probabilities: +0.7 points of agreement, no faster than the stock draft. "
                 "On the Strix Halo, speculative decoding itself cuts energy per token by a third."},
+    {"slug": "lattice-large", "file": "2026-10-lattice-large.md", "n": 22,
+     "summary": "Calibrated 2-bit against Q4_0 at 7B and 32B on the Strix Halo. At 32B the 2-bit model costs 16% less per correct "
+                "answer at equal accuracy; at 7B Q4_0 still wins by 21%. The crossover is where memory traffic takes over the token."},
 ]
 
 FIGURES = {
