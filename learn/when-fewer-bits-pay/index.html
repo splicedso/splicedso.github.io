@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>When fewer bits pay, and when they do not &middot; Spliced</title>
+<meta name="description" content="A 2-bit model reads half the bytes of a 4-bit one for every token. Reading bytes is most of what decoding costs (primer 2), so fewer bits should mean less energy per token. Our measurements say: sometimes. On a 1.5B model on a laptop chip a 2-bit token cost 13% more energy than a 4-bit one (note 20). On a 7B it cost 18% more. On a 32B it cost 10% less, and the 2-bit model won per correct answer by 16% (note 22). This primer is about why the sign flips.">
+<meta property="og:title" content="When fewer bits pay, and when they do not &middot; Spliced">
+<meta property="og:description" content="A 2-bit model reads half the bytes of a 4-bit one for every token. Reading bytes is most of what decoding costs (primer 2), so fewer bits should mean less energy per token. Our measurements say: sometimes. On a 1.5B model on a laptop chip a 2-bit token cost 13% more energy than a 4-bit one (note 20). On a 7B it cost 18% more. On a 32B it cost 10% less, and the 2-bit model won per correct answer by 16% (note 22). This primer is about why the sign flips.">
+<meta property="og:image" content="https://splicedso.github.io/assets/og.png?v=202610251438">
+<meta property="og:url" content="https://splicedso.github.io/learn/when-fewer-bits-pay/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Spliced">
+<link rel="canonical" href="https://splicedso.github.io/learn/when-fewer-bits-pay/">
+<meta name="color-scheme" content="light dark">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="../../assets/favicon.svg?v=202610251438" type="image/svg+xml">
+<link rel="icon" href="../../assets/favicon-32.png?v=202610251438" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png?v=202610251438">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>document.documentElement.classList.add("js");</script>
+<link rel="stylesheet" href="../../assets/style.css?v=202610251438">
+<link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
+</head>
+<body data-root="../../" data-page="learn">
+<a class="skip" href="#content">Skip to content</a>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="../../" aria-label="Spliced home">
+      <svg viewBox="-13 -13 966 1084" aria-hidden="true"><path fill="currentColor" stroke="currentColor" stroke-width="12.7" stroke-linejoin="round" d="M639.0 0.0 L941.0 0.0 L301.0 1059.0 L0.0 1059.0 Z"/></svg>
+      Spliced
+    </a>
+    <div class="nav-right">
+      <ul>
+        <li><a href="../../research/" data-nav="research">Research</a></li>
+        <li><a href="../../models/" data-nav="models">Models</a></li>
+        <li><a href="../../foundry/" data-nav="foundry">Foundry</a></li>
+        <li><a href="../../data/" data-nav="data">Data</a></li>
+        <li><a href="../../tools/phase/" data-nav="tools">Phase</a></li>
+        <li><a href="../../lab/" data-nav="lab">Lab</a></li>
+      </ul>
+      <a class="icon-link" href="https://github.com/splicedso" aria-label="Spliced on GitHub" title="GitHub"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a>
+      <a class="icon-link" href="https://www.linkedin.com/company/splicedso" aria-label="Spliced on LinkedIn" title="LinkedIn"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M0 1.15C0 .52.52 0 1.18 0h13.64C15.48 0 16 .52 16 1.15v13.7c0 .63-.52 1.15-1.18 1.15H1.18C.52 16 0 15.48 0 14.85V1.15zM4.75 13.39V6.17H2.35v7.22h2.4zM3.55 5.18c.84 0 1.36-.55 1.36-1.25-.02-.71-.52-1.25-1.34-1.25-.82 0-1.36.54-1.36 1.25 0 .7.52 1.25 1.33 1.25h.01zm4.91 8.21V9.36c0-.22.02-.43.08-.59.18-.43.57-.88 1.23-.88.87 0 1.22.66 1.22 1.64v3.86h2.4V9.25c0-2.22-1.18-3.25-2.76-3.25-1.27 0-1.84.7-2.16 1.19v.03h-.02l.02-.03V6.17h-2.4c.03.68 0 7.22 0 7.22h2.4z"/></svg></a>
+    </div>
+  </div>
+</nav>
+
+<svg id="bus" aria-hidden="true"></svg>
+
+<div id="content">
+<header class="page-head">
+  <div class="wrap">
+    <span class="label">Primer</span>
+    <h1>When fewer bits pay, and when they do not</h1>
+    <p class="lede">Primer 8. Builds on primer 3.</p>
+  </div>
+</header>
+<main><article class="wrap note-body"><p>A 2-bit model reads half the bytes of a 4-bit one for every token. Reading bytes is most of what decoding costs (primer 2), so fewer bits should mean less energy per token. Our measurements say: sometimes. On a 1.5B model on a laptop chip a 2-bit token cost 13% more energy than a 4-bit one (<a href="../../research/lattice-v0/">note 20</a>). On a 7B it cost 18% more. On a 32B it cost 10% less, and the 2-bit model won per correct answer by 16% (<a href="../../research/lattice-large/">note 22</a>). This primer is about why the sign flips.</p>
+<h2 data-via>Three costs in every token</h2>
+<p>A decoded token pays three bills. The chip reads every weight once, so the first bill is bytes moved from memory. The second is arithmetic: the weights are stored packed, and a 2-bit format has to be unpacked into numbers the math units can use, which is more work per weight than a 4-bit format needs (<a href="../../research/kernel-energy/">note 5</a> measured this unpacking cost directly). The third is everything the package draws regardless, the fans, the memory controller, the idle floor, charged per second and so per token.</p>
+<p>Fewer bits shrink the first bill and grow the second. The third does not care about bits, only about time.</p>
+<h2 data-via>Why the model's size decides</h2>
+<p>On a 1.5B model the weights are small. Reading them is quick, the unpacking is the same work per weight, and the fixed power ticks away either way. Halving a small bill while raising a larger one loses. On a 32B model the weights are twenty times bigger. Reading them is now most of the token, the unpacking is the same fraction it always was, and halving the big bill wins. Somewhere between 7B and 32B, on the machine we measured, the lines cross.</p>
+<p>The machine matters too. A chip whose memory is fast relative to its arithmetic moves the crossover up; one that is memory-starved moves it down. That is why we measure instead of reasoning from a spec sheet.</p>
+<h2 data-via>What it means in practice</h2>
+<p>For a small model on a laptop, 4 bits is the floor: going lower costs accuracy and saves nothing. For a large model, calibrated 2-bit is worth a measurement, because it may be cheaper per correct answer and not just per token. The accuracy half of that question is primer 3's: a calibrated 2-bit 32B lost nothing on our test, where a calibrated 2-bit 1.5B lost 24 points.</p>
+<p>Related: <a href="../../research/lattice-v0/">note 20</a>, <a href="../../research/lattice-large/">note 22</a>, <a href="../../research/kernel-energy/">note 5</a>. The models that come out of this are Lattice: <a href="../../models/">models</a>.</p></article></main>
+</div>
+
+<footer>
+  <div class="wrap foot">
+    <a class="brand" href="../../" aria-label="Spliced home"><svg viewBox="-13 -13 966 1084" aria-hidden="true"><path fill="currentColor" stroke="currentColor" stroke-width="12.7" stroke-linejoin="round" d="M639.0 0.0 L941.0 0.0 L301.0 1059.0 L0.0 1059.0 Z"/></svg>Spliced</a>
+    <nav class="foot-nav" aria-label="Footer">
+      <a href="../../research/">Research</a><a href="../../models/">Models</a><a href="../../foundry/">Foundry</a><a href="../../learn/">Learn</a><a href="../../data/">Data</a><a href="../../tools/phase/">Phase</a><a href="../../lab/">Lab</a>
+    </nav>
+    <div class="foot-social">
+      <a href="https://github.com/splicedso" aria-label="GitHub"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a>
+      <a href="https://www.linkedin.com/company/splicedso" aria-label="LinkedIn"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M0 1.15C0 .52.52 0 1.18 0h13.64C15.48 0 16 .52 16 1.15v13.7c0 .63-.52 1.15-1.18 1.15H1.18C.52 16 0 15.48 0 14.85V1.15zM4.75 13.39V6.17H2.35v7.22h2.4zM3.55 5.18c.84 0 1.36-.55 1.36-1.25-.02-.71-.52-1.25-1.34-1.25-.82 0-1.36.54-1.36 1.25 0 .7.52 1.25 1.33 1.25h.01zm4.91 8.21V9.36c0-.22.02-.43.08-.59.18-.43.57-.88 1.23-.88.87 0 1.22.66 1.22 1.64v3.86h2.4V9.25c0-2.22-1.18-3.25-2.76-3.25-1.27 0-1.84.7-2.16 1.19v.03h-.02l.02-.03V6.17h-2.4c.03.68 0 7.22 0 7.22h2.4z"/></svg></a>
+    </div>
+    <p class="foot-small">&copy; 2026 Spliced. Research and data are open.</p>
+  </div>
+</footer>
+
+<script src="../../assets/site.js?v=202610251438"></script>
+
+</body>
+</html>
