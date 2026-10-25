@@ -31,7 +31,7 @@ def shade(img, color, right=False):
     d = ImageDraw.Draw(fade)
     if right:  # a clean white field on the right, fading into the photograph
         for i in range(W):
-            a = 255 if i < 1250 else int(255 * max(0, 1 - (i - 1250) / 1000) ** 1.6)
+            a = int(205 * (1 if i < 700 else max(0, 1 - (i - 700) / 1300) ** 1.4))
             d.line([(W - 1 - i, 0), (W - 1 - i, H)], fill=a)
     else:
         for i in range(1500):
@@ -51,10 +51,10 @@ def band(path, focus, contrast, bright):
 # Black: the same wafer, graded dark.
 dark = band(HERE.parent / "render" / "photo-wafer.jpg", 0.5, 1.6, 0.55)
 lockup(shade(dark, (0, 0, 0), right=True), (255, 255, 255), x=1960, y=280,
-       sub="A research lab for efficient inference.").save(HERE / "linkedin-banner-black.png")
+       sub="Measuring Frontier Inference").save(HERE / "linkedin-banner-black.png")
 # White: the lockup on the right, where the company logo (lower left on desktop) never covers it
 # and inside the band phones keep.
 light = band(HERE.parent / "render" / "photo-wafer.jpg", 0.5, 1.25, 1.3)
 lockup(shade(light, (255, 255, 255), right=True), (0, 0, 0), x=1960, y=280,
-       sub="A research lab for efficient inference.").save(HERE / "linkedin-banner-white.png")
+       sub="Measuring Frontier Inference").save(HERE / "linkedin-banner-white.png")
 print("ok")
