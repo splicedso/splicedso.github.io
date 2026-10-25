@@ -1,0 +1,13 @@
+  <section class="etched">
+    <div class="etched-grid">
+      <figure><img src="../assets/img/rack.webp" alt="A concept liquid-cooled rack: twenty-four decode sleds, a coolant distribution unit, a top-of-rack switch" loading="lazy"></figure>
+      <div class="prose">
+        <h2>A rack built around the sled.</h2>
+        <p>Twenty-four sleds, a coolant distribution unit in the bottom four units, a switch at the top, and a vertical busbar at the rear so no sled carries its own power supply. Every sled face has two quick-disconnect couplers on the left, because the cold plates on the decode modules are liquid cooled from the start; there is no air path through the module and no fan in the sled.</p>
+        <h3>Why liquid, why a busbar</h3>
+        <p>A capped decode module draws a fraction of a conventional accelerator's power, so the rack's heat is modest for its density; what liquid buys is a flat cold plate and a 1U sled, which is what keeps twenty-four of them in one cabinet. The busbar removes twenty-four power supplies and their conversion losses from the rack, the overhead that sits between chip energy and wall energy in every measurement we have made.</p>
+        <h3>What would have to be true</h3>
+        <p>The idle floor of a full rack at low load, measured at the wall, has to stay below the sum of its parts idling; the coolant unit's pumps have to cost less than the fans they replace; and the switch has to carry cache handoffs between sleds within the time decode hides them. The two-box microbenchmark in our cluster groundwork is the first of those to run.</p>
+      </div>
+    </div>
+  </section>

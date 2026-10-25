@@ -1215,7 +1215,7 @@ pre { border: 0 !important; border-left: 1px solid #d4d4d4 !important; }
 .page-head .app-icon + .label { margin-top: 0; }
 .closer { border: 0 !important; }   /* the section rule above it is enough */
 /* Models: three boxes side by side, one per family, divided by thin rules. */
-.trio { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid #d4d4d4; border-bottom: 1px solid #d4d4d4; margin-top: 8px; }
+.trio { display: grid; grid-template-columns: repeat(2, 1fr); max-width: 980px; margin-left: auto; margin-right: auto; border-top: 1px solid #d4d4d4; border-bottom: 1px solid #d4d4d4; margin-top: 8px; }
 .model-box { padding: 40px 32px 44px; text-align: left; display: flex; flex-direction: column; }
 .model-box + .model-box { border-left: 1px solid #d4d4d4; }
 .model-box .label { margin: 0 0 18px; }

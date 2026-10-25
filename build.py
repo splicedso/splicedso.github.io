@@ -320,7 +320,10 @@ def feed():
 
 def webp_size(src):
     """Pixel size of an assets/img WebP, read from its header."""
-    b = (HERE / "assets/img" / src.rsplit("/", 1)[1]).read_bytes()[:30]
+    f = HERE / "assets/img" / src.rsplit("/", 1)[1]
+    if not f.exists():
+        print("missing image:", f.name); return (0, 0)
+    b = f.read_bytes()[:30]
     if b[12:16] == b"VP8X":
         return 1 + int.from_bytes(b[24:27], "little"), 1 + int.from_bytes(b[27:30], "little")
     if b[12:16] == b"VP8L":

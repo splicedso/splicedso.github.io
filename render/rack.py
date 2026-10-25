@@ -18,7 +18,7 @@ args = sys.argv[sys.argv.index("--") + 1:]
 OUT = args[0]
 W, H = (int(v) for v in (args[1] if len(args) > 1 and "x" in args[1] else "2000x2600").split("x"))
 random.seed(41)
-sc = S.setup(W, H, hdri_strength=0.5)
+sc = S.setup(W, H, samples=224, hdri_strength=0.5)
 S.floor(0.0)
 
 frame = S.scuffed("frame", (0.03, 0.03, 0.032), metal=0.7, rough=0.5)
@@ -42,9 +42,11 @@ for x in (-RW / 2, RW / 2):
 S.box((RW + 1.2, RD + 1.2, 1.0), (0, 0, RH + 0.5), frame, 0.06)
 S.box((RW + 1.2, RD + 1.2, 1.6), (0, 0, 0.8), frame, 0.06)
 S.box((RW, 1.0, RH), (0, RD / 2, RH / 2), frame, 0.04)        # rear panel
+for x in (-RW / 2 - 0.3, RW / 2 + 0.3):                        # side panels, so the cabinet reads as a closed box
+    S.box((0.6, RD, RH - 2.0), (x, 0, RH / 2), face, 0.04)
 for x in (-RW / 2 + 0.9, RW / 2 - 0.9):                        # front mounting rails with holes
     S.box((0.6, 0.6, RH - 2.0), (x, -RD / 2 + 0.3, RH / 2), steel, 0.02)
-    for i in range(0, 126, 3):
+    for i in range(0, 126, 6):
         S.box((0.3, 0.3, 0.3), (x, -RD / 2 + 0.0, 1.6 + i * 0.58), dark)
 # busbar at the rear, vertical, two copper bars behind a clear-ish cover (drawn as bars only)
 for bx in (-1.2, 1.2):
@@ -54,9 +56,9 @@ for bx in (-1.2, 1.2):
 CDU_Z = 1.6
 S.box((RW - 2.0, RD - 4, 4 * U), (0, 0, CDU_Z + 2 * U), face, 0.08)
 S.box((RW - 2.4, 0.1, 4 * U - 0.6), (0, -RD / 2 + 2.02, CDU_Z + 2 * U), dark)
-for i in range(60):
-    for j in range(7):
-        S.box((0.18, 0.1, 0.5), (-RW / 2 + 1.6 + i * 0.36, -RD / 2 + 1.98, CDU_Z + 0.8 + j * 0.85), face)
+for i in range(30):
+    for j in range(4):
+        S.box((0.36, 0.1, 0.9), (-RW / 2 + 1.7 + i * 0.72, -RD / 2 + 1.98, CDU_Z + 1.0 + j * 1.5), face)
 for k, x in enumerate((-RW / 2 + 3.0, -RW / 2 + 5.2)):
     bpy.ops.mesh.primitive_cylinder_add(radius=0.55, depth=1.2, location=(x, -RD / 2 + 1.4, CDU_Z + 1.2), rotation=(math.pi / 2, 0, 0), vertices=32)
     bpy.context.object.data.materials.append(steel)
@@ -72,9 +74,8 @@ def sled_face(z):
     """One 1U sled seen from the front: faceplate, grille, two couplers, a handle, a status LED."""
     S.box((RW - 2.4, RD - 4, U - 0.1), (0, 0, z + U / 2), face, 0.05)
     S.box((RW - 2.8, 0.08, U - 0.5), (0, -RD / 2 + 2.0, z + U / 2), dark)
-    for i in range(52):
-        for j in range(2):
-            S.box((0.16, 0.08, 0.42), (-RW / 2 + 4.6 + i * 0.3, -RD / 2 + 1.97, z + 0.55 + j * 0.62), face)
+    for i in range(26):
+        S.box((0.32, 0.08, 1.1), (-RW / 2 + 4.8 + i * 0.6, -RD / 2 + 1.97, z + U / 2), face)
     for k, x in enumerate((-RW / 2 + 1.9, -RW / 2 + 2.6)):                        # coupler stubs feeding the hoses
         bpy.ops.mesh.primitive_cylinder_add(radius=0.22, depth=0.8, location=(x, -RD / 2 + 2.2, z + U / 2), rotation=(math.pi / 2, 0, 0), vertices=20)
         bpy.context.object.data.materials.append(steel)
@@ -86,16 +87,25 @@ def sled_face(z):
 
 
 z = CDU_Z + 4 * U + 0.4
-for i in range(12):
+for i in range(24):
     sled_face(z + i * (U + 0.1))
-z_top = z + 12 * (U + 0.1)
-for i in range(6):                                                                  # blanking panels above
+z_top = z + 24 * (U + 0.1)
+# a top-of-rack switch: 1U, a row of 32 cage ports and two status lights
+S.box((RW - 2.4, RD - 4, U - 0.1), (0, 0, z_top + 0.4 + U / 2), face, 0.05)
+for i in range(32):
+    S.box((0.42, 0.1, 0.5), (-RW / 2 + 2.2 + i * 0.6, -RD / 2 + 1.98, z_top + 0.4 + U / 2), dark, 0.02)
+    S.box((0.36, 0.06, 0.44), (-RW / 2 + 2.2 + i * 0.6, -RD / 2 + 1.96, z_top + 0.4 + U / 2), steel, 0.01)
+for k in range(2):
+    bpy.ops.mesh.primitive_cylinder_add(radius=0.07, depth=0.05, location=(RW / 2 - 1.6 - k * 0.3, -RD / 2 + 1.96, z_top + 0.4 + U / 2), rotation=(math.pi / 2, 0, 0), vertices=12)
+    bpy.context.object.data.materials.append(led)
+z_top = z_top + 0.4 + U + 0.3
+for i in range(2):                                                                  # blanking panels above
     S.box((RW - 2.4, 0.3, 2 * U - 0.2), (0, -RD / 2 + 1.9, z_top + 1.0 + i * (2 * U + 0.1) + U - 0.1), blank, 0.04)
-    for j in range(80):
-        S.box((0.12, 0.1, 0.12), (-RW / 2 + 2.0 + j * 0.25, -RD / 2 + 1.75, z_top + 1.0 + i * (2 * U + 0.1) + U - 0.1), dark)
+    for j in range(20):
+        S.box((0.3, 0.1, 0.3), (-RW / 2 + 2.4 + j * 1.0, -RD / 2 + 1.75, z_top + 1.0 + i * (2 * U + 0.1) + U - 0.1), dark)
 
-S.area((-40, -60, 70), 90000, 30, (0, 0, 40))
+S.area((-50, -70, 80), 140000, 36, (0, 0, 40))
 S.area((45, -30, 40), 40000, 20, (0, 0, 40))
 S.area((0, 50, 60), 30000, 30, (0, 0, 40))
-S.camera((-38, -92, 48), (0, -6, 38), lens=60, fstop=9)
+S.camera((-52, -120, 58), (0, -8, 40), lens=50, fstop=9)
 S.render(OUT)

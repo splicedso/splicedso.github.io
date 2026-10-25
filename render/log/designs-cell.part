@@ -1,0 +1,20 @@
+  <section class="etched">
+    <div class="etched-grid">
+      <figure><img src="../assets/img/cell.webp" alt="A concept portable datacenter cell: a sealed pallet-sized enclosure with heat rejection on top and a dock on each side" loading="lazy"></figure>
+      <div class="prose">
+        <h2>A cell that is a datacenter on its own.</h2>
+        <p>One rack of decode sleds in a sealed, pallet-sized enclosure: forklift pockets below, lifting eyes above, heat rejection on top fed by the sleds' liquid loop. Alone, it needs only power and a network drop. Each side is a blind-mate dock with two coolant couplers, a fibre plate and a busbar cover, so a second cell pushed against the first connects without anyone opening either.</p>
+        <h3>Alone, or a hundred in a row</h3>
+        <p>Docked end to end, the coolant trunk, the busbar and the fibre pass through every cell: a row takes power at one end, rejects heat along its whole top, and its switches form one fabric. A row of a hundred is one unit to the scheduler and a hundred units to the forklift. Pull one out and its neighbours' docks close.</p>
+        <h3>Why one is cheap, and the hundredth cheaper</h3>
+        <p>The sleds spend their silicon on commodity stacked memory rather than a large die and run capped, which leaves out the expensive part of an accelerator. No power supply per cell, no raised floor, no chilled-water plant, no building: the cell is its own room. One enclosure, one door, one dock, built in volume. We have not costed it and will not print a price until a bill of materials exists.</p>
+        <h3>What would have to be true</h3>
+        <p>The top block rejects a full rack's heat at the design ambient without a chiller, at a fan power that keeps wall energy per correct answer below the single-chip figure. The couplers hold pressure through a hundred dockings. The busbar carries a row's current and a cell can be pulled live. None of these are measured.</p>
+      </div>
+    </div>
+  </section>
+  <section class="etched">
+    <div class="etched-grid solo">
+      <figure class="wide"><img src="../assets/img/cell-row.webp" alt="Eight concept cells docked end to end into one row" loading="lazy"></figure>
+    </div>
+  </section>
