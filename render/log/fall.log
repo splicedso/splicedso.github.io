@@ -1,0 +1,4 @@
+/Users/martinmuskov/Docs/GitHub/spliced/site/render/package.py:25: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  lid = bpy.data.materials.new("lid"); lid.use_nodes = True
+00:20.042  render           | Saved: '/Users/martinmuskov/Docs/GitHub/spliced/site/render/frames-fall/0001.png'
+00:23.954  render           | Saved: '/Users/martinmuskov/Docs/GitHub/spliced/site/render/frames-fall/0002.png'

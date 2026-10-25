@@ -353,7 +353,7 @@ def main():
     charts = '<script src="{{root}}assets/charts.js?v=' + VERSION + '"></script>'
 
     page("index.html", (SRC / "pages/home.html").read_text().replace("{{latest}}", notes_list("", 3)).replace("{{note_count}}", str(len(NOTES))),
-         title="Spliced", description="A research lab for efficient inference. We measure what a token costs, at the chip and at the board.",
+         title="Spliced", description="Research on efficient inference. We measure what a token costs, at the chip and at the board.",
          page="home", sheet="Spliced &middot; Efficient inference", sheetno=f"1 of {total}",
          scripts='<script src="{{root}}assets/home.js?v=' + VERSION + '"></script>')
     page("research/index.html", (SRC / "pages/research.html").read_text().replace("{{notes}}", notes_list("../")),
@@ -372,7 +372,7 @@ def main():
          title="Models &middot; Spliced", description="Spliced models: Trace draft models, Lattice low-bit models, Kinetic.",
          page="models", sheet="Models", sheetno="M")
     page("lab/index.html", (SRC / "pages/lab.html").read_text(),
-         title="Lab &middot; Spliced", description="Spliced is a small research lab for efficient inference.",
+         title="Lab &middot; Spliced", description="Spliced does open research on efficient inference.",
          page="lab", sheet="Lab", sheetno=f"4 of {total}")
     for i, n in enumerate(NOTES):
         title, date = note_meta(n)
