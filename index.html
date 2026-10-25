@@ -20,7 +20,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>document.documentElement.classList.add("js");</script>
-<link rel="stylesheet" href="assets/style.css?v=202610250252">
+<link rel="stylesheet" href="assets/style.css?v=202610250255">
 <link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
 </head>
 <body data-root="" data-page="home">
@@ -117,7 +117,7 @@
       <h2 class="center">Our models.</h2>
       <div class="models">
         <a class="model" href="research/spliced-drafter/"><img src="assets/img/package-top.webp" alt="" loading="lazy"><h3>Trace</h3><p>Draft models that make large models faster.</p><span class="status">v1 in progress</span></a>
-        <a class="model" href="https://github.com/splicedso/phase/blob/main/docs/program.md"><img src="assets/img/wafer.jpg" alt="" loading="lazy"><h3>Lattice</h3><p>Models that keep their answers at 2 bits.</p><span class="status">v0 measured</span></a>
+        <a class="model" href="research/lattice-v0/"><img src="assets/img/wafer.jpg" alt="" loading="lazy"><h3>Lattice</h3><p>Models that keep their answers at 2 bits.</p><span class="status">v0 published</span></a>
         <a class="model" href="https://github.com/splicedso/phase/blob/main/docs/program.md"><img src="assets/img/rack.jpg" alt="" loading="lazy"><h3>Kinetic</h3><p>A small model shaped by energy.</p><span class="status">Planned</span></a>
       </div>
     </div>
@@ -127,9 +127,9 @@
     <div class="wrap">
       <div class="split">
         <h2>Latest research.</h2>
-        <a class="more" href="research/">All 19 <span aria-hidden="true">&rarr;</span></a>
+        <a class="more" href="research/">All 20 <span aria-hidden="true">&rarr;</span></a>
       </div>
-      <div class="notes"><a class="note-card" href="research/joules-per-correct-answer/"><span class="meta">Note 19 &middot; 25 October 2026</span><h3>Per correct answer, how a model is served matters as much as its size</h3><p>Measured per correct answer, a 7B serving eight requests beats a 1.5B serving one, on two machines. Serving matters as much as size.</p><span class="go" aria-hidden="true">&rarr;</span></a><a class="note-card" href="research/prefill/"><span class="meta">Note 18 &middot; 24 October 2026</span><h3>Reading the prompt: what prefill costs, and when it dominates</h3><p>Reading the prompt: a prompt token costs about 40 times less than a generated one, yet at an 8000-token prompt prefill is 40% of a request's energy. Caching the prefix saves exactly that.</p><span class="go" aria-hidden="true">&rarr;</span></a><a class="note-card" href="research/longest-contexts/"><span class="meta">Note 17 &middot; 24 October 2026</span><h3>The 8-bit cache does not win even when it fits an extra sequence</h3><p>A prediction that failed: at 65536 tokens an 8-bit cache fits a third sequence where f16 fits two, and still costs 1.58 times as much. The context long enough to force the batch down also erases what batching saves.</p><span class="go" aria-hidden="true">&rarr;</span></a></div>
+      <div class="notes"><a class="note-card" href="research/lattice-v0/"><span class="meta">Note 20 &middot; 25 October 2026</span><h3>Calibration doubles 2-bit accuracy, and 4-bit is still cheaper per answer</h3><p>Calibration doubles 2-bit accuracy at the same size, 21% to 42% on GSM8K. 4-bit is still cheaper per correct answer: a 2-bit token costs more energy.</p><span class="go" aria-hidden="true">&rarr;</span></a><a class="note-card" href="research/joules-per-correct-answer/"><span class="meta">Note 19 &middot; 25 October 2026</span><h3>Per correct answer, how a model is served matters as much as its size</h3><p>Measured per correct answer, a 7B serving eight requests beats a 1.5B serving one, on two machines. Serving matters as much as size.</p><span class="go" aria-hidden="true">&rarr;</span></a><a class="note-card" href="research/prefill/"><span class="meta">Note 18 &middot; 24 October 2026</span><h3>Reading the prompt: what prefill costs, and when it dominates</h3><p>Reading the prompt: a prompt token costs about 40 times less than a generated one, yet at an 8000-token prompt prefill is 40% of a request's energy. Caching the prefix saves exactly that.</p><span class="go" aria-hidden="true">&rarr;</span></a></div>
     </div>
   </section>
 
@@ -162,7 +162,7 @@
   </div>
 </footer>
 
-<script src="assets/site.js?v=202610250252"></script>
-<script src="assets/home.js?v=202610250252"></script>
+<script src="assets/site.js?v=202610250255"></script>
+<script src="assets/home.js?v=202610250255"></script>
 </body>
 </html>

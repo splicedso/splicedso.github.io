@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calibration doubles 2-bit accuracy, and 4-bit is still cheaper per answer &middot; Spliced</title>
+<meta name="description" content="Calibration doubles 2-bit accuracy at the same size, 21% to 42% on GSM8K. 4-bit is still cheaper per correct answer: a 2-bit token costs more energy.">
+<meta property="og:title" content="Calibration doubles 2-bit accuracy, and 4-bit is still cheaper per answer &middot; Spliced">
+<meta property="og:description" content="Calibration doubles 2-bit accuracy at the same size, 21% to 42% on GSM8K. 4-bit is still cheaper per correct answer: a 2-bit token costs more energy.">
+<meta property="og:image" content="https://splicedso.github.io/assets/og.png">
+<meta property="og:url" content="https://splicedso.github.io/research/lattice-v0/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Spliced">
+<link rel="canonical" href="https://splicedso.github.io/research/lattice-v0/">
+<meta name="color-scheme" content="light dark">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>document.documentElement.classList.add("js");</script>
+<link rel="stylesheet" href="../../assets/style.css?v=202610250255">
+<link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
+</head>
+<body data-root="../../" data-page="research">
+<a class="skip" href="#content">Skip to content</a>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="../../" aria-label="Spliced home">
+      <svg viewBox="-13 -13 966 1084" aria-hidden="true"><path fill="currentColor" stroke="currentColor" stroke-width="12.7" stroke-linejoin="round" d="M639.0 0.0 L941.0 0.0 L301.0 1059.0 L0.0 1059.0 Z"/></svg>
+      Spliced
+    </a>
+    <div class="nav-right">
+      <ul>
+        <li><a href="../../research/" data-nav="research">Research</a></li>
+        <li><a href="../../learn/" data-nav="learn">Learn</a></li>
+        <li><a href="../../data/" data-nav="data">Data</a></li>
+        <li><a href="../../tools/phase/" data-nav="tools">Phase</a></li>
+        <li><a href="../../lab/" data-nav="lab">Lab</a></li>
+      </ul>
+      <a class="icon-link" href="https://github.com/splicedso" aria-label="Spliced on GitHub" title="GitHub"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a>
+      <a class="icon-link" href="https://www.linkedin.com/company/splicedso" aria-label="Spliced on LinkedIn" title="LinkedIn"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M0 1.15C0 .52.52 0 1.18 0h13.64C15.48 0 16 .52 16 1.15v13.7c0 .63-.52 1.15-1.18 1.15H1.18C.52 16 0 15.48 0 14.85V1.15zM4.75 13.39V6.17H2.35v7.22h2.4zM3.55 5.18c.84 0 1.36-.55 1.36-1.25-.02-.71-.52-1.25-1.34-1.25-.82 0-1.36.54-1.36 1.25 0 .7.52 1.25 1.33 1.25h.01zm4.91 8.21V9.36c0-.22.02-.43.08-.59.18-.43.57-.88 1.23-.88.87 0 1.22.66 1.22 1.64v3.86h2.4V9.25c0-2.22-1.18-3.25-2.76-3.25-1.27 0-1.84.7-2.16 1.19v.03h-.02l.02-.03V6.17h-2.4c.03.68 0 7.22 0 7.22h2.4z"/></svg></a>
+    </div>
+  </div>
+</nav>
+
+<svg id="bus" aria-hidden="true"></svg>
+
+<div id="content">
+<header class="page-head">
+  <div class="wrap">
+    <span class="label">Note 20 &middot; 25 October 2026</span>
+    <h1>Calibration doubles 2-bit accuracy, and 4-bit is still cheaper per answer</h1>
+    <p class="lede">Calibration doubles 2-bit accuracy at the same size, 21% to 42% on GSM8K. 4-bit is still cheaper per correct answer: a 2-bit token costs more energy.</p>
+    <p class="setup">Spliced research note 20, 25 October 2026. Apple M5 Pro, 24 GB, Metal. llama.cpp (Homebrew build) llama-imatrix, llama-quantize and llama-server. Qwen2.5 1.5B Instruct, from the F16 GGUF.</p>
+  </div>
+</header>
+<main><article class="wrap note-body"><p>Lattice is our line of models that keep their answers at fewer bits. Its starting point (<code>docs/program.md</code>): standard 2-bit quantization (Q2_K) drops the 1.5B from 66% to 21% on GSM8K. Before training anything, the cheapest fix is an importance matrix: llama.cpp measures which weights matter on sample text and spends its bits there.</p>
+<p><strong>Prediction.</strong> A calibrated Q2_K recovers a large share of the lost accuracy at an unchanged file size, and costs less per correct answer than standard Q2_K, but not less than Q4_0.</p>
+<h2 data-via>Method</h2>
+<p>Two importance matrices from the F16 model, 200 chunks each. One from 1,500 GSM8K training problems with their worked answers (the test set is separate), one from 1,500 general chat and code prompts with answers (the drafter set, note 15). Each was used to quantize the same F16 model to Q2_K; a plain Q2_K is the control. All three files are 753 MB. Then <code>experiments/quality.py</code> ran the first 250 GSM8K test questions, 8 at a time, two passes with the second reversed, with chip energy sampled over each run, against standard Q4_0 for reference. Passes agreed within 3.5% on joules per correct answer, except the maths-calibrated file at 5.5%, whose second pass overlapped other work on the machine.</p>
+<h2 data-via>Results</h2>
+<table>
+<thead>
+<tr>
+<th>model</th>
+<th style="text-align: right;">size</th>
+<th style="text-align: right;">accuracy</th>
+<th style="text-align: right;">J per correct answer</th>
+<th style="text-align: right;">mJ per token</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Q2_K, standard</td>
+<td style="text-align: right;">753 MB</td>
+<td style="text-align: right;">21.0%</td>
+<td style="text-align: right;">39.3</td>
+<td style="text-align: right;">46.1</td>
+</tr>
+<tr>
+<td>Q2_K, calibrated on general text</td>
+<td style="text-align: right;">753 MB</td>
+<td style="text-align: right;">37.2%</td>
+<td style="text-align: right;">28.4</td>
+<td style="text-align: right;">43.2</td>
+</tr>
+<tr>
+<td>Q2_K, calibrated on maths</td>
+<td style="text-align: right;">753 MB</td>
+<td style="text-align: right;">42.4%</td>
+<td style="text-align: right;">23.8</td>
+<td style="text-align: right;">44.2</td>
+</tr>
+<tr>
+<td>Q4_0, standard</td>
+<td style="text-align: right;">1.07 GB</td>
+<td style="text-align: right;">65.8%</td>
+<td style="text-align: right;">14.8</td>
+<td style="text-align: right;">39.1</td>
+</tr>
+</tbody>
+</table>
+<p>The other imatrix formats near this size did worse on the same test: IQ2_M 20.0% and IQ3_XXS 33.2%, both calibrated on maths (one pass, accuracy only).</p>
+<h2 data-via>1. Calibration doubles 2-bit accuracy</h2>
+<p>At the same file size, a maths-calibrated Q2_K answers 42.4% of the questions against 21.0% for the standard one: twice as many. Most of that is calibration itself rather than the topic: calibrating on general chat and code reaches 37.2%. So 16 of the 21 points come from calibrating at all, and 5 from calibrating on the task.</p>
+<h2 data-via>2. 4-bit is still cheaper per correct answer</h2>
+<p>The calibrated 2-bit costs 40% less per correct answer than the standard one, because it gets more right. But Q4_0 is cheaper still, 14.8 J against 23.8, and the reason is in the last column: on this machine a 2-bit token costs more energy than a 4-bit one (44 against 39 mJ). Unpacking the 2-bit format costs more than the bytes it saves, as note 1 found for the formats generally. Fewer bits only saves energy where moving bytes dominates: larger models, memory-bound hardware.</p>
+<h2 data-via>What to take from this</h2>
+<ol>
+<li>Calibrate any 2-bit model. It is free at quantization time and doubled accuracy here.</li>
+<li>On a laptop-class GPU with a 1.5B model, 2-bit does not save energy per answer. Q4_0 wins on both accuracy and energy.</li>
+<li>Lattice's energy case has to be made on larger models where memory is the bottleneck. That is the next test, on the 125 GB Strix Halo, along with quantization-aware training (Lattice v1).</li>
+</ol>
+<h2 data-via>Limits</h2>
+<p>One model, one task (GSM8K, first 250 questions, greedy), one machine, chip energy only. The Homebrew llama.cpp build differs from the pinned build of earlier notes; all four files here were quantized and served by the same build. Calibration on the GSM8K training split matches the test's domain; the general-text control shows how much that matters.</p>
+<h2 data-via>Reproduce</h2>
+<pre><code>llama-imatrix -m models/quant/1.5b-F16.gguf -f data/lattice-calib.txt -o data/imatrix-1.5b-gsm8k.gguf --chunks 200 -ngl 99
+llama-quantize --imatrix data/imatrix-1.5b-gsm8k.gguf models/quant/1.5b-F16.gguf models/lattice/1.5b-Q2_K-imat.gguf Q2_K
+uv run python experiments/quality.py models/lattice/1.5b-Q2_K-imat.gguf results/lattice-v0-energy-1.5b-Q2_K-imat-run1.json 250 8
+</code></pre>
+<p>The calibration texts are the first 1,500 rows of GSM8K's train.jsonl (question and answer) and of <code>results/drafter/train-answers.jsonl</code> (prompt and answer). The two importance matrices are committed in <code>results/lattice/</code>, so anyone can quantize the same files. Raw results: <code>results/lattice-v0-*.json</code>, <code>results/lattice-mac-*.json</code>.</p>
+<p class="source mono">Source, scripts and raw data: <a href="https://github.com/splicedso/phase/blob/main/notes/2026-10-lattice-v0-calibration.md">phase/notes/2026-10-lattice-v0-calibration.md</a></p>
+</article></main>
+</div>
+
+<footer>
+  <div class="wrap foot">
+    <a class="brand" href="../../" aria-label="Spliced home"><svg viewBox="-13 -13 966 1084" aria-hidden="true"><path fill="currentColor" stroke="currentColor" stroke-width="12.7" stroke-linejoin="round" d="M639.0 0.0 L941.0 0.0 L301.0 1059.0 L0.0 1059.0 Z"/></svg>Spliced</a>
+    <nav class="foot-nav" aria-label="Footer">
+      <a href="../../research/">Research</a><a href="../../learn/">Learn</a><a href="../../data/">Data</a><a href="../../tools/phase/">Phase</a><a href="../../lab/">Lab</a>
+    </nav>
+    <div class="foot-social">
+      <a href="https://github.com/splicedso" aria-label="GitHub"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a>
+      <a href="https://www.linkedin.com/company/splicedso" aria-label="LinkedIn"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M0 1.15C0 .52.52 0 1.18 0h13.64C15.48 0 16 .52 16 1.15v13.7c0 .63-.52 1.15-1.18 1.15H1.18C.52 16 0 15.48 0 14.85V1.15zM4.75 13.39V6.17H2.35v7.22h2.4zM3.55 5.18c.84 0 1.36-.55 1.36-1.25-.02-.71-.52-1.25-1.34-1.25-.82 0-1.36.54-1.36 1.25 0 .7.52 1.25 1.33 1.25h.01zm4.91 8.21V9.36c0-.22.02-.43.08-.59.18-.43.57-.88 1.23-.88.87 0 1.22.66 1.22 1.64v3.86h2.4V9.25c0-2.22-1.18-3.25-2.76-3.25-1.27 0-1.84.7-2.16 1.19v.03h-.02l.02-.03V6.17h-2.4c.03.68 0 7.22 0 7.22h2.4z"/></svg></a>
+    </div>
+    <p class="foot-small">&copy; 2026 Spliced. Research and data are open.</p>
+  </div>
+</footer>
+
+<script src="../../assets/site.js?v=202610250255"></script>
+<script src="../../assets/charts.js?v=202610250255"></script>
+</body>
+</html>

@@ -81,6 +81,9 @@ NOTES = [
     {"slug": "joules-per-correct-answer", "file": "2026-10-joules-per-correct-answer.md", "n": 19,
      "summary": "Measured per correct answer, a 7B serving eight requests beats a 1.5B serving one, on two machines. "
                 "Serving matters as much as size."},
+    {"slug": "lattice-v0", "file": "2026-10-lattice-v0-calibration.md", "n": 20,
+     "summary": "Calibration doubles 2-bit accuracy at the same size, 21% to 42% on GSM8K. "
+                "4-bit is still cheaper per correct answer: a 2-bit token costs more energy."},
 ]
 
 FIGURES = {
