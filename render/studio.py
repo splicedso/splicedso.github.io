@@ -11,7 +11,7 @@ from mathutils import Vector
 HDRI = Path(__file__).parent / "hdri" / "studio.exr"
 
 
-def setup(width, height, samples=384):
+def setup(width, height, samples=384, hdri_rot=120, hdri_strength=1.0):
     bpy.ops.wm.read_factory_settings(use_empty=True)
     sc = bpy.context.scene
     sc.render.engine = "CYCLES"
@@ -31,9 +31,9 @@ def setup(width, height, samples=384):
     nt = world.node_tree; bg = nt.nodes["Background"]
     env = nt.nodes.new("ShaderNodeTexEnvironment"); env.image = bpy.data.images.load(str(HDRI))
     mp = nt.nodes.new("ShaderNodeMapping"); tc = nt.nodes.new("ShaderNodeTexCoord")
-    mp.inputs["Rotation"].default_value = (0, 0, math.radians(120))
+    mp.inputs["Rotation"].default_value = (0, 0, math.radians(hdri_rot))
     nt.links.new(tc.outputs["Generated"], mp.inputs["Vector"]); nt.links.new(mp.outputs["Vector"], env.inputs["Vector"])
-    nt.links.new(env.outputs["Color"], bg.inputs["Color"]); bg.inputs["Strength"].default_value = 1.0
+    nt.links.new(env.outputs["Color"], bg.inputs["Color"]); bg.inputs["Strength"].default_value = hdri_strength
     return sc
 
 

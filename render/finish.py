@@ -9,7 +9,8 @@ from PIL import Image
 src, dst = sys.argv[1], sys.argv[2]
 pad = int(sys.argv[3]) if len(sys.argv) > 3 else 60
 im = Image.open(src).convert("RGBA")
-bb = im.getbbox()
+# crop to the object, not its faint floor shadow: bounding box of fairly opaque pixels
+bb = im.getchannel("A").point(lambda v: 255 if v > 200 else 0).getbbox()
 im = im.crop((max(0, bb[0] - pad), max(0, bb[1] - pad), min(im.width, bb[2] + pad), min(im.height, bb[3] + pad)))
 a = np.asarray(im).astype(np.float32)
 rng = np.random.default_rng(7)

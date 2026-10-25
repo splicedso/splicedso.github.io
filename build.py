@@ -205,6 +205,17 @@ def chart_data():
             "results": results, "roofline": roofline}
 
 
+RENDERS = [("package.webp", "A processor package"), ("server.webp", "A rack server"),
+           ("card.webp", "An accelerator card"), ("wafer.webp", "A silicon wafer"),
+           ("dimm.webp", "A server memory module"), ("package-top.webp", "A processor package, top view")]
+
+
+def figure(i, depth="../../"):
+    """One of the product renders, rotating so neighbouring pages differ."""
+    img, alt = RENDERS[i % len(RENDERS)]
+    return f'<figure class="page-object slim"><img src="{depth}assets/img/{img}" alt="{alt}" loading="lazy"></figure>'
+
+
 def notes_list(root, limit=None):
     items = []
     for n in list(reversed(NOTES))[:limit]:
@@ -269,7 +280,7 @@ def article(md_path, root, kicker):
     <p class="lede">{markdown.markdown(lede)[3:-4]}</p>
   </div>
 </header>
-<main><article class="wrap note-body">{body}</article></main>"""
+<main>{figure(len(title), depth=root)}<article class="wrap note-body">{body}</article></main>"""
     return title, content
 
 
@@ -343,7 +354,7 @@ def main():
     <p class="setup">{markdown.markdown(lede)[3:-4]}</p>
   </div>
 </header>
-<main><article class="wrap note-body">{body}
+<main>{figure(i + 1)}<article class="wrap note-body">{body}
 <p class="source mono">Source, scripts and raw data: <a href="https://github.com/splicedso/phase/blob/main/notes/{n['file']}">phase/notes/{n['file']}</a></p>
 </article></main>"""
         page(f"research/{n['slug']}/index.html", content, title=f"{title} &middot; Spliced", description=n["summary"],

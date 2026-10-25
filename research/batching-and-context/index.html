@@ -14,13 +14,14 @@
 <link rel="canonical" href="https://splicedso.github.io/research/batching-and-context/">
 <meta name="color-scheme" content="light dark">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
+<link rel="icon" href="../../assets/favicon.svg?v=202610250314" type="image/svg+xml">
+<link rel="icon" href="../../assets/favicon-32.png?v=202610250314" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png?v=202610250314">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>document.documentElement.classList.add("js");</script>
-<link rel="stylesheet" href="../../assets/style.css?v=202610250303">
+<link rel="stylesheet" href="../../assets/style.css?v=202610250314">
 <link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
 </head>
 <body data-root="../../" data-page="research">
@@ -57,7 +58,7 @@
     <p class="setup">Spliced research note 14 (Windows half), 24 October 2026. Windows 11 laptop: Intel Core Ultra 9 285H, NVIDIA GeForce RTX 5070 Ti Laptop GPU (12 GB, Blackwell), 32 GB RAM, on AC. llama.cpp build 11851 (prebuilt CUDA 13.4 x64), CUDA backend, all layers on the GPU. Qwen2.5 1.5B and 7B, Q4_0.</p>
   </div>
 </header>
-<main><article class="wrap note-body"><p>Note 8 found a 405B datacenter result costing 60 times the energy per token of a 70B one, concluded that long prefill alone could not explain it, and named two effects of a long context on decode: a larger key-value cache to read each step, and fewer sequences fitting in memory, so less batching. Note 13 measured the first at batch 1 and found it small, about 1.3 times at 16k, too small on its own. It named the batching loss as the untested remainder. This note tests that: does a long context erode the energy saving from batching?</p>
+<main><figure class="page-object slim"><img src="../../assets/img/card.webp" alt="An accelerator card" loading="lazy"></figure><article class="wrap note-body"><p>Note 8 found a 405B datacenter result costing 60 times the energy per token of a 70B one, concluded that long prefill alone could not explain it, and named two effects of a long context on decode: a larger key-value cache to read each step, and fewer sequences fitting in memory, so less batching. Note 13 measured the first at batch 1 and found it small, about 1.3 times at 16k, too small on its own. It named the batching loss as the untested remainder. This note tests that: does a long context erode the energy saving from batching?</p>
 <h2 data-via>Method</h2>
 <p><code>experiments/batching.py</code> (llama-batched-bench), batch sizes 1, 2, 4 and 8, 512 generated tokens per sequence, three passes. Two context lengths per sequence: 64 and 4096 prompt tokens. Two models, 1.5B and 7B Q4_0. Flash attention left at the script's default. GPU (chip) energy only, as in note 4; there is no whole-system reading on AC here. Batch 8 at 4096 tokens fit in the 12 GB of VRAM for both models, so nothing was dropped. The three passes agreed within 4% on chip energy per token at batches 4 and 8. At batches 1 and 2 two cells spread wider: 15% at batch 1 and 8% at batch 2 on the 1.5B at 64 tokens, and 11% at batch 2 on the 7B at 4096. Those cells are the least precise. The 1.5B decode windows are short, 1.5 to 4 seconds, which is why its batch-1 cells are the noisiest.</p>
 <h2 data-via>Results</h2>
@@ -210,7 +211,7 @@
   </div>
 </footer>
 
-<script src="../../assets/site.js?v=202610250303"></script>
-<script src="../../assets/charts.js?v=202610250303"></script>
+<script src="../../assets/site.js?v=202610250314"></script>
+<script src="../../assets/charts.js?v=202610250314"></script>
 </body>
 </html>

@@ -14,13 +14,14 @@
 <link rel="canonical" href="https://splicedso.github.io/research/joules-per-correct-answer/">
 <meta name="color-scheme" content="light dark">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
+<link rel="icon" href="../../assets/favicon.svg?v=202610250314" type="image/svg+xml">
+<link rel="icon" href="../../assets/favicon-32.png?v=202610250314" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png?v=202610250314">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>document.documentElement.classList.add("js");</script>
-<link rel="stylesheet" href="../../assets/style.css?v=202610250303">
+<link rel="stylesheet" href="../../assets/style.css?v=202610250314">
 <link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
 </head>
 <body data-root="../../" data-page="research">
@@ -57,7 +58,7 @@
     <p class="setup">Spliced research note 19, 25 October 2026. Two machines: an Apple M5 Pro (24 GB, macOS 27, Metal) and an AMD Ryzen AI Max+ 395 (Strix Halo, Radeon 8060S, 125 GB, Linux, Vulkan). llama.cpp build 11669 (620d2225c) on both, llama-server, Qwen2.5 1.5B and 7B Instruct Q4_0, all layers on the GPU.</p>
   </div>
 </header>
-<main><article class="wrap note-body"><p>Our earlier notes measured energy per token. That rewards a model that answers quickly and wrongly. This note measures what a user pays for: <strong>joules per correct answer</strong>, the chip energy of a whole evaluation divided by the questions it got right.</p>
+<main><figure class="page-object slim"><img src="../../assets/img/server.webp" alt="A rack server" loading="lazy"></figure><article class="wrap note-body"><p>Our earlier notes measured energy per token. That rewards a model that answers quickly and wrongly. This note measures what a user pays for: <strong>joules per correct answer</strong>, the chip energy of a whole evaluation divided by the questions it got right.</p>
 <p><strong>Prediction.</strong> The Mac ran first and found that the 7B serving eight requests at once costs less per correct answer than the 1.5B serving one at a time. Before the second machine ran, we predicted the same ordering would hold there. It did.</p>
 <h2 data-via>Method</h2>
 <p><code>experiments/quality.py</code>: the first 250 GSM8K test questions (grade-school maths, MIT licence), greedy, through llama-server's chat endpoint, with 1 or 8 requests in flight (slots). The answer is read from <code>\boxed{}</code>, else the last "The answer is", else the last number. Chip power is sampled through the whole evaluation. Two passes per cell, the second in reverse order.</p>
@@ -188,7 +189,7 @@
   </div>
 </footer>
 
-<script src="../../assets/site.js?v=202610250303"></script>
-<script src="../../assets/charts.js?v=202610250303"></script>
+<script src="../../assets/site.js?v=202610250314"></script>
+<script src="../../assets/charts.js?v=202610250314"></script>
 </body>
 </html>

@@ -14,13 +14,14 @@
 <link rel="canonical" href="https://splicedso.github.io/research/two-machines/">
 <meta name="color-scheme" content="light dark">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
+<link rel="icon" href="../../assets/favicon.svg?v=202610250314" type="image/svg+xml">
+<link rel="icon" href="../../assets/favicon-32.png?v=202610250314" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png?v=202610250314">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>document.documentElement.classList.add("js");</script>
-<link rel="stylesheet" href="../../assets/style.css?v=202610250303">
+<link rel="stylesheet" href="../../assets/style.css?v=202610250314">
 <link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
 </head>
 <body data-root="../../" data-page="research">
@@ -57,7 +58,7 @@
     <p class="setup">Spliced research note 4, 24 October 2026. Qwen2.5 1.5B on two laptops: an Apple M5 Pro (24 GB, unified memory) and a Windows laptop with an Intel Core Ultra 9 285H, 32 GB, and an NVIDIA GeForce RTX 5070 Ti Laptop GPU, run on battery.</p>
   </div>
 </header>
-<main><article class="wrap note-body"><p>Notes 1 to 3 measured one machine. A finding from one machine might be physics, or it might be Apple. This note repeats the format study on hardware that shares nothing with the Mac: a different CPU vendor, a discrete GPU with its own memory, a different GPU backend (CUDA instead of Metal), a different operating system.</p>
+<main><figure class="page-object slim"><img src="../../assets/img/dimm.webp" alt="A server memory module" loading="lazy"></figure><article class="wrap note-body"><p>Notes 1 to 3 measured one machine. A finding from one machine might be physics, or it might be Apple. This note repeats the format study on hardware that shares nothing with the Mac: a different CPU vendor, a discrete GPU with its own memory, a different GPU backend (CUDA instead of Metal), a different operating system.</p>
 <h2 data-via>Method</h2>
 <p>The Windows study used Phase with a new power backend, written for this note (<code>phase/power_windows.py</code>), that needs no admin rights:</p>
 <ul>
@@ -268,7 +269,7 @@ uv run phase models\quant\1.5b-*.gguf --seconds 15 --out results\run.json
   </div>
 </footer>
 
-<script src="../../assets/site.js?v=202610250303"></script>
-<script src="../../assets/charts.js?v=202610250303"></script>
+<script src="../../assets/site.js?v=202610250314"></script>
+<script src="../../assets/charts.js?v=202610250314"></script>
 </body>
 </html>

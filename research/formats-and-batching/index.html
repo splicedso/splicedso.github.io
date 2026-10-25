@@ -14,13 +14,14 @@
 <link rel="canonical" href="https://splicedso.github.io/research/formats-and-batching/">
 <meta name="color-scheme" content="light dark">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
+<link rel="icon" href="../../assets/favicon.svg?v=202610250314" type="image/svg+xml">
+<link rel="icon" href="../../assets/favicon-32.png?v=202610250314" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png?v=202610250314">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>document.documentElement.classList.add("js");</script>
-<link rel="stylesheet" href="../../assets/style.css?v=202610250303">
+<link rel="stylesheet" href="../../assets/style.css?v=202610250314">
 <link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
 </head>
 <body data-root="../../" data-page="research">
@@ -57,7 +58,7 @@
     <p class="setup">Spliced research note 1, 24 October 2026. Apple M5 Pro, 24 GB, macOS on AC, llama.cpp build 11669 (Homebrew), Metal, all layers on the GPU.</p>
   </div>
 </header>
-<main><article class="wrap note-body"><h2 data-via>Question</h2>
+<main><figure class="page-object slim"><img src="../../assets/img/server.webp" alt="A rack server" loading="lazy"></figure><article class="wrap note-body"><h2 data-via>Question</h2>
 <p>Does a lower-bit format cost less energy per decoded token on unified memory, and how much does serving several sequences at once save? Prior Apple Silicon energy work measures one format (Q4) with powermetrics, chip only, at about 2 s resolution, and names DRAM as the part it cannot see. Profiling work on Apple quantization reports latency, not energy. We measure both the chip (200 ms or faster) and the board's DC input, without sudo.</p>
 <h2 data-via>Method</h2>
 <ul>
@@ -230,7 +231,7 @@ uv run python experiments/batching.py model.gguf results/batch.json 1,2,3,4,5,6,
   </div>
 </footer>
 
-<script src="../../assets/site.js?v=202610250303"></script>
-<script src="../../assets/charts.js?v=202610250303"></script>
+<script src="../../assets/site.js?v=202610250314"></script>
+<script src="../../assets/charts.js?v=202610250314"></script>
 </body>
 </html>

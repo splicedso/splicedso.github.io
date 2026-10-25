@@ -14,13 +14,14 @@
 <link rel="canonical" href="https://splicedso.github.io/research/context-depth/">
 <meta name="color-scheme" content="light dark">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
+<link rel="icon" href="../../assets/favicon.svg?v=202610250314" type="image/svg+xml">
+<link rel="icon" href="../../assets/favicon-32.png?v=202610250314" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png?v=202610250314">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>document.documentElement.classList.add("js");</script>
-<link rel="stylesheet" href="../../assets/style.css?v=202610250303">
+<link rel="stylesheet" href="../../assets/style.css?v=202610250314">
 <link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
 </head>
 <body data-root="../../" data-page="research">
@@ -57,7 +58,7 @@
     <p class="setup">Spliced research note 13 (Windows half), 24 October 2026. Windows 11 laptop: Intel Core Ultra 9 285H, NVIDIA GeForce RTX 5070 Ti Laptop GPU (12 GB, Blackwell), 32 GB RAM, on AC. llama.cpp build 11851 (prebuilt CUDA 13.4 x64), CUDA backend, all layers on the GPU. Qwen2.5 1.5B and 7B, Q4_0.</p>
   </div>
 </header>
-<main><article class="wrap note-body"><p>Note 8 found that a 405B model's measured energy per token was far above what its weights alone predict, on a benchmark whose prompts average about 9,400 tokens. It concluded that long prefill alone could not explain the gap, and that the larger effect was likely what long contexts do to decode: more key-value cache to read per step, and fewer sequences fitting in memory at once, so less batching. This note measures the first of those directly, at batch 1, on one machine: how much more does a token cost when the context is already deep, and does quantizing the KV cache to 8 bits, the usual fix for a large cache, save that energy back?</p>
+<main><figure class="page-object slim"><img src="../../assets/img/server.webp" alt="A rack server" loading="lazy"></figure><article class="wrap note-body"><p>Note 8 found that a 405B model's measured energy per token was far above what its weights alone predict, on a benchmark whose prompts average about 9,400 tokens. It concluded that long prefill alone could not explain the gap, and that the larger effect was likely what long contexts do to decode: more key-value cache to read per step, and fewer sequences fitting in memory at once, so less batching. This note measures the first of those directly, at batch 1, on one machine: how much more does a token cost when the context is already deep, and does quantizing the KV cache to 8 bits, the usual fix for a large cache, save that energy back?</p>
 <h2 data-via>Method</h2>
 <p><code>phase --seconds 12</code> with llama-bench's decode test at a given context depth (<code>-d</code>), flash attention on (<code>-fa on</code>). Depths 0, 1024, 4096, 8192, 16384 tokens already in the cache. Two configurations: the default f16 KV cache, and an 8-bit cache (<code>-ctk q8_0 -ctv q8_0</code>). Two models, 1.5B and 7B Q4_0. The whole set ran twice, the second pass in reverse order. GPU (chip) energy only, as in note 4: there is no whole-system reading on AC on this machine. Every depth fit in the 12 GB of VRAM for both models and both cache types, so nothing was skipped or spilled to the CPU. The two passes agreed within 6% on chip energy per token for every cell.</p>
 <h2 data-via>Results</h2>
@@ -305,7 +306,7 @@
   </div>
 </footer>
 
-<script src="../../assets/site.js?v=202610250303"></script>
-<script src="../../assets/charts.js?v=202610250303"></script>
+<script src="../../assets/site.js?v=202610250314"></script>
+<script src="../../assets/charts.js?v=202610250314"></script>
 </body>
 </html>

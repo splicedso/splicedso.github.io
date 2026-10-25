@@ -14,13 +14,14 @@
 <link rel="canonical" href="https://splicedso.github.io/research/memory-bound/">
 <meta name="color-scheme" content="light dark">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
+<link rel="icon" href="../../assets/favicon.svg?v=202610250314" type="image/svg+xml">
+<link rel="icon" href="../../assets/favicon-32.png?v=202610250314" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png?v=202610250314">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>document.documentElement.classList.add("js");</script>
-<link rel="stylesheet" href="../../assets/style.css?v=202610250303">
+<link rel="stylesheet" href="../../assets/style.css?v=202610250314">
 <link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
 </head>
 <body data-root="../../" data-page="research">
@@ -57,7 +58,7 @@
     <p class="setup">Spliced research note 16 (Windows half), 24 October 2026. Windows 11 laptop: Intel Core Ultra 9 285H, NVIDIA GeForce RTX 5070 Ti Laptop GPU (12 GB, Blackwell), 32 GB RAM, on AC. llama.cpp build 11851 (prebuilt CUDA 13.4 x64), CUDA backend, all layers on the GPU. Qwen2.5 7B Q4_0.</p>
   </div>
 </header>
-<main><article class="wrap note-body"><p>Note 14 found that a 4096-token context barely dents the batching saving, and said why: the cache still fit, so batching was never forced down, and note 8's lost-batching effect needs memory to be the binding constraint. This note forces that constraint. At 8192 and 16384 tokens of context on a 12 GB card, how large a batch still fits, what does the forced-smaller batch cost, and can an 8-bit KV cache, which note 13 found costs more energy per token, win it back by letting a bigger batch fit?</p>
+<main><figure class="page-object slim"><img src="../../assets/img/dimm.webp" alt="A server memory module" loading="lazy"></figure><article class="wrap note-body"><p>Note 14 found that a 4096-token context barely dents the batching saving, and said why: the cache still fit, so batching was never forced down, and note 8's lost-batching effect needs memory to be the binding constraint. This note forces that constraint. At 8192 and 16384 tokens of context on a 12 GB card, how large a batch still fits, what does the forced-smaller batch cost, and can an 8-bit KV cache, which note 13 found costs more energy per token, win it back by letting a bigger batch fit?</p>
 <h2 data-via>Method</h2>
 <p>7B Q4_0, <code>experiments/batching.py</code> with 512 generated tokens per sequence, three passes. Each batch size was run in its own invocation, so its key-value cache is sized to that batch alone: <code>batching.py</code> allocates the context for the largest batch in a run, which would spill every batch in a shared run, so a per-batch invocation is the only way to find the true fit boundary. Context lengths 8192 and 16384. Three cache settings: the default f16 cache, the f16 cache with flash attention (<code>-fa on</code>), and an 8-bit cache (<code>-ctk q8_0 -ctv q8_0 -fa on</code>). GPU (chip) energy only.</p>
 <p>This card does not hard-fail when a run exceeds VRAM: the NVIDIA driver spills to shared system memory and the run crawls. So a spill shows as peak dedicated memory pegged near the 12 GB cap with throughput collapsing, not as an out-of-memory error. Fit and spill were judged by peak <code>nvidia-smi</code> memory and completion, not by a timeout, because a large batch at a long context has a slow prefill that is not itself a spill. <code>batching.py</code> was given a minimal optional passthrough so trailing flags reach llama-batched-bench (noted in the PR); nothing else in it changed.</p>
@@ -184,7 +185,7 @@
   </div>
 </footer>
 
-<script src="../../assets/site.js?v=202610250303"></script>
-<script src="../../assets/charts.js?v=202610250303"></script>
+<script src="../../assets/site.js?v=202610250314"></script>
+<script src="../../assets/charts.js?v=202610250314"></script>
 </body>
 </html>

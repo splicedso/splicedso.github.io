@@ -14,13 +14,14 @@
 <link rel="canonical" href="https://splicedso.github.io/learn/what-happens-when-a-model-writes-a-token/">
 <meta name="color-scheme" content="light dark">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
+<link rel="icon" href="../../assets/favicon.svg?v=202610250314" type="image/svg+xml">
+<link rel="icon" href="../../assets/favicon-32.png?v=202610250314" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png?v=202610250314">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>document.documentElement.classList.add("js");</script>
-<link rel="stylesheet" href="../../assets/style.css?v=202610250303">
+<link rel="stylesheet" href="../../assets/style.css?v=202610250314">
 <link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
 </head>
 <body data-root="../../" data-page="learn">
@@ -56,7 +57,7 @@
     <p class="lede">Primer 1. No background assumed.</p>
   </div>
 </header>
-<main><article class="wrap note-body"><p>A language model is a very large function. You give it a list of numbers, it gives back one prediction. Everything else in these notes follows from what that function is made of, and from the fact that it has to run once for every token it writes.</p>
+<main><figure class="page-object slim"><img src="../../assets/img/dimm.webp" alt="A server memory module" loading="lazy"></figure><article class="wrap note-body"><p>A language model is a very large function. You give it a list of numbers, it gives back one prediction. Everything else in these notes follows from what that function is made of, and from the fact that it has to run once for every token it writes.</p>
 <h2 data-via>Tokens</h2>
 <p>A model does not read letters or words. It reads <strong>tokens</strong>: pieces of text from a fixed vocabulary, usually tens of thousands of them. "inference" might be one token; "Spliced" is two, "Sp" and "liced". The headline on our home page is typed out one real token at a time, using the tokenizer of the model we measure, so you can see where the boundaries fall.</p>
 <p>Each token is turned into a list of numbers, a vector, before the model does anything with it.</p>
@@ -94,7 +95,7 @@
   </div>
 </footer>
 
-<script src="../../assets/site.js?v=202610250303"></script>
+<script src="../../assets/site.js?v=202610250314"></script>
 
 </body>
 </html>
