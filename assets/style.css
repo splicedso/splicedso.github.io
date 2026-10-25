@@ -1204,3 +1204,5 @@ pre { border: 0 !important; border-left: 1px solid #d4d4d4 !important; }
 .area .icon, .area .icon-wrap { background: transparent !important; box-shadow: none !important; }
 .closer { border: 0 !important; border-top: 1px solid #d4d4d4 !important; border-bottom: 1px solid #d4d4d4 !important; }
 .top-render.tall img { max-height: 62vh; }
+/* Renders are still. The home hero is the only animation on the site. */
+.band-photo { animation: none !important; transform: none !important; }
