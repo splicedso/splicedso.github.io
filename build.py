@@ -295,7 +295,7 @@ def article(md_path, root, kicker):
     <p class="lede">{markdown.markdown(lede)[3:-4]}</p>
   </div>
 </header>
-<main>{figure(len(title), depth=root)}<article class="wrap note-body">{body}</article></main>"""
+<main><article class="wrap note-body">{body}</article></main>"""
     return title, content
 
 
@@ -385,7 +385,7 @@ def main():
     <p class="setup">{markdown.markdown(lede)[3:-4]}</p>
   </div>
 </header>
-<main>{figure(i + 1)}<article class="wrap note-body">{body}
+<main><article class="wrap note-body">{body}
 <p class="source mono">Source, scripts and raw data: <a href="https://github.com/splicedso/phase/blob/main/notes/{n['file']}">phase/notes/{n['file']}</a></p>
 </article></main>"""
         page(f"research/{n['slug']}/index.html", content, title=f"{title} &middot; Spliced", description=n["summary"],
