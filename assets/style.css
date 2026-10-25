@@ -647,3 +647,41 @@ footer { padding: 32px 0 48px; border-top: 1px solid var(--line); margin-top: 40
 .hero { padding: 140px 0 120px; }
 .hero::before { inset: -80px 0 auto; background: radial-gradient(50% 60% at 50% 35%, var(--glow), transparent 70%), radial-gradient(30% 40% at 78% 25%, rgba(0, 200, 255, .12), transparent 70%), radial-gradient(30% 40% at 22% 60%, rgba(120, 80, 255, .08), transparent 70%); }
 @media (max-width: 600px) { .hero { padding: 72px 0 64px; } }
+
+/* ---- notebook layer: graph paper, mono labels, hairlines ---- */
+body {
+  background-image:
+    linear-gradient(rgba(8, 102, 255, .055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(8, 102, 255, .055) 1px, transparent 1px),
+    linear-gradient(rgba(8, 102, 255, .025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(8, 102, 255, .025) 1px, transparent 1px);
+  background-size: 120px 120px, 120px 120px, 24px 24px, 24px 24px;
+  background-position: -1px -1px;
+}
+.label, .note-card .meta, .page-head .label {
+  font: 500 12px/1.4 var(--mono); text-transform: uppercase; letter-spacing: .1em; color: var(--blue);
+  display: inline-flex; align-items: center; gap: 10px;
+}
+.label::before { content: ""; width: 18px; height: 1px; background: currentColor; }
+.hero-center .label::before { display: none; }
+.note-card .meta { color: var(--mute); }
+.area, .fact, .note-card, .closer { box-shadow: inset 0 0 0 1px var(--line); }
+.band .fact { box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .18); }
+section + section:not(.band) > .wrap { border-top: 1px solid var(--line); padding-top: 96px; }
+section + section:not(.band) { padding-top: 0; }
+.band + section > .wrap { border-top: 0; }
+
+/* nav: clear at the top so the glow runs under it, frosted once scrolled */
+nav { background: transparent; backdrop-filter: none; -webkit-backdrop-filter: none; margin-bottom: -64px; }
+nav.scrolled { background: rgba(255, 255, 255, .72); backdrop-filter: saturate(1.6) blur(14px); -webkit-backdrop-filter: saturate(1.6) blur(14px); }
+.hero, .page-head { padding-top: calc(64px + 120px); }
+.hero::before { inset: 0 0 auto; height: 820px; }
+.page-head::before {
+  content: ""; position: absolute; inset: 0 0 auto; height: 520px; z-index: -1; pointer-events: none;
+  background: radial-gradient(45% 70% at 15% 20%, var(--glow), transparent 70%), radial-gradient(30% 50% at 85% 10%, rgba(0, 200, 255, .08), transparent 70%);
+}
+@media (max-width: 600px) {
+  nav { margin-bottom: -106px; }
+  .hero, .page-head { padding-top: calc(106px + 48px); }
+  section + section:not(.band) > .wrap { padding-top: 64px; }
+}
