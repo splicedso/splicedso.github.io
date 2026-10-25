@@ -99,27 +99,27 @@ v = [((x - 470) * k + 2.6, -2.378, -(y - 530) * k + 0.55) for x, y in A]
 me = bpy.data.meshes.new("mark"); me.from_pydata(v, [], [[0, 1, 2, 3]]); me.update()
 o = bpy.data.objects.new("mark", me); sc.collection.objects.link(o); o.data.materials.append(ink)
 
-# Cabling, as on photographs of cabled inference servers: thick braided cables drop from the
-# chassis underside through a comb bar at the front edge and hang straight down in one dense,
-# even curtain. Same length, same spacing, a slight sway each, nothing loose.
+# Cabling, as on photographs of cabled inference servers: thick braided cables leave the upper
+# unit through a comb bar on its front edge, hang in one even loop under the chassis, and go back up
+# into the lower unit's front. Every cable the same, a slight sway each, nothing loose or cut off.
 NC = 30
 pitch = 0.225
 cx0 = -(NC - 1) * pitch / 2
 comb, _ = principled("comb", (0.02, 0.02, 0.022), rough=0.6)
-box((NC * pitch + 0.3, 0.26, 0.12), (0, -2.05, 0.04), comb, 0.02)           # comb bar under the front edge
+for zc in (1.06, 0.12):                                                       # comb bars: upper unit's bottom edge, lower unit's bottom edge
+    box((NC * pitch + 0.3, 0.26, 0.12), (0, -2.12, zc), comb, 0.02)
+    for i in range(NC - 1):
+        S.box((0.08, 0.28, 0.14), (cx0 + i * pitch + pitch / 2, -2.12, zc), dark)
 for i in range(NC):
     x = cx0 + i * pitch
-    if i < NC - 1:
-        S.box((0.08, 0.28, 0.14), (x + pitch / 2, -2.05, 0.04), dark)        # the slots between cables
     sway = random.uniform(-0.03, 0.03)
+    drop = random.uniform(-0.04, 0.04)
     cu = bpy.data.curves.new("c", "CURVE"); cu.dimensions = "3D"
     cu.bevel_depth = 0.085; cu.bevel_resolution = 10; cu.use_fill_caps = True; cu.resolution_u = 32
     sp = cu.splines.new("BEZIER"); sp.bezier_points.add(5)
-    # down through the comb, then the bottom end hooks forward toward the camera, as cables do
-    # where they turn into the unit below
-    hook = random.uniform(0.45, 0.6)
-    pts = [(x, -1.2, 0.15), (x, -1.95, 0.02), (x + sway * 0.4, -2.08, -1.6),
-           (x + sway, -2.15, -3.0), (x + sway * 1.5, -2.2 - hook, -4.6), (x + sway * 1.5, -2.25 - hook, -6.8)]
+    pts = [(x, -1.4, 1.1), (x, -2.12, 1.0), (x + sway * 0.5, -2.45, -0.2),
+           (x + sway, -2.55, -1.55 + drop), (x + sway * 0.5, -2.4, -0.6), (x, -2.12, 0.05), ]
+    pts = [(x, -1.4, 1.1), (x, -2.12, 1.0), (x + sway, -2.6, -0.3), (x + sway, -2.75, -1.45 + drop), (x + sway * 0.4, -2.5, -0.9), (x, -2.12, 0.05)]
     for bp, co in zip(sp.bezier_points, pts):
         bp.co = co; bp.handle_left_type = bp.handle_right_type = "AUTO"
     ob = bpy.data.objects.new("cable", cu); sc.collection.objects.link(ob)
@@ -152,8 +152,8 @@ area((0, -9, -4), 160, 8)          # faint lift from below
 
 cam_d = bpy.data.cameras.new("cam"); cam_d.lens = 80
 cam = bpy.data.objects.new("cam", cam_d); sc.collection.objects.link(cam); sc.camera = cam
-cam.location = (-6.0, -24.0, -2.1)                     # low front three-quarter, as the product shot is taken
-target = Vector((0.2, -1.5, -0.7))
+cam.location = (-7.0, -27.0, -1.2)                     # low front three-quarter, the whole unit and its loops in frame
+target = Vector((0.2, -1.5, 0.1))
 cam.rotation_euler = (target - cam.location).to_track_quat("-Z", "Y").to_euler()
 cam_d.dof.use_dof = True; cam_d.dof.focus_distance = (target - cam.location).length; cam_d.dof.aperture_fstop = 7.0
 

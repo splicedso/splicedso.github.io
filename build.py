@@ -269,7 +269,8 @@ def learn_items():
         text = f.read_text()
         title = re.search(r"^# (.+)$", text, re.M).group(1)
         first = [b for b in text.split("\n\n")[2:] if b and not b.startswith("#")][0]
-        items.append({"n": int(n), "slug": slug, "file": f, "title": title, "summary": re.sub(r"[*`]", "", first)})
+        summary = re.sub(r"\[([^\]]+)\]\([^)]*\)", r"\1", first)   # markdown links read as their text
+        items.append({"n": int(n), "slug": slug, "file": f, "title": title, "summary": re.sub(r"[*`]", "", summary)})
     return items
 
 

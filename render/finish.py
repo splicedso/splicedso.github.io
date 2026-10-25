@@ -1,4 +1,4 @@
-"""Finish a transparent render for the web: crop to the object, add fine film grain, export WebP.
+"""Finish a transparent render for the web: crop to the object and its shadow, add fine film grain, export WebP.
 
     python render/finish.py in.png out.webp [pad]
 """
@@ -18,11 +18,8 @@ m = 3 * pad
 box = (max(0, min(bb[0] - m, sb[0])), max(0, min(bb[1] - m, sb[1])), min(im.width, max(bb[2] + m, sb[2])), min(im.height, max(bb[3] + m, sb[3])))
 im = im.crop(box)
 a = np.asarray(im).astype(np.float32)
-h, w = a.shape[:2]
-fx = np.clip(np.minimum(np.arange(w), np.arange(w)[::-1]) / (0.14 * w), 0, 1)
-fy = np.clip(np.minimum(np.arange(h), np.arange(h)[::-1]) / (0.16 * h), 0, 1)
-ramp = np.outer(fy * fy * (3 - 2 * fy), fx * fx * (3 - 2 * fx))
-a[..., 3] *= ramp
+# no border fade: it read as white fog around every object. Each scene frames its object whole,
+# and the shadow catcher's shadow already fades to nothing on its own.
 rng = np.random.default_rng(7)
 grain = rng.normal(0, 3.2, a.shape[:2])[..., None]
 a[..., :3] = np.clip(a[..., :3] + grain, 0, 255)
