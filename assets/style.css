@@ -1105,3 +1105,9 @@ section .wrap > .label::before { display: none; }
   mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent), linear-gradient(transparent, #000 5%, #000 92%, transparent);
   mask-composite: intersect; }
 .hero-object canvas { height: min(72vh, 680px); width: 100%; object-fit: cover; }
+/* Hero: one centred column; the chip sits below the buttons, whole, never cropped. */
+.hero .hero-center { display: block; text-align: center; max-width: none; }
+.hero .hero-center > div { margin: 0 auto; max-width: 980px; }
+.hero-object { width: 100vw; max-width: none; margin: 40px 0 0 calc(50% - 50vw); }
+.hero-object canvas { display: block; width: min(1200px, 100vw); height: auto; margin: 0 auto; object-fit: contain;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent); mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent); }
