@@ -76,7 +76,7 @@ files = {
     "tile-white-on-black.svg": tile("#fff", "#000"),
     "tile-black-on-white.svg": tile("#000", "#fff"),
     "icon-white-on-black.svg": tile("#fff", "#000", scale=0.62, radius=224),
-    "favicon.svg": tile("#fff", BLUE, size=64, scale=0.66, radius=14),
+    "favicon.svg": tile(BLUE, "#fff", size=64, scale=0.7, radius=14),
 }
 for name, svg in files.items():
     (OUT / name).write_text(svg)
