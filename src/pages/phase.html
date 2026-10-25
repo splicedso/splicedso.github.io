@@ -8,7 +8,19 @@
 </header>
 
 <main>
-  <figure class="page-object"><img src="../../assets/img/package.webp" alt="A processor package"></figure>
+  <section class="etched">
+    <div class="etched-grid">
+      <figure><img src="../../assets/img/package.webp" alt="A processor package"></figure>
+      <div class="prose">
+        <h2>A power meter for local AI.</h2>
+        <p>Phase runs a model and reads the chip's power while it works. It splits the energy into reading the prompt and writing the answer, because they cost very different amounts.</p>
+        <h3>No extra hardware</h3>
+        <p>It uses the sensors already in the machine: macOS power metrics on Apple silicon, the GPU's own counters on AMD and NVIDIA.</p>
+        <h3>Honest by default</h3>
+        <p>Every measurement warms up first, runs twice, and reports idle power beside the result. Where a machine cannot measure something, Phase says so.</p>
+      </div>
+    </div>
+  </section>
 
   <section class="tight">
     <div class="wrap cols">

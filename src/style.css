@@ -1155,3 +1155,4 @@ body { background: transparent; } html { background: #eee; }
 .mrow .wrap.mgrid.solo { grid-template-columns: 1fr !important; } .mrow .wrap.mgrid.solo > div { border-left: 0; max-width: 640px; margin: 0 auto; }
 .mrow .mgrid .label, .mrow .mgrid h2, .mrow .mgrid p { text-align: left; margin-left: 0; }
 @media (max-width: 900px) { .mrow .wrap.mgrid { grid-template-columns: 1fr !important; border: 0; } .mrow .wrap.mgrid > div { border-left: 0; padding: 24px 16px 56px; } .mrow .wrap.mgrid > figure { padding: 24px 16px 0; } }
+.etched-grid > figure img { -webkit-mask-image: radial-gradient(ellipse 54% 58% at 50% 50%, #000 66%, transparent 100%); mask-image: radial-gradient(ellipse 54% 58% at 50% 50%, #000 66%, transparent 100%); }
