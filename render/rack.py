@@ -64,6 +64,8 @@ for k, x in enumerate((-RW / 2 + 3.0, -RW / 2 + 5.2)):
     bpy.context.object.data.materials.append(steel)
     bpy.ops.mesh.primitive_cylinder_add(radius=0.62, depth=0.35, location=(x, -RD / 2 + 0.9, CDU_Z + 1.2), rotation=(math.pi / 2, 0, 0), vertices=32)
     bpy.context.object.data.materials.append(collar)
+S.box((5.0, 0.1, 2.0), (RW / 2 - 5.5, -RD / 2 + 1.94, CDU_Z + 4 * U - 1.6), steel, 0.05)                 # nameplate on the CDU
+S.mark((RW / 2 - 7.2, -RD / 2 + 1.88, CDU_Z + 4 * U - 1.6), 1.3, dark, rot=(math.pi / 2, 0, 0))
 # supply and return hoses from the CDU up the inside of the left post to each sled (two vertical runs)
 for hx in (-RW / 2 + 1.9, -RW / 2 + 2.6):
     bpy.ops.mesh.primitive_cylinder_add(radius=0.3, depth=RH - 10, location=(hx, -RD / 2 + 2.6, (RH - 10) / 2 + 6), vertices=24)

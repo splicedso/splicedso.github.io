@@ -62,6 +62,7 @@ def decode_module(ox, oy, z=0.0, plate_on=False):
         for hx in (-1.15, 1.15):
             for hy in (-1.0, 1.0):
                 S.screw((ox + hx, oy + hy, z + 0.36), frame, 0.06)
+        S.mark((ox - 0.75, oy - 0.65, z + 0.341), 0.34, S.mat("etch", (0.3, 0.3, 0.3), metal=1.0, rough=0.6))   # laser-etched into the plate
     else:
         S.box((0.6, 0.6, 0.04), (ox, oy, z + 0.19), die, 0.006)                       # the small compute die
         for k in (-1, 1):                                                              # eight memory stacks, a ring
@@ -74,6 +75,7 @@ def decode_module(ox, oy, z=0.0, plate_on=False):
         if abs(x - ox) < 1.55 and abs(y - oy) < 1.4:
             continue
         S.box((0.05, 0.025, 0.025), (x, y, z + 0.093), cap, 0.003, 2)
+    S.mark((ox + 1.95, oy + 1.35, z + 0.083), 0.22, S.mat("silkmark", (0.9, 0.9, 0.87), rough=0.7))             # silk mark in the board's corner
     for i in range(6):                                                                  # a short power stage row: low power
         S.box((0.22, 0.22, 0.12), (ox - 1.1 + i * 0.44, oy - 1.62, z + 0.14), choke, 0.02)
 

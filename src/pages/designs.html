@@ -67,4 +67,16 @@
       <figure class="wide"><img src="../assets/img/cell-row.webp" alt="Eight concept cells docked side by side into one row" loading="lazy"></figure>
     </div>
   </section>
+  <section class="etched">
+    <div class="etched-grid solo">
+      <div class="prose">
+        <h2>What is inside, and whose it is.</h2>
+        <p>Buy the silicon, own everything above it. For the first generations a cell runs on parts that exist and that we can measure: an AMD Ryzen AI Max+ 395 class part with its 128 GB of unified memory for the decode modules, a discrete GPU for prefill, an ordinary server CPU as host, a 400G switch, a busbar tap instead of a power supply, one liquid loop. What Spliced makes is the module board, the cold plate, the capped clock, the enclosure, the dock, the operating system and the scheduler. That is most of what a cell is.</p>
+        <h3>Our own chip, or not</h3>
+        <p>The measurements say decode wants a small die with as much bandwidth as can be attached, at a fixed low clock, and no vendor sells exactly that. That is a real argument for a chip. Against it, today: the expensive part of an accelerator is the memory stack and the packaging, which we would buy anyway, and a two-person group cannot tape out a die. The test is in our software: once cells are measured, split a token's joules into memory traffic, compute, interconnect and overhead. If compute is a small share, a bought part is already near the roofline. We do not know which yet, and will not say we do.</p>
+        <h3>Spliced Linux</h3>
+        <p>Not a distribution: an appliance image. An upstream kernel with the accelerator drivers we measure with, a read-only root built from a recipe, two slots with signed whole-image updates, one service manager, and one workload, the scheduler. The clock cap is set at boot and verified under load; every cell reports package power, clock and busy for every module, and the number it reports is the number we publish. The first deliverable costs only time: a recipe that boots the machine we own and reproduces our capped figures within 3%.</p>
+      </div>
+    </div>
+  </section>
 </main>

@@ -53,6 +53,8 @@ def cell(ox, docked_left=False, docked_right=False):
         for sy in range(-int(CD / 2) + 8, int(CD / 2) - 6, 10):
             S.screw((ox + side * (CW / 2 + 0.02), sy, SK + 2.5), steel, 0.35, axis="x")
             S.screw((ox + side * (CW / 2 + 0.02), sy, SK + CH - 2.5), steel, 0.35, axis="x")
+    # the mark, inset in the door above the status window
+    S.mark((ox - 5, -CD / 2 - 1.02, SK + CH - 3), 2.4, S.mat("inset", (0.75, 0.75, 0.74), metal=1.0, rough=0.35), rot=(math.pi / 2, 0, 0), depth=0.15)
     # a blank rating-plate recess on the front door, low, and a drain at the rear of the skid
     S.box((7, 0.3, 3.2), (ox - 2, -CD / 2 - 0.65, SK + 8), steel, 0.1)
     bpy.ops.mesh.primitive_cylinder_add(radius=0.5, depth=1.0, location=(ox + 6, CD / 2 + 0.4, 1.0), rotation=(math.pi / 2, 0, 0), vertices=16)
