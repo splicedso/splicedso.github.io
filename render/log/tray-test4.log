@@ -1,0 +1,8 @@
+/Users/martinmuskov/Docs/GitHub/spliced/site/render/tray.py:22: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  m = bpy.data.materials.new(name); m.use_nodes = True
+/Users/martinmuskov/Docs/GitHub/spliced/site/render/tray.py:134: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  led = bpy.data.materials.new("led"); led.use_nodes = True
+00:08.608  render           | Saved: '/Users/martinmuskov/Docs/GitHub/spliced/site/render/log/tray-test4.png'
+Blender 5.2.2 LTS (hash d13f752e3b9c built 2026-09-15 01:49:19)
+
+Blender quit
