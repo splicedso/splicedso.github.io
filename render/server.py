@@ -92,8 +92,8 @@ S.mark((Wd / 2 - 0.55, fy - 0.081, Hh - 0.07), 0.12, label, rot=(math.pi / 2, 0,
 S.area((-7, -9, 9), 800, 9, (0, 0, 0.6))
 S.area((9, -5, 4), 500, 5, (0, 0, 0.6))
 S.area((0, 9, 7), 350, 8, (0, 0, 0.6))
-S.camera((-17.5, -27.5, 12.0), (0.3, -0.4, 0.5), lens=100, fstop=4.5)
+S.camera((-11.0, -31.0, 12.0), (0.3, -0.4, 0.5), lens=100, fstop=4.5)
 if "--turntable" in args:
-    S.turntable(OUT, int(args[args.index("--turntable") + 1]), sway=28)
+    S.turntable(OUT, int(args[args.index("--turntable") + 1]), sway=14)
 else:
     S.render(OUT)
