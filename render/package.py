@@ -67,11 +67,11 @@ rmp = nt.nodes.new("ShaderNodeMapRange"); rmp.inputs["To Min"].default_value = 0
 nt.links.new(tc.outputs["Object"], mp.inputs["Vector"]); nt.links.new(mp.outputs["Vector"], nz.inputs["Vector"])
 nt.links.new(nz.outputs["Fac"], rmp.inputs["Value"]); nt.links.new(rmp.outputs["Result"], p.inputs["Roughness"])
 
-substrate = mat("substrate", (0.025, 0.03, 0.028), rough=0.35, coat=0.6)
+substrate = mat("substrate", (0.012, 0.014, 0.013), rough=0.55, coat=0.25)
 gold = mat("gold", (0.75, 0.75, 0.72), metal=1.0, rough=0.25)
 cap = mat("cap", (0.32, 0.3, 0.27), rough=0.45)
 capend = mat("capend", (0.8, 0.8, 0.78), metal=1.0, rough=0.2)
-etch = mat("etch", (0.18, 0.18, 0.18), metal=1.0, rough=0.55)
+etch = mat("etch", (0.02, 0.02, 0.02), metal=0.3, rough=0.45)
 ball = mat("ball", (0.7, 0.7, 0.7), metal=1.0, rough=0.15)
 
 box((3.2, 3.2, 0.12), (0, 0, 0.06), substrate, 0.04)
@@ -119,7 +119,7 @@ area((0, -6, 0.6), 120, 4)         # low front kicker for the balls
 
 cam_d = bpy.data.cameras.new("cam"); cam_d.lens = 85
 cam = bpy.data.objects.new("cam", cam_d); sc.collection.objects.link(cam); sc.camera = cam
-cam.location = (5.6, -8.8, 3.0) if ANGLE == "low" else (0.0, -5.2, 9.5)
+cam.location = (7.4, -11.4, 4.4) if ANGLE == "low" else (0.0, -6.5, 11.8)
 cam.rotation_euler = (Vector((0, 0, 0.1)) - cam.location).to_track_quat("-Z", "Y").to_euler()
 cam_d.dof.use_dof = True; cam_d.dof.focus_distance = (cam.location - Vector((0, 0, 0.1))).length; cam_d.dof.aperture_fstop = 8
 

@@ -31,7 +31,7 @@ function fitCanvas(c) {
   if (c.width !== w * r) { c.width = w * r; c.height = h * r; }
   const x = c.getContext("2d"); x.setTransform(r, 0, 0, r, 0, 0); return [x, w, h];
 }
-const BLUE = "#ffffff";
+const C = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 
 // Replay: the real chip and board trace, drawn up to a moving playhead. Counters come from the
 // measured rates of that run (6,454 prompt tokens/s, 197.8 answer tokens/s), not from the trace.
@@ -51,23 +51,23 @@ fetch(ROOT + "assets/trace.json").then(r => r.json()).then(trace => {
     const X = s => pad + s / T * (w - 2 * pad), Y = p => bot - p / PMAX * (bot - top);
     x.clearRect(0, 0, w, h);
     for (const [m, a] of marks) if (m !== "idle") {
-      x.fillStyle = m === "decode" ? "rgba(255, 255, 255,.14)" : "rgba(255, 255, 255,.08)";
+      x.fillStyle = m === "decode" ? C("--cv-band-a") : C("--cv-band-b");
       x.fillRect(X(a), top, X(nextMark(a)) - X(a), bot - top);
-      x.fillStyle = "rgba(242, 242, 242,.55)"; x.font = "11px JetBrains Mono, monospace";
+      x.fillStyle = C("--cv-text"); x.font = "11px JetBrains Mono, monospace";
       x.fillText(m === "decode" ? "writing the answer" : "reading the prompt", X(a) + 6, top + 12);
     }
-    x.strokeStyle = "rgba(242, 242, 242,.07)"; x.lineWidth = 1;
+    x.strokeStyle = C("--cv-grid"); x.lineWidth = 1;
     for (let p = 0; p <= PMAX; p += 20) { x.beginPath(); x.moveTo(pad, Y(p)); x.lineTo(w - pad, Y(p)); x.stroke(); }
     const line = (k, color, width) => {
       x.beginPath(); x.strokeStyle = color; x.lineWidth = width; x.lineJoin = "round";
       S.forEach((s, i) => { if (s[0] <= t) (i ? x.lineTo : x.moveTo).call(x, X(s[0]), Y(s[k])); });
       x.stroke();
     };
-    line(2, "rgba(242, 242, 242,.4)", 1.5);
-    line(1, "#ffffff", 2.4);
+    line(2, C("--cv-board"), 1.5);
+    line(1, C("--cv-ink"), 2.4);
     const cur = S.findLast ? S.findLast(s => s[0] <= t) || S[0] : S.filter(s => s[0] <= t).pop() || S[0];
-    x.fillStyle = "#ffffff"; x.shadowColor = "#ffffff"; x.shadowBlur = 14; x.beginPath(); x.arc(X(Math.min(t, T)), Y(cur[1]), 4.5, 0, 7); x.fill(); x.shadowBlur = 0;
-    x.fillStyle = "rgba(242, 242, 242,.45)"; x.fillText(PMAX + " W", pad + 2, top + 10);
+    x.fillStyle = C("--cv-ink"); x.shadowColor = C("--cv-ink"); x.shadowBlur = 10; x.beginPath(); x.arc(X(Math.min(t, T)), Y(cur[1]), 4.5, 0, 7); x.fill(); x.shadowBlur = 0;
+    x.fillStyle = C("--cv-text"); x.fillText(PMAX + " W", pad + 2, top + 10);
     const [ph, a0] = phaseAt(t);
     out("sc-chip").textContent = cur[1].toFixed(1);
     out("sc-board").textContent = cur[2].toFixed(1);
@@ -162,7 +162,7 @@ document.querySelectorAll(".mviz").forEach(c => {
     const [x, w, h] = fitCanvas(c), t = reduced ? 2 : now / 1000;
     x.clearRect(0, 0, w, h);
     if (kind === "trace") {
-      for (const [k, color, lag] of [[0, "rgba(242, 242, 242,.35)", 0], [1, "#ffffff", 0.35]]) {
+      for (const [k, color, lag] of [[0, C("--cv-board"), 0], [1, C("--cv-ink"), 0.35]]) {
         x.beginPath(); x.strokeStyle = color; x.lineWidth = k ? 2.4 : 1.6;
         for (let i = 0; i <= w; i += 4) {
           const u = i / w * 6 + t - lag;
@@ -173,9 +173,9 @@ document.querySelectorAll(".mviz").forEach(c => {
       }
     } else if (kind === "lattice") {
       const g = 22, snap = (Math.sin(t * 0.9) + 1) / 2;
-      x.fillStyle = "rgba(255, 255, 255,.22)";
+      x.fillStyle = C("--cv-grid-dot");
       for (let i = g / 2; i < w; i += g) for (let j = g / 2; j < h; j += g) { x.beginPath(); x.arc(i, j, 1.4, 0, 7); x.fill(); }
-      x.fillStyle = BLUE;
+      x.fillStyle = C("--cv-ink");
       dots.forEach(([a, b]) => {
         const px = a * w, py = b * h, qx = Math.round((px - g / 2) / g) * g + g / 2, qy = Math.round((py - g / 2) / g) * g + g / 2;
         x.beginPath(); x.arc(px + (qx - px) * snap, py + (qy - py) * snap, 3, 0, 7); x.fill();
@@ -184,7 +184,7 @@ document.querySelectorAll(".mviz").forEach(c => {
       dots.forEach(([a, b, v]) => {
         const px = ((a + t * 0.25 * v) % 1) * (w + 60) - 30, py = b * h;
         const grad = x.createLinearGradient(px - 40 * v, py, px, py);
-        grad.addColorStop(0, "rgba(255, 255, 255,0)"); grad.addColorStop(1, BLUE);
+        grad.addColorStop(0, C("--cv-ink-0")); grad.addColorStop(1, C("--cv-ink"));
         x.strokeStyle = grad; x.lineWidth = 2; x.beginPath(); x.moveTo(px - 40 * v, py); x.lineTo(px, py); x.stroke();
       });
     }
