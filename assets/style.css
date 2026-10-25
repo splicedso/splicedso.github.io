@@ -1053,3 +1053,13 @@ main > .page-object:first-child { margin-top: -40px; } .page-object img { max-he
 .center-head .lede { margin-left: auto; margin-right: auto; text-align: center; }
 .models .model img { height: 260px; aspect-ratio: auto; }
 .label + h2 + .dtable-wrap, h2 + .dtable-wrap { margin-top: 32px; }
+/* A page's render sits behind its headline; difference blending keeps the type readable over it. */
+body:has(.page-head + main > .page-object:first-child) .page-head { pointer-events: none; }
+body:has(.page-head + main > .page-object:first-child) .page-head { isolation: auto; }
+body:has(.page-head + main > .page-object:first-child) .page-head :is(h1, .lede, .label) { position: relative; z-index: 1; color: #fff; mix-blend-mode: difference; }
+body:has(.page-head + main > .page-object:first-child) > div:has(> .page-head) { background: #eee; }
+body:has(.page-head + main > .page-object:first-child) .page-head a { pointer-events: auto; }
+.page-head + main > .page-object:first-child { position: relative; z-index: 0; margin-top: clamp(-260px, -18vw, -120px); }
+html:has(.page-head + main > .page-object:first-child) { background: #eee; }
+body:has(.page-head + main > .page-object:first-child) { isolation: isolate; }
+.page-head + main > .page-object:first-child :is(img, video) { mix-blend-mode: multiply; }
