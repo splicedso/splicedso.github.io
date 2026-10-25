@@ -213,3 +213,32 @@ def turntable(out, frames, samples=96, sway=None):
     r = sc.render
     r.image_settings.file_format = "PNG"; r.image_settings.color_mode = "RGBA"; r.filepath = out
     bpy.ops.render.render(animation=True)
+
+
+def silkscreen(cx, cy, z, w, h, n=60, seed=3, keep_out=None, color=(0.9, 0.9, 0.87)):
+    """Silkscreen on a board: small open component outlines scattered over a w x h area, the way
+    a real board carries them. No text, no marks. keep_out=(x0, y0, x1, y1) is left clear."""
+    import random as _r
+    rnd = _r.Random(seed)
+    m = mat("silk", color, rough=0.7)
+    for _ in range(n):
+        x = cx + rnd.uniform(-w / 2, w / 2); y = cy + rnd.uniform(-h / 2, h / 2)
+        if keep_out and keep_out[0] < x < keep_out[2] and keep_out[1] < y < keep_out[3]:
+            continue
+        ow, oh = rnd.choice(((0.14, 0.08), (0.08, 0.14), (0.22, 0.1), (0.1, 0.1)))
+        t = 0.008
+        for dx, dy, sx, sy in ((0, oh / 2, ow, t), (0, -oh / 2, ow, t), (ow / 2, 0, t, oh), (-ow / 2, 0, t, oh)):
+            bpy.ops.mesh.primitive_cube_add(size=1, location=(x + dx, y + dy, z))
+            o = bpy.context.object; o.scale = (sx, sy, 0.002); o.data.materials.append(m)
+
+
+def scuffed(name, color, metal=1.0, rough=0.3):
+    """Handled metal: a scuffed, slightly streaky roughness, so highlights break up as on a real part."""
+    m = mat(name, color, metal=metal, rough=rough)
+    nt = m.node_tree; p = nt.nodes["Principled BSDF"]
+    tc = nt.nodes.new("ShaderNodeTexCoord"); mp = nt.nodes.new("ShaderNodeMapping"); mp.inputs["Scale"].default_value = (40, 2, 40)
+    nz = nt.nodes.new("ShaderNodeTexNoise"); nz.inputs["Scale"].default_value = 6; nz.inputs["Detail"].default_value = 12; nz.inputs["Roughness"].default_value = 0.8
+    mr = nt.nodes.new("ShaderNodeMapRange"); mr.inputs["To Min"].default_value = max(0.0, rough - 0.12); mr.inputs["To Max"].default_value = min(1.0, rough + 0.16)
+    nt.links.new(tc.outputs["Object"], mp.inputs["Vector"]); nt.links.new(mp.outputs["Vector"], nz.inputs["Vector"])
+    nt.links.new(nz.outputs["Fac"], mr.inputs["Value"]); nt.links.new(mr.outputs["Result"], p.inputs["Roughness"])
+    return m

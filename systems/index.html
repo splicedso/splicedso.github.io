@@ -7,21 +7,21 @@
 <meta name="description" content="How to run a model well on one machine, decided by what we measured: format, batch, draft, prefix cache, clock.">
 <meta property="og:title" content="Systems &middot; Spliced">
 <meta property="og:description" content="How to run a model well on one machine, decided by what we measured: format, batch, draft, prefix cache, clock.">
-<meta property="og:image" content="https://splicedso.github.io/assets/og.png?v=202610251608">
+<meta property="og:image" content="https://splicedso.github.io/assets/og.png?v=202610251615">
 <meta property="og:url" content="https://splicedso.github.io/systems/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Spliced">
 <link rel="canonical" href="https://splicedso.github.io/systems/">
 <meta name="color-scheme" content="light dark">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="../assets/favicon.svg?v=202610251608" type="image/svg+xml">
-<link rel="icon" href="../assets/favicon-32.png?v=202610251608" type="image/png" sizes="32x32">
-<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png?v=202610251608">
+<link rel="icon" href="../assets/favicon.svg?v=202610251615" type="image/svg+xml">
+<link rel="icon" href="../assets/favicon-32.png?v=202610251615" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png?v=202610251615">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>document.documentElement.classList.add("js");</script>
-<link rel="stylesheet" href="../assets/style.css?v=202610251608">
+<link rel="stylesheet" href="../assets/style.css?v=202610251615">
 <link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
 </head>
 <body data-root="../" data-page="systems">
@@ -57,8 +57,7 @@
     <h1>A local inference system, by the measurements</h1>
     <p class="lede">How to run a model well on one machine, decided by what we have measured rather than by
 spec sheets. This is the recipe Foundry follows and the baseline every Spliced model has to
-beat. Each decision cites the note that measured it. Where a decision is still provisional, it
-says so. 25 October 2026.</p>
+beat. Each decision cites the note that measured it. Every number is a two-pass measurement. 25 October 2026.</p>
   </div>
 </header>
 <main><article class="wrap note-body"><h2 data-via>Summary</h2>
@@ -100,9 +99,11 @@ agreement by 0.7 points and bought nothing; the stock 0.5B draft is the one to s
 Trace clears the 3-point bar.</p>
 <p><strong>Clock: cap the shader clock where the platform allows it.</strong> On the Strix Halo, an 1,800 MHz cap
 through the OD table cuts 7B decode energy per token 37% at 4% less speed, and 42% at 8% less
-at 1,200 MHz (results/halo-clockcap.md). Per correct answer, the first pass of the capped
-quality run shows 15 to 28% less energy with accuracy within a point; the two-pass result is in
-note 23 when it lands. Decode is memory bound, so the shader clock buys little speed and costs
+at 1,200 MHz (results/halo-clockcap.md). Per correct answer, under the same cap, a 7B Q4_0 at
+eight slots costs 28% less (111.3 against 153.8 J), a 32B Q4_0 24% less (426.2 against 563.6) and a 32B
+calibrated Q2_K 19% less (384.7 against 473.7), with accuracy within a point everywhere (note 23). The
+speed cost at eight slots is larger than the sweep's 4%: 15% on the 7B, 11% on the 32B Q4_0, 24% on the
+32B Q2_K, because eight slots are closer to compute bound than one. Decode is memory bound, so the shader clock buys little speed and costs
 much power. Prefill is compute bound and loses a third of its speed under the cap, so a system
 that does long prefill should lift the cap for it. This needs root and is Linux only so far.</p>
 <p><strong>Measure warm.</strong> A cold first measurement understates energy per token by 20 to 30%, because
@@ -141,7 +142,7 @@ runs slowly does not save energy per token. Finish fast, then idle.</p>
 <td style="text-align: right;">8</td>
 <td>0.5B, p-min 0.5</td>
 <td>OD 1,800 MHz</td>
-<td>153.8 J per correct answer on auto (note 22); about 110 capped (note 23, pass 1)</td>
+<td>153.8 J per correct answer on auto (note 22); 111.3 capped (note 23)</td>
 </tr>
 <tr>
 <td>AMD Ryzen AI Max+ 395</td>
@@ -150,7 +151,7 @@ runs slowly does not save energy per token. Finish fast, then idle.</p>
 <td style="text-align: right;">8</td>
 <td>none measured</td>
 <td>OD 1,800 MHz</td>
-<td>473.7 J per correct answer on auto (note 22); about 403 capped (note 23, pass 1)</td>
+<td>473.7 J per correct answer on auto (note 22); 384.7 capped (note 23); Q4_0 capped is 426.2, so 2-bit's lead shrinks to 9.7% under the cap</td>
 </tr>
 </tbody>
 </table>
@@ -182,7 +183,7 @@ runs slowly does not save energy per token. Finish fast, then idle.</p>
   </div>
 </footer>
 
-<script src="../assets/site.js?v=202610251608"></script>
+<script src="../assets/site.js?v=202610251615"></script>
 
 </body>
 </html>

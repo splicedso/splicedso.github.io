@@ -27,7 +27,7 @@ pcb = S.pcb_mat("pcb", (0.008, 0.022, 0.014))
 interposer = S.mat("interposer", (0.25, 0.26, 0.3), metal=1.0, rough=0.18)
 die = S.mat("die", (0.08, 0.08, 0.1), metal=0.6, rough=0.12)
 hbm = S.mat("hbm", (0.05, 0.05, 0.06), metal=0.4, rough=0.3)
-frame = S.mat("frame", (0.62, 0.62, 0.6), metal=1.0, rough=0.32, micro=0.08)
+frame = S.scuffed("frame", (0.62, 0.62, 0.6), metal=1.0, rough=0.32)
 cap = S.mat("cap", (0.36, 0.32, 0.26), rough=0.45)
 choke = S.mat("choke", (0.02, 0.02, 0.02), rough=0.6)
 gold = S.mat("gold", (0.95, 0.72, 0.38), metal=1.0, rough=0.22)
@@ -66,6 +66,7 @@ def module(ox, oy, z=0.0, heatsink=False):
     for side in (-1, 1):
         for k in (-1, 0, 1):
             S.box((0.32, 0.36, 0.05), (ox + side * 0.67, oy + k * 0.4, z + 0.195), hbm, 0.006)
+    S.silkscreen(ox, oy, z + 0.082, 4.4, 2.8, n=70, seed=int(ox * 7 + oy * 3) & 0xFFFF, keep_out=(ox - 1.4, oy - 1.2, ox + 1.4, oy + 1.2))
     # decoupling capacitors and power stages
     for i in range(140):
         x = ox + random.uniform(-2.2, 2.2); y = oy + random.uniform(-1.4, 1.4)
@@ -78,6 +79,7 @@ def module(ox, oy, z=0.0, heatsink=False):
 
 if BOARD:
     S.box((22.0, 9.6, 0.12), (0, 0, 0.06), pcb, 0.03)                      # baseboard
+    S.silkscreen(0, 0, 0.122, 21.0, 9.0, n=160, seed=5)
     for r, y in enumerate((-2.4, 2.4)):
         for c in range(4):
             module(-7.5 + c * 5.0, y, z=0.12, heatsink=True)

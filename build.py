@@ -91,6 +91,9 @@ NOTES = [
     {"slug": "lattice-large", "file": "2026-10-lattice-large.md", "n": 22,
      "summary": "Calibrated 2-bit against Q4_0 at 7B and 32B on the Strix Halo. At 32B the 2-bit model costs 16% less per correct "
                 "answer at equal accuracy; at 7B Q4_0 still wins by 21%. The crossover is where memory traffic takes over the token."},
+    {"slug": "capped-quality", "file": "2026-10-capped-quality.md", "n": 23,
+     "summary": "Capping the Strix Halo's shader clock at 1,800 MHz cuts joules per correct answer 19 to 28% on a 7B and a 32B at eight "
+                "requests at once, with accuracy within a point, for 11 to 24% less speed. Two-bit's lead over 4-bit shrinks under the cap."},
 ]
 
 FIGURES = {

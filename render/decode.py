@@ -27,13 +27,13 @@ pcb = S.pcb_mat("pcb", (0.008, 0.022, 0.014))
 interposer = S.mat("interposer", (0.25, 0.26, 0.3), metal=1.0, rough=0.18)
 die = S.mat("die", (0.08, 0.08, 0.1), metal=0.6, rough=0.12)
 hbm = S.mat("hbm", (0.05, 0.05, 0.06), metal=0.4, rough=0.3)
-frame = S.mat("frame", (0.62, 0.62, 0.6), metal=1.0, rough=0.32, micro=0.08)
+frame = S.scuffed("frame", (0.62, 0.62, 0.6), metal=1.0, rough=0.32)
 cap = S.mat("cap", (0.36, 0.32, 0.26), rough=0.45)
 choke = S.mat("choke", (0.02, 0.02, 0.02), rough=0.6)
 gold = S.mat("gold", (0.95, 0.72, 0.38), metal=1.0, rough=0.22)
 fin = S.mat("fin", (0.78, 0.78, 0.76), metal=1.0, rough=0.28, micro=0.05)
 cu = S.mat("cu", (0.86, 0.52, 0.34), metal=1.0, rough=0.25)
-plate = S.mat("plate", (0.7, 0.7, 0.69), metal=1.0, rough=0.22, micro=0.06)
+plate = S.scuffed("plate", (0.7, 0.7, 0.69), metal=1.0, rough=0.22)
 black = S.mat("black", (0.015, 0.015, 0.015), rough=0.55)
 sub = S.mat("sub", (0.02, 0.025, 0.02), rough=0.35, coat=0.3)
 
@@ -68,6 +68,7 @@ def decode_module(ox, oy, z=0.0, plate_on=False):
             for j in (-0.72, 0, 0.72):
                 S.box((0.34, 0.5, 0.05), (ox + k * 0.78, oy + j, z + 0.195), hbm, 0.006)
             S.box((0.5, 0.34, 0.05), (ox, oy + k * 0.72, z + 0.195), hbm, 0.006)
+    S.silkscreen(ox, oy, z + 0.082, 4.4, 3.2, n=70, seed=int(ox * 7 + oy * 3) & 0xFFFF, keep_out=(ox - 1.6, oy - 1.45, ox + 1.6, oy + 1.45))
     for i in range(150):
         x = ox + random.uniform(-2.2, 2.2); y = oy + random.uniform(-1.6, 1.6)
         if abs(x - ox) < 1.55 and abs(y - oy) < 1.4:
@@ -92,6 +93,7 @@ def prefill_module(ox, oy, z=0.0):
 if SLED:
     # a 1U sled: six decode modules in two rows behind one prefill module and a switch, power at the back
     S.box((20.0, 8.6, 0.12), (0, 0, 0.06), pcb, 0.03)
+    S.silkscreen(0, 0, 0.122, 19.0, 8.0, n=140, seed=9)
     S.box((20.4, 9.0, 0.3), (0, 0, -0.12), S.mat("tray", (0.03, 0.03, 0.032), metal=0.7, rough=0.5, micro=0.1), 0.03)
     for r, y in enumerate((-2.2, 2.2)):
         for c in range(3):

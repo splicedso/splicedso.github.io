@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Does a clock cap pay per correct answer? &middot; Spliced</title>
+<meta name="description" content="Capping the Strix Halo's shader clock at 1,800 MHz cuts joules per correct answer 19 to 28% on a 7B and a 32B at eight requests at once, with accuracy within a point, for 11 to 24% less speed. Two-bit's lead over 4-bit shrinks under the cap.">
+<meta property="og:title" content="Does a clock cap pay per correct answer? &middot; Spliced">
+<meta property="og:description" content="Capping the Strix Halo's shader clock at 1,800 MHz cuts joules per correct answer 19 to 28% on a 7B and a 32B at eight requests at once, with accuracy within a point, for 11 to 24% less speed. Two-bit's lead over 4-bit shrinks under the cap.">
+<meta property="og:image" content="https://splicedso.github.io/assets/og.png?v=202610251615">
+<meta property="og:url" content="https://splicedso.github.io/research/capped-quality/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Spliced">
+<link rel="canonical" href="https://splicedso.github.io/research/capped-quality/">
+<meta name="color-scheme" content="light dark">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="../../assets/favicon.svg?v=202610251615" type="image/svg+xml">
+<link rel="icon" href="../../assets/favicon-32.png?v=202610251615" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png?v=202610251615">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>document.documentElement.classList.add("js");</script>
+<link rel="stylesheet" href="../../assets/style.css?v=202610251615">
+<link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
+</head>
+<body data-root="../../" data-page="research">
+<a class="skip" href="#content">Skip to content</a>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="../../" aria-label="Spliced home">
+      <svg viewBox="-13 -13 966 1084" aria-hidden="true"><path fill="currentColor" stroke="currentColor" stroke-width="12.7" stroke-linejoin="round" d="M639.0 0.0 L941.0 0.0 L301.0 1059.0 L0.0 1059.0 Z"/></svg>
+      Spliced
+    </a>
+    <div class="nav-right">
+      <ul>
+        <li><a href="../../research/" data-nav="research">Research</a></li>
+        <li><a href="../../models/" data-nav="models">Models</a></li>
+        <li><a href="../../foundry/" data-nav="foundry">Foundry</a></li>
+        <li><a href="../../data/" data-nav="data">Data</a></li>
+        <li><a href="../../tools/phase/" data-nav="tools">Phase</a></li>
+        <li><a href="../../lab/" data-nav="lab">Lab</a></li>
+      </ul>
+      <a class="icon-link" href="https://github.com/splicedso" aria-label="Spliced on GitHub" title="GitHub"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a>
+      <a class="icon-link" href="https://www.linkedin.com/company/splicedso" aria-label="Spliced on LinkedIn" title="LinkedIn"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M0 1.15C0 .52.52 0 1.18 0h13.64C15.48 0 16 .52 16 1.15v13.7c0 .63-.52 1.15-1.18 1.15H1.18C.52 16 0 15.48 0 14.85V1.15zM4.75 13.39V6.17H2.35v7.22h2.4zM3.55 5.18c.84 0 1.36-.55 1.36-1.25-.02-.71-.52-1.25-1.34-1.25-.82 0-1.36.54-1.36 1.25 0 .7.52 1.25 1.33 1.25h.01zm4.91 8.21V9.36c0-.22.02-.43.08-.59.18-.43.57-.88 1.23-.88.87 0 1.22.66 1.22 1.64v3.86h2.4V9.25c0-2.22-1.18-3.25-2.76-3.25-1.27 0-1.84.7-2.16 1.19v.03h-.02l.02-.03V6.17h-2.4c.03.68 0 7.22 0 7.22h2.4z"/></svg></a>
+    </div>
+  </div>
+</nav>
+
+<svg id="bus" aria-hidden="true"></svg>
+
+<div id="content">
+<header class="page-head">
+  <div class="wrap">
+    <span class="label">Note 23 &middot; 25 October 2026</span>
+    <h1>Does a clock cap pay per correct answer?</h1>
+    <p class="lede">Capping the Strix Halo's shader clock at 1,800 MHz cuts joules per correct answer 19 to 28% on a 7B and a 32B at eight requests at once, with accuracy within a point, for 11 to 24% less speed. Two-bit's lead over 4-bit shrinks under the cap.</p>
+    <p class="setup"><strong>Prediction verdict:</strong> held on the headline (15 to 28% fewer joules per correct answer at accuracy within a
+point, every cell); missed on the 32B calibrated Q2_K, which slows 22 to 24% under the cap (predicted under
+10%) and whose lead over Q4_0 shrinks to 9.7% on the mean (7.6% and 12.0% per pass) (predicted 16% within 5 points).</p>
+  </div>
+</header>
+<main><article class="wrap note-body"><p>Spliced research note 23, 25 October 2026. AMD Ryzen AI Max+ 395 (Strix Halo, Radeon 8060S, 128 GB, shared GPU memory 90%), Linux, llama.cpp 620d2225c, Vulkan. Qwen2.5 7B and 32B Instruct.</p>
+<p>The clock-cap sweep (<code>results/halo-clockcap.md</code>) found that capping the shader clock at 1,800 MHz through the OD table cuts the 7B's batch-1 decode energy per token by 37% at 4% less speed. That is energy per token at batch 1. The bar every model and setting is judged on is joules per correct answer at 8 requests at once (<code>experiments/quality.py</code>, note 19). This note runs that harness under the cap, on the same three cells note 22 measured on auto earlier today.</p>
+<p><strong>Prediction</strong> (<code>docs/predictions.md</code>, committed and pushed before the first measurement): accuracy within 1 point of the auto run in every cell. 7B Q4_0: 20 to 35% fewer joules per correct answer, 5 to 20% fewer tokens per second (eight slots are more compute-bound than batch-1 decode, so the speed cost is larger than the sweep's 4%). 32B calibrated Q2_K: 25 to 40% fewer joules, under 10% slower. 32B Q4_0: 25 to 40% fewer joules, and calibrated Q2_K stays 16% cheaper than Q4_0 within 5 points. The cap holds for all six runs.</p>
+<h2 data-via>Method</h2>
+<p><code>experiments/halo_capped_quality.sh</code>: the OD table set to 1,800 MHz (<code>power_dpm_force_performance_level=manual</code>, <code>pp_od_clk_voltage</code> <code>s 1 1800</code>, <code>c</code>), verified under a decode load before anything is measured, the active clock sampled during every run and its maximum logged. Then <code>quality.py</code>, GSM8K-250, 8 slots, chip (package) energy, two passes with the second reversed: 7B Q4_0, 32B calibrated Q2_K, 32B Q4_0. Package idle sampled for 10 s before every run with nothing loaded (<code>results/halo-capped-idle-pre.csv</code>), next to quality.py's own loaded idle. Auto comparison cells are note 22's runs from earlier today, same machine, same build, same shared-memory setting; the 7B auto pair was re-run in this session (below) so both of its passes share conditions. The clock was restored to auto and the OD table reset at the end; readback in <code>results/halo-capped-readback.txt</code>.</p>
+<h2 data-via>Results</h2>
+<p>Capped at 1,800 MHz, two-pass means; every pass, both idle readings, the sampled clock and the spreads are in
+<code>results/halo-capped-quality.md</code>, raw JSON in <code>results/quality-halo-cap1800-*-pass{1,2}.json</code>.</p>
+<table>
+<thead>
+<tr>
+<th>model, format</th>
+<th style="text-align: right;">accuracy</th>
+<th style="text-align: right;">J per correct</th>
+<th style="text-align: right;">vs auto</th>
+<th style="text-align: right;">tok/s</th>
+<th style="text-align: right;">vs auto</th>
+<th style="text-align: right;">mJ per token</th>
+<th style="text-align: right;">vs auto</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>7B Q4_0</td>
+<td style="text-align: right;">88.2%</td>
+<td style="text-align: right;">111.3</td>
+<td style="text-align: right;">-28%</td>
+<td style="text-align: right;">192.1</td>
+<td style="text-align: right;">-15%</td>
+<td style="text-align: right;">425</td>
+<td style="text-align: right;">-28%</td>
+</tr>
+<tr>
+<td>32B Q2_K, calibrated</td>
+<td style="text-align: right;">95.6%</td>
+<td style="text-align: right;">384.7</td>
+<td style="text-align: right;">-19%</td>
+<td style="text-align: right;">46.5</td>
+<td style="text-align: right;">-24%</td>
+<td style="text-align: right;">1618</td>
+<td style="text-align: right;">-19%</td>
+</tr>
+<tr>
+<td>32B Q4_0</td>
+<td style="text-align: right;">95.8%</td>
+<td style="text-align: right;">426.2</td>
+<td style="text-align: right;">-24%</td>
+<td style="text-align: right;">49.9</td>
+<td style="text-align: right;">-11%</td>
+<td style="text-align: right;">1705</td>
+<td style="text-align: right;">-23%</td>
+</tr>
+</tbody>
+</table>
+<p>Auto, for reference (note 22 means; the 7B re-run below is not averaged in):</p>
+<table>
+<thead>
+<tr>
+<th>model, format</th>
+<th style="text-align: right;">accuracy</th>
+<th style="text-align: right;">J per correct</th>
+<th style="text-align: right;">tok/s</th>
+<th style="text-align: right;">mJ per token</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>7B Q4_0</td>
+<td style="text-align: right;">88.6%</td>
+<td style="text-align: right;">153.8</td>
+<td style="text-align: right;">225.9</td>
+<td style="text-align: right;">589</td>
+</tr>
+<tr>
+<td>32B Q2_K, calibrated</td>
+<td style="text-align: right;">95.6%</td>
+<td style="text-align: right;">473.7</td>
+<td style="text-align: right;">61.2</td>
+<td style="text-align: right;">1992</td>
+</tr>
+<tr>
+<td>32B Q4_0</td>
+<td style="text-align: right;">94.8%</td>
+<td style="text-align: right;">563.6</td>
+<td style="text-align: right;">56.3</td>
+<td style="text-align: right;">2224</td>
+</tr>
+</tbody>
+</table>
+<p>Package power during the runs fell from 122 to 127 W on auto to 75 to 87 W under the cap. The cap held: the
+active clock, sampled every 0.5 s, never exceeded 1,800 MHz in any run. Idle before each run drifted 6.3 to
+19.2 W; gross J per correct answer is the headline, net is soft.</p>
+<p>Spread: the 7B and 32B Q4_0 cells repeat to within 2.0% and 4.8% on J per correct (the latter flagged: 87.0
+against 83.2 W at the same speed). The capped 32B Q2_K pair differs by 9.7%, flagged: the power log shows
+the first 15 minutes of its pass 2 at 64 to 67 W at the same clock and GPU load as pass 1, then 75 to 87 W,
+and the pre-run idle before it was 6.3 W where every other run saw 10.6 to 19.2 W. Something outside the GPU
+was in a lower power state for that stretch; the logger now records memory, fabric and display clocks and the
+display's power state so the next such stretch can be attributed. Pass 1 (403.4 J per correct) is the
+representative Q2_K figure; the mean carries the artefact.</p>
+<h2 data-via>7B on auto, re-run in one session</h2>
+<p>Note 22's 7B pass 1 (previous session) drew 10% more power than pass 2 at the same speed. To test whether
+that was the session, both 7B pass-1 cells were re-run on auto in this session at 16:00, right after the
+capped run and before the harvest resumed (<code>experiments/lattice_7b_rerun.sh</code>). The re-run rows are kept apart
+in <code>results/lattice-halo.md</code> and not averaged into note 22's means.</p>
+<table>
+<thead>
+<tr>
+<th>format</th>
+<th>run</th>
+<th style="text-align: right;">accuracy</th>
+<th style="text-align: right;">gross J/correct</th>
+<th style="text-align: right;">net J/correct</th>
+<th style="text-align: right;">tok/s</th>
+<th style="text-align: right;">mJ/token</th>
+<th style="text-align: right;">W during run</th>
+<th style="text-align: right;">idle W, model loaded</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Q4_0</td>
+<td>pass 1, previous session</td>
+<td style="text-align: right;">88.0% (220/250)</td>
+<td style="text-align: right;">161.6</td>
+<td style="text-align: right;">141.8</td>
+<td style="text-align: right;">226.2</td>
+<td style="text-align: right;">617</td>
+<td style="text-align: right;">139.6</td>
+<td style="text-align: right;">17.1</td>
+</tr>
+<tr>
+<td>Q4_0</td>
+<td>pass 2, 13:18</td>
+<td style="text-align: right;">89.2% (223/250)</td>
+<td style="text-align: right;">145.9</td>
+<td style="text-align: right;">120.5</td>
+<td style="text-align: right;">225.5</td>
+<td style="text-align: right;">561</td>
+<td style="text-align: right;">126.5</td>
+<td style="text-align: right;">22.0</td>
+</tr>
+<tr>
+<td>Q4_0</td>
+<td>re-run, 15:57</td>
+<td style="text-align: right;">88.4% (221/250)</td>
+<td style="text-align: right;">160.5</td>
+<td style="text-align: right;">139.4</td>
+<td style="text-align: right;">227.4</td>
+<td style="text-align: right;">615</td>
+<td style="text-align: right;">139.8</td>
+<td style="text-align: right;">18.3</td>
+</tr>
+<tr>
+<td>Q2_K calibrated</td>
+<td>pass 1, previous session</td>
+<td style="text-align: right;">84.8% (212/250)</td>
+<td style="text-align: right;">200.3</td>
+<td style="text-align: right;">166.3</td>
+<td style="text-align: right;">188.5</td>
+<td style="text-align: right;">717</td>
+<td style="text-align: right;">135.1</td>
+<td style="text-align: right;">22.9</td>
+</tr>
+<tr>
+<td>Q2_K calibrated</td>
+<td>pass 2, 13:12</td>
+<td style="text-align: right;">83.6% (209/250)</td>
+<td style="text-align: right;">191.4</td>
+<td style="text-align: right;">155.0</td>
+<td style="text-align: right;">186.0</td>
+<td style="text-align: right;">673</td>
+<td style="text-align: right;">125.2</td>
+<td style="text-align: right;">23.8</td>
+</tr>
+<tr>
+<td>Q2_K calibrated</td>
+<td>re-run, 16:02</td>
+<td style="text-align: right;">82.4% (206/250)</td>
+<td style="text-align: right;">213.7</td>
+<td style="text-align: right;">178.8</td>
+<td style="text-align: right;">178.1</td>
+<td style="text-align: right;">741</td>
+<td style="text-align: right;">132.0</td>
+<td style="text-align: right;">21.6</td>
+</tr>
+</tbody>
+</table>
+<p>The re-run reproduced pass 1: Q4_0 within 1% (139.8 against 139.6 W, 160.5 against 161.6
+J/correct); Q2_K within 3% on power and energy per token (132.0 against 135.1 W, 741 against 717
+mJ/token), with six fewer problems right, which puts its J/correct 6.7% off. So note 22's 10% spread is run
+order, not the session: pass 2 followed four 32B runs and drew 10% less power at the same speed, and a first
+7B run after a change of state (a session start; here, 95 minutes under the clock cap ending a minute earlier)
+draws the higher figure. The flag stays on note 22's 7B cells.</p>
+<h2 data-via>What to take from this</h2>
+<ol>
+<li><strong>The cap pays on the bar that matters.</strong> At 8 requests at once, every cell costs 15 to 28% fewer joules
+   per correct answer than on auto, at the same accuracy. The 7B Q4_0 drops from 153.8 to 111.3 J per correct
+   answer at 15% fewer tokens per second; the 32B Q4_0 from 563.6 to 426.2 at 11% fewer. The predicted direction
+   and sizes held for both Q4_0 cells.</li>
+<li><strong>The 2-bit model pays for the cap in speed.</strong> Calibrated Q2_K at 32B slows 24% under the cap where Q4_0
+   slows 11%, and its energy lead over Q4_0 shrinks from 16% to 9.7% (7.6% and 12.0% per pass). Fewer bits mean more unpacking work
+   per weight, and a lower shader clock makes that work the slow part. Not predicted; the prediction said the
+   16% lead would hold within 5 points.</li>
+<li><strong>Serving at 8 slots costs more speed than batch-1 decode did.</strong> The clock-cap sweep lost 4% of batch-1 decode
+   speed at 1,800 MHz; here the 7B loses 15% and the 32B Q4_0 11%, as predicted, because eight concurrent
+   requests make the run more compute-bound.</li>
+<li><strong>For Foundry on this machine:</strong> a capped 32B Q4_0 answers GSM8K at 95.8% for 426 J per correct answer,
+   24% less than the same model on auto, at 11% fewer tokens per second; whether that trade is worth it is a
+   product decision, and only the energy and speed are measured here.</li>
+</ol>
+<h2 data-via>Limits</h2>
+<p>One task, one machine, chip (package) energy, one cap value. The cap needs root; a laptop's equivalent is its firmware power mode, not measured here. Whether a lower cap (1,200 MHz) does better per correct answer at 8 slots is untested.</p>
+<p class="source mono">Source, scripts and raw data: <a href="https://github.com/splicedso/phase/blob/main/notes/2026-10-capped-quality.md">phase/notes/2026-10-capped-quality.md</a></p>
+</article></main>
+</div>
+
+<footer>
+  <div class="wrap foot">
+    <a class="brand" href="../../" aria-label="Spliced home"><svg viewBox="-13 -13 966 1084" aria-hidden="true"><path fill="currentColor" stroke="currentColor" stroke-width="12.7" stroke-linejoin="round" d="M639.0 0.0 L941.0 0.0 L301.0 1059.0 L0.0 1059.0 Z"/></svg>Spliced</a>
+    <nav class="foot-nav" aria-label="Footer">
+      <a href="../../research/">Research</a><a href="../../models/">Models</a><a href="../../systems/">Systems</a><a href="../../designs/">Designs</a><a href="../../foundry/">Foundry</a><a href="../../learn/">Learn</a><a href="../../data/">Data</a><a href="../../tools/phase/">Phase</a><a href="../../lab/">Lab</a>
+    </nav>
+    <div class="foot-social">
+      <a href="https://github.com/splicedso" aria-label="GitHub"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a>
+      <a href="https://www.linkedin.com/company/splicedso" aria-label="LinkedIn"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M0 1.15C0 .52.52 0 1.18 0h13.64C15.48 0 16 .52 16 1.15v13.7c0 .63-.52 1.15-1.18 1.15H1.18C.52 16 0 15.48 0 14.85V1.15zM4.75 13.39V6.17H2.35v7.22h2.4zM3.55 5.18c.84 0 1.36-.55 1.36-1.25-.02-.71-.52-1.25-1.34-1.25-.82 0-1.36.54-1.36 1.25 0 .7.52 1.25 1.33 1.25h.01zm4.91 8.21V9.36c0-.22.02-.43.08-.59.18-.43.57-.88 1.23-.88.87 0 1.22.66 1.22 1.64v3.86h2.4V9.25c0-2.22-1.18-3.25-2.76-3.25-1.27 0-1.84.7-2.16 1.19v.03h-.02l.02-.03V6.17h-2.4c.03.68 0 7.22 0 7.22h2.4z"/></svg></a>
+    </div>
+    <p class="foot-small">&copy; 2026 Spliced. Research and data are open.</p>
+  </div>
+</footer>
+
+<script src="../../assets/site.js?v=202610251615"></script>
+<script src="../../assets/charts.js?v=202610251615"></script>
+</body>
+</html>
