@@ -138,19 +138,32 @@ const cssVar = name => getComputedStyle(document.documentElement).getPropertyVal
   const c = document.getElementById("fall");
   if (!c) return;
   const n = 36, ctx = c.getContext("2d"), frames = [];
-  let shown = -1;
-  const draw = () => {
+  let cur = 0, goal = 0, running = false;
+  const target = () => {
     const r = c.getBoundingClientRect();
-    const t = Math.min(1, Math.max(0, (innerHeight * 0.85 - r.top) / (r.height + innerHeight * 0.35)));
-    const i = Math.round(t * (n - 1));
-    const im = frames[i];
-    if (i !== shown && im && im.complete && im.naturalWidth) { ctx.drawImage(im, 0, 0, c.width, c.height); shown = i; }
+    return Math.min(1, Math.max(0, (innerHeight * 0.9 - r.top) / (r.height + innerHeight * 0.3))) * (n - 1);
   };
+  const ready = (i) => frames[i] && frames[i].complete && frames[i].naturalWidth;
+  const paint = () => {
+    const a = Math.floor(cur), b = Math.min(n - 1, a + 1), t = cur - a;
+    if (!ready(a)) return;
+    ctx.globalAlpha = 1; ctx.drawImage(frames[a], 0, 0, c.width, c.height);
+    if (t > 0.001 && ready(b)) { ctx.globalAlpha = t; ctx.drawImage(frames[b], 0, 0, c.width, c.height); }
+  };
+  const tick = () => {
+    cur += (goal - cur) * 0.12;
+    if (Math.abs(goal - cur) < 0.002) cur = goal;
+    paint();
+    running = cur !== goal;
+    if (running) requestAnimationFrame(tick);
+  };
+  const go = () => { goal = target(); if (!running) { running = true; requestAnimationFrame(tick); } };
   for (let i = 0; i < n; i++) {
     const im = new Image();
     im.src = "assets/fall/" + String(i + 1).padStart(4, "0") + ".jpg";
-    im.onload = () => { shown = -1; draw(); };
+    im.onload = () => { if (i === 0 || i === Math.round(cur)) { cur = goal = target(); paint(); } };
     frames.push(im);
   }
-  addEventListener("scroll", () => requestAnimationFrame(draw), { passive: true });
+  addEventListener("scroll", go, { passive: true });
+  addEventListener("resize", go);
 })();
