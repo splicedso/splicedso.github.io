@@ -77,6 +77,17 @@ nt.links.new(diem.outputs[0], rough.inputs["Value"]); nt.links.new(rough.outputs
 if "Thin Film Thickness" in p.inputs:
     film = nt.nodes.new("ShaderNodeMapRange"); film.inputs["To Min"].default_value = 300; film.inputs["To Max"].default_value = 620
     film.inputs["To Min"].default_value = 250; film.inputs["To Max"].default_value = 900
+    if "--stand" in args:
+        # on edge the whole face is one reflection, so the drift reads as blotches; instead each die gets
+        # its own thickness, a little off its neighbours, as a processed wafer looks up close
+        cell = nt.nodes.new("ShaderNodeTexBrick"); cell.offset = 0.0; cell.squash = 1.0
+        cell.inputs["Scale"].default_value = 1.0
+        cell.inputs["Brick Width"].default_value = 0.16; cell.inputs["Row Height"].default_value = 0.16
+        cell.inputs["Mortar Size"].default_value = 0.0; cell.inputs["Bias"].default_value = 0.0
+        cell.inputs["Color1"].default_value = (0, 0, 0, 1); cell.inputs["Color2"].default_value = (1, 1, 1, 1)
+        nt.links.new(tc.outputs["Object"], cell.inputs["Vector"])
+        film.inputs["To Min"].default_value = 430; film.inputs["To Max"].default_value = 520
+        nt.links.new(cell.outputs["Color"], film.inputs["Value"])
     nt.links.new(nz.outputs["Fac"], film.inputs["Value"]); nt.links.new(film.outputs["Result"], p.inputs["Thin Film Thickness"])
 
 bpy.ops.mesh.primitive_cylinder_add(radius=R, depth=0.03, location=(0, 0, 0.015), vertices=256)
@@ -99,9 +110,14 @@ if "--stand" in args:
     # gradient (no hotspot), a weak fill from the other side, and a brighter HDRI so the rest is not black.
     # dimmer, and set off the mirror ray so its reflection grades across the face from bright to dark,
     # the way a polished wafer photographs: a dark disc with one soft window of light in it
-    S.area((12.0, -6.5, R + 8.5), 700, 16, target=(0, 0, R))
-    S.area((-9.0, -7.0, R + 1.0), 120, 8, target=(0, 0, R))
-    sc.world.node_tree.nodes["Background"].inputs["Strength"].default_value = 0.18
+    # most of the face stays dark silicon; one narrow soft window of light crosses it, as in a product shot
+    S.area((11.0, -8.0, R + 7.0), 420, 7, target=(0, 0, R))
+    S.area((-9.0, -7.0, R + 1.0), 60, 8, target=(0, 0, R))
+    sc.world.node_tree.nodes["Background"].inputs["Strength"].default_value = 0.08
+    for m in bpy.data.materials:
+        if m.name == "wafer":
+            mx = next(n for n in m.node_tree.nodes if n.type == "MIX" and n.inputs["A"].default_value[0] > 0.6)
+            mx.inputs["A"].default_value = (0.3, 0.31, 0.34, 1); mx.inputs["B"].default_value = (0.12, 0.125, 0.15, 1)
     sc.cycles.samples = 640
     S.camera((3.0, -16.0, R + 2.4), (0, 0, R * 0.95), lens=70, fstop=11)
 else:

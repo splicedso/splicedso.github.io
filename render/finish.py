@@ -1,6 +1,9 @@
 """Finish a transparent render for the web: crop to the object and its shadow, add fine film grain, export WebP.
 
-    python render/finish.py in.png out.webp [pad]
+    python render/finish.py in.png out.webp [pad] [cut]
+
+cut (0 to 255) drops the faint haze a shadow catcher leaves across the whole floor: alpha below
+cut goes to nothing and ramps up to full over the next 96 levels, so the real shadow stays.
 """
 import sys
 import numpy as np
@@ -8,7 +11,10 @@ from PIL import Image
 
 src, dst = sys.argv[1], sys.argv[2]
 pad = int(sys.argv[3]) if len(sys.argv) > 3 else 60
+cut = int(sys.argv[4]) if len(sys.argv) > 4 else 0
 im = Image.open(src).convert("RGBA")
+if cut:
+    im.putalpha(im.getchannel("A").point(lambda v: 0 if v < cut else min(255, int(255 * (v - cut) / 96))))
 # crop to the object, not its faint floor shadow: bounding box of fairly opaque pixels
 bb = im.getchannel("A").point(lambda v: 255 if v > 200 else 0).getbbox()
 # keep the whole soft shadow around the object, then fade it to nothing at the borders,
