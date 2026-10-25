@@ -1208,9 +1208,7 @@ pre { border: 0 !important; border-left: 1px solid #d4d4d4 !important; }
 .band-photo { animation: none !important; transform: none !important; }
 /* A top-down render is dark to its edges, so it sits below the nav, and its floor shadow fades out in a circle rather than ending in a rectangle. */
 .top-render.tall { margin-top: 0; padding-top: 8px; }
-.top-render.tall img { max-height: 60vh;
-  -webkit-mask-image: radial-gradient(ellipse 58% 58% at 50% 50%, #000 68%, transparent 100%) !important;
-  mask-image: radial-gradient(ellipse 58% 58% at 50% 50%, #000 68%, transparent 100%) !important; }
+.top-render.tall img { max-height: 60vh; }   /* no mask: the render's own shadow fades out; finish.py cuts the floor haze */
 .note-card .go { background: transparent !important; }
 /* The Foundry icon is a still, and the label starts under it on every width. */
 .app-icon { animation: none !important; opacity: 1 !important; position: relative; z-index: 1; }

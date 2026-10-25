@@ -104,22 +104,30 @@ if "--stand" in args:
     for o in list(bpy.context.scene.objects):
         if o.type == "MESH" and o.name != "Plane" and o.parent is None:
             o.parent = pivot
-    pivot.rotation_euler = (math.radians(78), 0, math.radians(28)); pivot.location = (0, 0, R * math.sin(math.radians(78)) + 0.03)
+    # --face: square to the camera, as if held up to the viewer; otherwise yawed a little, as if in a carrier
+    yaw = 0 if "--face" in args else 28
+    pivot.rotation_euler = (math.radians(78), 0, math.radians(yaw)); pivot.location = (0, 0, R * math.sin(math.radians(78)) + 0.03)
     # The face is a mirror, so what the camera sees on it is whatever sits along the reflected ray.
     # One very large softbox placed on that ray, so its reflection spans the whole face as one smooth
     # gradient (no hotspot), a weak fill from the other side, and a brighter HDRI so the rest is not black.
     # dimmer, and set off the mirror ray so its reflection grades across the face from bright to dark,
     # the way a polished wafer photographs: a dark disc with one soft window of light in it
     # most of the face stays dark silicon; one narrow soft window of light crosses it, as in a product shot
-    S.area((11.0, -8.0, R + 7.0), 420, 7, target=(0, 0, R))
-    S.area((-9.0, -7.0, R + 1.0), 60, 8, target=(0, 0, R))
+    if "--face" in args:
+        # square on, the face mirrors what is in front of it: a soft window high and to one side, a weak fill
+        S.area((5.0, -12.0, R + 8.0), 760, 14, target=(0, 0, R))
+        S.area((-10.0, -9.0, R - 1.0), 50, 8, target=(0, 0, R))
+    else:
+        S.area((11.0, -8.0, R + 7.0), 420, 7, target=(0, 0, R))
+        S.area((-9.0, -7.0, R + 1.0), 60, 8, target=(0, 0, R))
     sc.world.node_tree.nodes["Background"].inputs["Strength"].default_value = 0.08
     for m in bpy.data.materials:
         if m.name == "wafer":
             mx = next(n for n in m.node_tree.nodes if n.type == "MIX" and n.inputs["A"].default_value[0] > 0.6)
             mx.inputs["A"].default_value = (0.3, 0.31, 0.34, 1); mx.inputs["B"].default_value = (0.12, 0.125, 0.15, 1)
     sc.cycles.samples = 640
-    S.camera((3.0, -16.0, R + 2.4), (0, 0, R * 0.95), lens=70, fstop=11)
+    cam_x = 0.0 if "--face" in args else 3.0
+    S.camera((cam_x, -16.0, R + 2.4), (0, 0, R * 0.95), lens=70, fstop=11)
 else:
     S.area((-3, 5, 5), 260, 3)
     S.area((5, 3, 2.5), 160, 2)
