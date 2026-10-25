@@ -78,6 +78,9 @@ NOTES = [
     {"slug": "prefill", "file": "2026-10-windows-prefill.md", "n": 18,
      "summary": "Reading the prompt: a prompt token costs about 40 times less than a generated one, yet at an 8000-token "
                 "prompt prefill is 40% of a request's energy. Caching the prefix saves exactly that."},
+    {"slug": "joules-per-correct-answer", "file": "2026-10-joules-per-correct-answer.md", "n": 19,
+     "summary": "Measured per correct answer, a 7B serving eight requests beats a 1.5B serving one, on two machines. "
+                "Serving matters as much as size."},
 ]
 
 FIGURES = {

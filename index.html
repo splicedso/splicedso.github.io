@@ -20,7 +20,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>document.documentElement.classList.add("js");</script>
-<link rel="stylesheet" href="assets/style.css?v=202610250003">
+<link rel="stylesheet" href="assets/style.css?v=202610250148">
 <link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
 </head>
 <body data-root="" data-page="home">
@@ -96,9 +96,9 @@
     <div class="wrap">
       <div class="split">
         <h2>Latest research.</h2>
-        <a class="more" href="research/">All 18 notes <span aria-hidden="true">&rarr;</span></a>
+        <a class="more" href="research/">All 19 notes <span aria-hidden="true">&rarr;</span></a>
       </div>
-      <div class="notes"><a class="note-card" href="research/prefill/"><span class="meta">Note 18 &middot; 24 October 2026</span><h3>Reading the prompt: what prefill costs, and when it dominates</h3><p>Reading the prompt: a prompt token costs about 40 times less than a generated one, yet at an 8000-token prompt prefill is 40% of a request's energy. Caching the prefix saves exactly that.</p><span class="go" aria-hidden="true">&rarr;</span></a><a class="note-card" href="research/longest-contexts/"><span class="meta">Note 17 &middot; 24 October 2026</span><h3>The 8-bit cache does not win even when it fits an extra sequence</h3><p>A prediction that failed: at 65536 tokens an 8-bit cache fits a third sequence where f16 fits two, and still costs 1.58 times as much. The context long enough to force the batch down also erases what batching saves.</p><span class="go" aria-hidden="true">&rarr;</span></a><a class="note-card" href="research/memory-bound/"><span class="meta">Note 16 &middot; 24 October 2026</span><h3>The memory-bound regime: when a long context caps the batch</h3><p>When a long context caps the batch: a 12 GB card fits only 8 sequences of a 7B at 8k or 16k tokens. An 8-bit cache buys at most one batch doubling, and here that never pays for its 1.5 times penalty.</p><span class="go" aria-hidden="true">&rarr;</span></a></div>
+      <div class="notes"><a class="note-card" href="research/joules-per-correct-answer/"><span class="meta">Note 19 &middot; 25 October 2026</span><h3>Per correct answer, how a model is served matters as much as its size</h3><p>Measured per correct answer, a 7B serving eight requests beats a 1.5B serving one, on two machines. Serving matters as much as size.</p><span class="go" aria-hidden="true">&rarr;</span></a><a class="note-card" href="research/prefill/"><span class="meta">Note 18 &middot; 24 October 2026</span><h3>Reading the prompt: what prefill costs, and when it dominates</h3><p>Reading the prompt: a prompt token costs about 40 times less than a generated one, yet at an 8000-token prompt prefill is 40% of a request's energy. Caching the prefix saves exactly that.</p><span class="go" aria-hidden="true">&rarr;</span></a><a class="note-card" href="research/longest-contexts/"><span class="meta">Note 17 &middot; 24 October 2026</span><h3>The 8-bit cache does not win even when it fits an extra sequence</h3><p>A prediction that failed: at 65536 tokens an 8-bit cache fits a third sequence where f16 fits two, and still costs 1.58 times as much. The context long enough to force the batch down also erases what batching saves.</p><span class="go" aria-hidden="true">&rarr;</span></a></div>
     </div>
   </section>
 
@@ -132,7 +132,7 @@
   </div>
 </footer>
 
-<script src="assets/site.js?v=202610250003"></script>
-<script src="assets/home.js?v=202610250003"></script>
+<script src="assets/site.js?v=202610250148"></script>
+<script src="assets/home.js?v=202610250148"></script>
 </body>
 </html>
