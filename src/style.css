@@ -1164,3 +1164,9 @@ body { background: transparent; } html { background: #eee; }
 .etched-grid.solo .prose { border-left: 0; padding: 56px 32px; }
 /* Renders fade on their own now; no CSS masks. */
 .page-object img, .mgrid figure img, .etched-grid > figure img, .top-render img, .stage-img img { -webkit-mask-image: none !important; mask-image: none !important; }
+/* Announcement lives inside the navbar row, centred, transparent, as on etched.com. */
+.announce { position: absolute; top: 0; left: 0; right: 0; height: 72px; padding: 0; background: transparent; display: flex; align-items: center; justify-content: center; pointer-events: none; z-index: 70; }
+.announce a { pointer-events: auto; color: #555; font-size: 12px; }
+.announce a:hover, .announce a:hover span { color: #111; }
+@media (max-width: 1240px) { .announce { display: none; } }
+.announce { top: 62px; height: 26px; } @media (max-width: 1240px) { .announce { display: flex; } } @media (max-width: 700px) { .announce { display: none; } }
