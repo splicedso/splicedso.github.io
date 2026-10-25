@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Two machines, one token &middot; Spliced</title>
-<meta name="description" content="The study on a Windows laptop with an RTX 5070 Ti, on battery. Q4_0 wins on both machines and a 4-bit token costs the same whole-machine energy on both; one Mac finding does not transfer.">
+<meta name="description" content="The study on an RTX 5070 Ti Laptop GPU. Q4_0 wins on both machines and a 4-bit token costs the same whole-machine energy on both; one Mac finding does not transfer.">
 <meta property="og:title" content="Two machines, one token &middot; Spliced">
-<meta property="og:description" content="The study on a Windows laptop with an RTX 5070 Ti, on battery. Q4_0 wins on both machines and a 4-bit token costs the same whole-machine energy on both; one Mac finding does not transfer.">
+<meta property="og:description" content="The study on an RTX 5070 Ti Laptop GPU. Q4_0 wins on both machines and a 4-bit token costs the same whole-machine energy on both; one Mac finding does not transfer.">
 <meta property="og:image" content="https://splicedso.github.io/assets/og.png">
 <meta property="og:url" content="https://splicedso.github.io/research/two-machines/">
 <meta property="og:type" content="article">
@@ -20,7 +20,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>document.documentElement.classList.add("js");</script>
-<link rel="stylesheet" href="../../assets/style.css?v=202610250204">
+<link rel="stylesheet" href="../../assets/style.css?v=202610250215">
 <link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
 </head>
 <body data-root="../../" data-page="research">
@@ -53,7 +53,7 @@
   <div class="wrap">
     <span class="label">Note 4 &middot; 24 October 2026</span>
     <h1>Two machines, one token</h1>
-    <p class="lede">The study on a Windows laptop with an RTX 5070 Ti, on battery. Q4_0 wins on both machines and a 4-bit token costs the same whole-machine energy on both; one Mac finding does not transfer.</p>
+    <p class="lede">The study on an RTX 5070 Ti Laptop GPU. Q4_0 wins on both machines and a 4-bit token costs the same whole-machine energy on both; one Mac finding does not transfer.</p>
     <p class="setup">Spliced research note 4, 24 October 2026. Qwen2.5 1.5B on two laptops: an Apple M5 Pro (24 GB, unified memory) and a Windows laptop with an Intel Core Ultra 9 285H, 32 GB, and an NVIDIA GeForce RTX 5070 Ti Laptop GPU, run on battery.</p>
   </div>
 </header>
@@ -223,9 +223,9 @@
 <li><strong>F16 costs much more on Windows</strong> (740 against 547 mJ for the whole machine), while the 4-bit formats cost the same. Full precision is where the two memory systems differ most.</li>
 </ol>
 <figure class="chart" id="two">
-  <div class="chart-bar mono"><span>Whole-machine decode energy, Qwen2.5 1.5B, two laptops</span><span>solid: Windows, RTX 5070 Ti, battery &middot; outline: Mac, M5 Pro, board</span></div>
-  <svg viewBox="0 0 1000 400" role="img" aria-label="Whole-machine energy per token for eight formats on a Windows laptop and a Mac"></svg>
-  <figcaption class="mono">Mean of two passes per machine. The labels read Windows / Mac in millijoules per token. At 4 bits the two machines land within 5% of each other; at full precision they part.</figcaption>
+  <div class="chart-bar mono"><span>Whole-machine decode energy, Qwen2.5 1.5B, two machines</span><span>solid: RTX 5070 Ti Laptop GPU &middot; outline: Mac, M5 Pro, board</span></div>
+  <svg viewBox="0 0 1000 400" role="img" aria-label="Whole-machine energy per token for eight formats on an RTX 5070 Ti Laptop GPU and an M5 Pro"></svg>
+  <figcaption class="mono">Mean of two passes per machine. The labels read RTX / M5 Pro in millijoules per token. At 4 bits the two machines land within 5% of each other; at full precision they part.</figcaption>
 </figure>
 
 <h2 data-via>Where you put the probe decides what you count</h2>
@@ -268,7 +268,7 @@ uv run phase models\quant\1.5b-*.gguf --seconds 15 --out results\run.json
   </div>
 </footer>
 
-<script src="../../assets/site.js?v=202610250204"></script>
-<script src="../../assets/charts.js?v=202610250204"></script>
+<script src="../../assets/site.js?v=202610250215"></script>
+<script src="../../assets/charts.js?v=202610250215"></script>
 </body>
 </html>

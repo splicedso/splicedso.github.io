@@ -31,6 +31,6 @@ Both drafters go through exactly the same conversion and quantization, so the on
 
 ## Why a small lab can do this
 
-Training a large model from scratch takes thousands of GPUs. Distilling a 0.5 billion parameter drafter takes a few thousand prompts, an hour of the teacher's time and an hour or two of fine-tuning, on one laptop. It is a small model built for one job, and the job comes straight out of our measurements.
+Training a large model from scratch takes thousands of GPUs. Distilling a 0.5 billion parameter drafter takes a few thousand prompts, an hour of the teacher's time and an hour or two of fine-tuning, on one machine. It is a small model built for one job, and the job comes straight out of our measurements.
 
 Related: [note 7](../research/speculative-decoding/), [note 9](../research/speculative-threshold/), [note 11](../research/speculative-second-tool/). The result: [note 15](../research/spliced-drafter/).

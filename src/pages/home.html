@@ -13,11 +13,11 @@
 </header>
 
 <main>
-  <section class="tight scope-sec">
+  <section class="tight scope-sec dark">
     <div class="wrap">
-      <div class="label">Live replay &middot; real recording</div>
+      <div class="label">01 / Live replay</div>
       <h2>Watch a model spend energy.</h2>
-      <p class="sub">Qwen2.5 1.5B on an M5 Pro, recorded with Phase at 10 samples a second. It reads a prompt, then writes an answer.</p>
+      <p class="sub">A real recording. Qwen2.5 1.5B reads a prompt, then writes.</p>
       <figure class="scope-panel">
         <div class="scope-top mono">
           <span><i class="sw chip"></i>chip <b id="sc-chip">0.0</b> W</span>
@@ -31,26 +31,28 @@
     </div>
   </section>
 
-  <section class="tight">
+  <section class="tight dark">
     <div class="wrap">
-      <div class="label">Instruments</div>
-      <h2>Three of our results, running.</h2>
+      <div class="label">02 / Instruments</div>
+      <h2>Results, running.</h2>
       <div class="inst-grid">
         <figure class="inst">
-          <div class="inst-head"><span class="mono">Note 1 &middot; batching</span><b><span id="bt-mj">104.7</span> mJ<small>/token</small></b></div>
-          <div class="lanes" id="lanes"></div>
-          <div class="inst-ctrl"><span class="mono">requests at once</span><input type="range" id="bt" min="1" max="8" value="1" aria-label="Batch size"><b id="bt-n">1</b></div>
-          <figcaption>Serving more requests at once shares each weight read. Eight at a time cuts energy per token 72%.</figcaption>
+          <div class="inst-head"><span class="mono">Note 1 &middot; batching</span><span class="mono" id="bt-w">18 W</span></div>
+          <div class="readout"><b id="bt-mj">104.7</b><span>mJ per token</span><em id="bt-cut">baseline</em></div>
+          <div class="cols" id="cols"></div>
+          <input type="range" id="bt" min="1" max="8" value="1" step="1" aria-label="Requests served at once">
+          <div class="ticks mono"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span></div>
+          <figcaption>Requests served at once. Drag it.</figcaption>
         </figure>
         <figure class="inst">
           <div class="inst-head"><span class="mono">Note 19 &middot; per correct answer</span><b>0.68<small>&times;</small></b></div>
           <svg id="jpc" viewBox="0 0 360 220" role="img" aria-label="Joules per correct answer by model and serving"></svg>
-          <figcaption>A 7B serving eight requests beats a 1.5B serving one, per right answer, on two machines.</figcaption>
+          <figcaption>Energy per correct answer. 7B &times; 8 vs 1.5B &times; 1.</figcaption>
         </figure>
         <figure class="inst term">
           <div class="inst-head"><span class="mono">Phase &middot; open source</span><span class="dots"><i></i><i></i><i></i></span></div>
           <pre id="term" aria-label="Phase measuring three models"></pre>
-          <figcaption>One command measures energy per token, prompt and answer apart. <a href="tools/phase/">Phase</a>.</figcaption>
+          <figcaption>One command. <a href="tools/phase/">Phase</a>, open source.</figcaption>
         </figure>
       </div>
     </div>
@@ -58,6 +60,7 @@
 
   <section class="band">
     <div class="wrap">
+      <div class="label light">03 / Findings</div>
       <h2 class="center">What we have measured.</h2>
       <div class="facts">
         <div class="fact"><div class="n" data-count="72">72<small>%</small></div><p>less energy per token when serving eight requests at once.</p></div>
@@ -69,25 +72,24 @@
 
   <section class="tight">
     <div class="wrap">
-      <div class="label">The bench</div>
-      <h2>Three machines. One 7B model.</h2>
-      <p class="sub">Energy to write one token, measured on each machine's chip.</p>
+      <div class="label">04 / The bench</div>
+      <h2>Three machines. One 7B token.</h2>
       <div class="bench">
         <div class="rig"><svg class="die" viewBox="0 0 120 120" aria-hidden="true"><rect x="20" y="20" width="80" height="80" rx="10"/><rect x="34" y="34" width="52" height="52" rx="4" class="core"/><path d="M20 40H8M20 60H8M20 80H8M100 40h12M100 60h12M100 80h12M40 20V8M60 20V8M80 20V8M40 100v12M60 100v12M80 100v12"/></svg>
-          <h3>Apple M5 Pro</h3><p class="mono">24 GB unified &middot; macOS</p><div class="meter"><i style="--w:19%"></i></div><b>389 mJ</b></div>
+          <h3>Apple M5 Pro</h3><p class="mono">24 GB unified memory</p><div class="meter"><i style="--w:19%"></i></div><b>389 mJ</b></div>
         <div class="rig"><svg class="die" viewBox="0 0 120 120" aria-hidden="true"><rect x="10" y="30" width="100" height="60" rx="8"/><rect x="24" y="42" width="44" height="36" rx="3" class="core"/><rect x="76" y="42" width="22" height="16" rx="2" class="core"/><rect x="76" y="62" width="22" height="16" rx="2" class="core"/><path d="M10 50H2M10 70H2M110 50h8M110 70h8"/></svg>
-          <h3>NVIDIA RTX 5070 Ti</h3><p class="mono">12 GB &middot; Windows laptop</p><div class="meter"><i style="--w:51%"></i></div><b>1,027 mJ</b></div>
+          <h3>RTX 5070 Ti Laptop GPU</h3><p class="mono">12 GB GDDR7</p><div class="meter"><i style="--w:51%"></i></div><b>1,027 mJ</b></div>
         <div class="rig"><svg class="die" viewBox="0 0 120 120" aria-hidden="true"><rect x="14" y="14" width="92" height="92" rx="12"/><rect x="26" y="26" width="30" height="30" rx="3" class="core"/><rect x="64" y="26" width="30" height="30" rx="3" class="core"/><rect x="26" y="64" width="68" height="30" rx="3" class="core"/></svg>
-          <h3>AMD Strix Halo</h3><p class="mono">125 GB unified &middot; Linux</p><div class="meter"><i style="--w:100%"></i></div><b>2,015 mJ</b></div>
+          <h3>Ryzen AI Max+ 395</h3><p class="mono">128 GB unified memory</p><div class="meter"><i style="--w:100%"></i></div><b>2,015 mJ</b></div>
       </div>
-      <p class="fine">Qwen2.5 7B Q4_0, one request, chip power: the M5 Pro SoC (note 3), the RTX GPU (note 13), the Halo APU package (its baseline run, three passes). Different boundaries, so read them as each machine's own chip, not one meter.</p>
+      <p class="fine">Chip energy, Qwen2.5 7B Q4_0. Each chip measured at its own boundary.</p>
     </div>
   </section>
 
   <section class="tight">
     <div class="wrap">
-      <div class="label">Our models</div>
-      <h2>Small models, built for one job each.</h2>
+      <div class="label">05 / Models</div>
+      <h2>Small models. One job each.</h2>
       <div class="models">
         <div class="model m-trace"><canvas class="mviz" data-viz="trace"></canvas><h3>Trace</h3><p>Draft models that predict a larger model, to make it faster and cheaper.</p><span class="status">v0 measured &middot; v1 data building</span></div>
         <div class="model m-lattice"><canvas class="mviz" data-viz="lattice"></canvas><h3>Lattice</h3><p>Models that keep their answers at 3 bits or fewer per weight.</p><span class="status">Baseline running</span></div>

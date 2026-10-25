@@ -14,7 +14,7 @@ In matrix terms, one user means a matrix times a vector. Eight users means a mat
 
 On the M5 Pro ([note 1](../research/formats-and-batching/)), serving 8 sequences at once instead of 1 cut energy per token by **72%**. But the savings were uneven: the second sequence saved only 1%, because at batch 1 the GPU was mostly idle, waiting on memory, and adding a second sequence woke it up to full power. After that, extra sequences were nearly free.
 
-On the Windows laptop's NVIDIA GPU ([note 10](../research/batching-without-a-step/)), the GPU already ran at full power with one sequence, so the second sequence saved 43% straight away. The total saving at batch 8 was similar, by a different route. **How a chip manages its power decides where batching pays off.**
+On the RTX 5070 Ti Laptop GPU ([note 10](../research/batching-without-a-step/)), the GPU already ran at full power with one sequence, so the second sequence saved 43% straight away. The total saving at batch 8 was similar, by a different route. **How a chip manages its power decides where batching pays off.**
 
 ## In the datacenter
 

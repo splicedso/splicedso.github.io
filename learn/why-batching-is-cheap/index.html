@@ -20,7 +20,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>document.documentElement.classList.add("js");</script>
-<link rel="stylesheet" href="../../assets/style.css?v=202610250204">
+<link rel="stylesheet" href="../../assets/style.css?v=202610250215">
 <link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
 </head>
 <body data-root="../../" data-page="learn">
@@ -62,7 +62,7 @@
 <p>In matrix terms, one user means a matrix times a vector. Eight users means a matrix times eight vectors, a small matrix. The same bytes, eight times the arithmetic. Batching raises arithmetic intensity, which pushes decode up the roofline.</p>
 <h2 data-via>What we measured</h2>
 <p>On the M5 Pro (<a href="../../research/formats-and-batching/">note 1</a>), serving 8 sequences at once instead of 1 cut energy per token by <strong>72%</strong>. But the savings were uneven: the second sequence saved only 1%, because at batch 1 the GPU was mostly idle, waiting on memory, and adding a second sequence woke it up to full power. After that, extra sequences were nearly free.</p>
-<p>On the Windows laptop's NVIDIA GPU (<a href="../../research/batching-without-a-step/">note 10</a>), the GPU already ran at full power with one sequence, so the second sequence saved 43% straight away. The total saving at batch 8 was similar, by a different route. <strong>How a chip manages its power decides where batching pays off.</strong></p>
+<p>On the RTX 5070 Ti Laptop GPU (<a href="../../research/batching-without-a-step/">note 10</a>), the GPU already ran at full power with one sequence, so the second sequence saved 43% straight away. The total saving at batch 8 was similar, by a different route. <strong>How a chip manages its power decides where batching pays off.</strong></p>
 <h2 data-via>In the datacenter</h2>
 <p>A datacenter server does this at a much larger scale. In <a href="../../research/tokens-per-megawatt-hour/">note 8</a>, an 8-GPU B200 server produced over 100,000 tokens per second on a 70 billion parameter model. The roofline says that reading the weights once per token, it could manage at most about 1,760. So it must be serving <strong>at least 58 sequences at once</strong> for every pass over the weights. That is most of why a token from a 70 billion parameter model on that server used about a tenth of the energy of a token from a 7 billion parameter model on our laptop, despite the model being ten times larger.</p>
 <h2 data-via>The catch: waiting</h2>
@@ -84,7 +84,7 @@
   </div>
 </footer>
 
-<script src="../../assets/site.js?v=202610250204"></script>
+<script src="../../assets/site.js?v=202610250215"></script>
 
 </body>
 </html>

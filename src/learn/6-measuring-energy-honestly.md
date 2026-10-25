@@ -24,7 +24,7 @@ Always state which point you measured. Never compare across points without sayin
 
 ## Sensors are slow, and slowness is not neutral
 
-Power sensors average over time. Our Mac's whole-board reading updates about once a second; the Windows laptop's battery reading every few seconds. Three rules follow:
+Power sensors average over time. Our Mac's whole-board reading updates about once a second; the RTX machine's battery reading every few seconds. Three rules follow:
 
 1. **Make the window long compared to the sensor.** One-second kernel runs disagreed by 40% between repeats; fifteen-second runs agreed within 2% ([note 5](../research/kernel-energy/)).
 2. **Drop the edges.** The first part of a run includes the chip ramping up and the sensor catching up; we discard the first quarter.

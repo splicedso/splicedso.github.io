@@ -51,23 +51,23 @@ fetch(ROOT + "assets/trace.json").then(r => r.json()).then(trace => {
     const X = s => pad + s / T * (w - 2 * pad), Y = p => bot - p / PMAX * (bot - top);
     x.clearRect(0, 0, w, h);
     for (const [m, a] of marks) if (m !== "idle") {
-      x.fillStyle = m === "decode" ? "rgba(8,102,255,.07)" : "rgba(0,180,255,.07)";
+      x.fillStyle = m === "decode" ? "rgba(77,148,255,.14)" : "rgba(0,200,255,.08)";
       x.fillRect(X(a), top, X(nextMark(a)) - X(a), bot - top);
-      x.fillStyle = "#5f7381"; x.font = "11px JetBrains Mono, monospace";
+      x.fillStyle = "rgba(233,238,243,.55)"; x.font = "11px JetBrains Mono, monospace";
       x.fillText(m === "decode" ? "writing the answer" : "reading the prompt", X(a) + 6, top + 12);
     }
-    x.strokeStyle = "rgba(28,43,51,.08)"; x.lineWidth = 1;
+    x.strokeStyle = "rgba(233,238,243,.07)"; x.lineWidth = 1;
     for (let p = 0; p <= PMAX; p += 20) { x.beginPath(); x.moveTo(pad, Y(p)); x.lineTo(w - pad, Y(p)); x.stroke(); }
     const line = (k, color, width) => {
       x.beginPath(); x.strokeStyle = color; x.lineWidth = width; x.lineJoin = "round";
       S.forEach((s, i) => { if (s[0] <= t) (i ? x.lineTo : x.moveTo).call(x, X(s[0]), Y(s[k])); });
       x.stroke();
     };
-    line(2, "rgba(28,43,51,.35)", 1.5);
-    line(1, BLUE, 2.4);
+    line(2, "rgba(233,238,243,.4)", 1.5);
+    line(1, "#4d94ff", 2.4);
     const cur = S.findLast ? S.findLast(s => s[0] <= t) || S[0] : S.filter(s => s[0] <= t).pop() || S[0];
-    x.fillStyle = BLUE; x.beginPath(); x.arc(X(Math.min(t, T)), Y(cur[1]), 4, 0, 7); x.fill();
-    x.fillStyle = "#5f7381"; x.fillText(PMAX + " W", pad + 2, top + 10);
+    x.fillStyle = "#4d94ff"; x.shadowColor = "#4d94ff"; x.shadowBlur = 14; x.beginPath(); x.arc(X(Math.min(t, T)), Y(cur[1]), 4.5, 0, 7); x.fill(); x.shadowBlur = 0;
+    x.fillStyle = "rgba(233,238,243,.45)"; x.fillText(PMAX + " W", pad + 2, top + 10);
     const [ph, a0] = phaseAt(t);
     out("sc-chip").textContent = cur[1].toFixed(1);
     out("sc-board").textContent = cur[2].toFixed(1);
@@ -82,22 +82,30 @@ fetch(ROOT + "assets/trace.json").then(r => r.json()).then(trace => {
   whileVisible(c, () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(draw); }, () => cancelAnimationFrame(raf));
 });
 
-// Batching: lanes of tokens; the energy readout is note 1's measured series for each batch size.
+// Batching: note 1's measured energy per token at each batch size. The columns are the series;
+// the readout eases to the selected column; the slider plays itself until someone drags it.
 fetch(ROOT + "assets/data.json").then(r => r.json()).then(data => {
-  const lanes = document.getElementById("lanes"), slider = document.getElementById("bt");
-  if (!lanes) return;
-  const series = data.batch.q4_0;
-  for (let i = 0; i < 8; i++) lanes.insertAdjacentHTML("beforeend", `<div class="lane"><i></i><i></i><i></i></div>`);
+  const cols = document.getElementById("cols"), slider = document.getElementById("bt");
+  if (!cols) return;
+  const series = data.batch.q4_0, top = series[0].mj;
+  series.forEach(p => cols.insertAdjacentHTML("beforeend", `<i style="--h:${(p.mj / top * 100).toFixed(1)}%"><span>${Math.round(p.mj)}</span></i>`));
+  const out = document.getElementById("bt-mj"), cut = document.getElementById("bt-cut"), watts = document.getElementById("bt-w");
+  let shown = top, target = top, raf = 0;
+  const ease = () => { shown += (target - shown) * 0.16; out.textContent = shown.toFixed(1); if (Math.abs(target - shown) > 0.05) raf = requestAnimationFrame(ease); else out.textContent = target.toFixed(1); };
   const set = n => {
-    document.getElementById("bt-n").textContent = n;
-    document.getElementById("bt-mj").textContent = series[n - 1].mj.toFixed(1);
-    [...lanes.children].forEach((l, i) => l.classList.toggle("on", i < n));
+    const p = series[n - 1];
+    target = p.mj; cancelAnimationFrame(raf); raf = requestAnimationFrame(ease);
+    cut.textContent = n === 1 ? "one request" : `${Math.round((1 - p.mj / top) * 100)}% less`;
+    watts.textContent = `${Math.round(p.gpu_w)} W`;
+    [...cols.children].forEach((c, i) => c.classList.toggle("on", i === n - 1));
+    slider.style.setProperty("--p", `${(n - 1) / 7 * 100}%`);
   };
   let auto = null, n = 1;
-  const play = () => { if (!reduced && !auto) auto = setInterval(() => { n = n % 8 + 1; slider.value = n; set(n); }, 1100); };
+  const play = () => { if (!reduced && !auto) auto = setInterval(() => { n = n % 8 + 1; slider.value = n; set(n); }, 1300); };
   const pause = () => { clearInterval(auto); auto = null; };
   slider.addEventListener("input", () => { pause(); n = +slider.value; set(n); slider.dataset.touched = 1; });
-  whileVisible(lanes, () => { if (!slider.dataset.touched) play(); }, pause);
+  [...cols.children].forEach((c, i) => c.addEventListener("click", () => { pause(); slider.dataset.touched = 1; n = i + 1; slider.value = n; set(n); }));
+  whileVisible(cols, () => { if (!slider.dataset.touched) play(); }, pause);
   set(1);
 });
 
@@ -154,7 +162,7 @@ document.querySelectorAll(".mviz").forEach(c => {
     const [x, w, h] = fitCanvas(c), t = reduced ? 2 : now / 1000;
     x.clearRect(0, 0, w, h);
     if (kind === "trace") {
-      for (const [k, color, lag] of [[0, "rgba(28,43,51,.35)", 0], [1, BLUE, 0.35]]) {
+      for (const [k, color, lag] of [[0, "rgba(233,238,243,.35)", 0], [1, "#4d94ff", 0.35]]) {
         x.beginPath(); x.strokeStyle = color; x.lineWidth = k ? 2.4 : 1.6;
         for (let i = 0; i <= w; i += 4) {
           const u = i / w * 6 + t - lag;
@@ -165,7 +173,7 @@ document.querySelectorAll(".mviz").forEach(c => {
       }
     } else if (kind === "lattice") {
       const g = 22, snap = (Math.sin(t * 0.9) + 1) / 2;
-      x.fillStyle = "rgba(8,102,255,.15)";
+      x.fillStyle = "rgba(77,148,255,.22)";
       for (let i = g / 2; i < w; i += g) for (let j = g / 2; j < h; j += g) { x.beginPath(); x.arc(i, j, 1.4, 0, 7); x.fill(); }
       x.fillStyle = BLUE;
       dots.forEach(([a, b]) => {

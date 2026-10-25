@@ -34,7 +34,7 @@ NOTES = [
      "summary": "The format study at 7B, where every finding replicates and the hardware is used better, and in MLX, "
                 "where repeat runs do not yet agree, so only claims that survive both passes are made."},
     {"slug": "two-machines", "file": "2026-10-two-machines.md", "n": 4,
-     "summary": "The study on a Windows laptop with an RTX 5070 Ti, on battery. Q4_0 wins on both machines and a 4-bit token "
+     "summary": "The study on an RTX 5070 Ti Laptop GPU. Q4_0 wins on both machines and a 4-bit token "
                 "costs the same whole-machine energy on both; one Mac finding does not transfer."},
     {"slug": "kernel-energy", "file": "2026-10-kernel-energy.md", "n": 5,
      "summary": "Each format's matrix-vector kernel measured alone. Q4_0 and Q4_K read identical bytes at identical speed; "
@@ -52,11 +52,11 @@ NOTES = [
      "summary": "A draft confidence threshold removes speculative decoding's energy penalty on every task tested. "
                 "At about 0.5, speculation on prose becomes a free 1.3x speed-up."},
     {"slug": "batching-without-a-step", "file": "2026-10-windows-ac-and-batching.md", "n": 10,
-     "summary": "The Windows laptop plugged in, and a batch sweep on CUDA. Plugging in buys 34 to 46% more speed for 23 to 33% "
+     "summary": "An RTX 5070 Ti Laptop GPU on AC, and a batch sweep on CUDA. Plugging in buys 34 to 46% more speed for 23 to 33% "
                 "more energy per token, and with the GPU at its ceiling from batch 1 the second request saves 43%."},
     {"slug": "speculative-second-tool", "file": "2026-10-speculative-second-tool.md", "n": 11,
      "summary": "Notes 7 and 9 repeated through llama-server, the program real deployments use. Every finding holds. "
-                "Also why Windows Smart App Control blocked the same run on our Windows laptop."},
+                "Also why the same run could not run on our RTX machine."},
     {"slug": "model-width-on-nvidia", "file": "2026-10-windows-width.md", "n": 12,
      "summary": "Note 6's width sweep on an RTX 5070 Ti. Small models pay up to 2.2 times more energy per weight, more than "
                 "on the Mac for the 4-bit formats; Q4_0 is cheapest at every width; Q5_K_M beats Q6_K throughout."},
@@ -67,7 +67,7 @@ NOTES = [
      "summary": "Does a long context spend the batching saving? Not while the cache fits: batch 8 keeps 72 to 76% of its "
                 "energy saving at 4096 tokens, against 75 to 79% at 64. Note 8's 60 times needs memory to run out."},
     {"slug": "spliced-drafter", "file": "2026-10-spliced-drafter.md", "n": 15,
-     "summary": "Our first model: a 0.5B draft distilled from a 7B on one laptop. Held-out loss 6% lower, acceptance about 3% "
+     "summary": "Our first model: a 0.5B draft distilled from a 7B on one machine. Held-out loss 6% lower, acceptance about 3% "
                 "higher. Real and small, and a higher confidence threshold did not help."},
     {"slug": "memory-bound", "file": "2026-10-windows-memory-bound.md", "n": 16,
      "summary": "When a long context caps the batch: a 12 GB card fits only 8 sequences of a 7B at 8k or 16k tokens. An 8-bit "
@@ -97,9 +97,9 @@ FIGURES = {
   <figcaption class="mono">Mean of two passes. F16 is plotted but did not repeat (memory pressure), so it is left out of the conclusions. Same layout as note 1: better is higher, cheaper is further left.</figcaption>
 </figure>""",
     "two": """<figure class="chart" id="two">
-  <div class="chart-bar mono"><span>Whole-machine decode energy, Qwen2.5 1.5B, two laptops</span><span>solid: Windows, RTX 5070 Ti, battery &middot; outline: Mac, M5 Pro, board</span></div>
-  <svg viewBox="0 0 1000 400" role="img" aria-label="Whole-machine energy per token for eight formats on a Windows laptop and a Mac"></svg>
-  <figcaption class="mono">Mean of two passes per machine. The labels read Windows / Mac in millijoules per token. At 4 bits the two machines land within 5% of each other; at full precision they part.</figcaption>
+  <div class="chart-bar mono"><span>Whole-machine decode energy, Qwen2.5 1.5B, two machines</span><span>solid: RTX 5070 Ti Laptop GPU &middot; outline: Mac, M5 Pro, board</span></div>
+  <svg viewBox="0 0 1000 400" role="img" aria-label="Whole-machine energy per token for eight formats on an RTX 5070 Ti Laptop GPU and an M5 Pro"></svg>
+  <figcaption class="mono">Mean of two passes per machine. The labels read RTX / M5 Pro in millijoules per token. At 4 bits the two machines land within 5% of each other; at full precision they part.</figcaption>
 </figure>""",
     "kern": """<figure class="chart" id="kern">
   <div class="chart-bar mono"><span>Chip energy per weight, one 4096 x 14336 matrix-vector kernel per format</span><span>outline: streaming the bytes &middot; solid: unpacking them</span></div>
