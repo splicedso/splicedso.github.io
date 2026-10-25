@@ -209,7 +209,7 @@ def chart_data():
             "results": results, "roofline": roofline}
 
 
-RENDERS = [("package.webp", "A processor package"), ("wafer.webp", "A silicon wafer"), ("package-top.webp", "A processor package, top view")]
+RENDERS = [("package.webp", "A processor package"), ("wafer-face.webp", "A silicon wafer"), ("package-top.webp", "A processor package, top view")]
 
 
 def figure(i, depth="../../"):

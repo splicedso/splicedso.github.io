@@ -73,6 +73,8 @@ tint = nt.nodes.new("ShaderNodeMix"); tint.data_type = "RGBA"; tint.blend_type =
 nt.links.new(diem.outputs[0], tint.inputs["Factor"]); nt.links.new(mix_c.outputs["Result"], tint.inputs["A"]); nt.links.new(br2.outputs["Color"], tint.inputs["B"])
 nt.links.new(tint.outputs["Result"], p.inputs["Base Color"])
 rough = nt.nodes.new("ShaderNodeMapRange"); rough.inputs["To Min"].default_value = 0.1; rough.inputs["To Max"].default_value = 0.3
+if "--face" in args:   # square on, a little more roughness softens the edge of the reflected light
+    rough.inputs["To Min"].default_value = 0.18; rough.inputs["To Max"].default_value = 0.36
 nt.links.new(diem.outputs[0], rough.inputs["Value"]); nt.links.new(rough.outputs["Result"], p.inputs["Roughness"])
 if "Thin Film Thickness" in p.inputs:
     film = nt.nodes.new("ShaderNodeMapRange"); film.inputs["To Min"].default_value = 300; film.inputs["To Max"].default_value = 620
@@ -115,7 +117,7 @@ if "--stand" in args:
     # most of the face stays dark silicon; one narrow soft window of light crosses it, as in a product shot
     if "--face" in args:
         # square on, the face mirrors what is in front of it: a soft window high and to one side, a weak fill
-        S.area((5.0, -12.0, R + 8.0), 760, 14, target=(0, 0, R))
+        S.area((7.0, -14.0, R + 10.0), 650, 11, target=(0, 0, R))
         S.area((-10.0, -9.0, R - 1.0), 50, 8, target=(0, 0, R))
     else:
         S.area((11.0, -8.0, R + 7.0), 420, 7, target=(0, 0, R))
