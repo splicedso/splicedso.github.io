@@ -340,7 +340,7 @@ def page(path, content, *, title, description, page, sheet, sheetno, scripts="",
     html = re.sub(r'<img src="([^"]+\.webp)"', lambda m: m.group(0) + ' width="%d" height="%d"' % webp_size(m.group(1)), html)
     out = HERE / path
     out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(html)
+    out.write_text(re.sub(r"(\.(?:webp|jpg|png))\"", r"\1?v=" + VERSION + "\"", html))
     return out
 
 
