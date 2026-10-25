@@ -1,0 +1,58 @@
+<header class="page-head center-head">
+  <div class="wrap">
+    <span class="label">Models</span>
+    <h1>Small models. One job each.</h1>
+  </div>
+</header>
+
+<main>
+  <section class="mrow">
+    <div class="wrap mgrid">
+      <figure><img src="../assets/img/card.webp" alt="An accelerator card marked Spliced Trace-1" loading="lazy"></figure>
+      <div>
+        <span class="label">Trace</span>
+        <h2>Draft models for one target.</h2>
+        <p class="sub">A small model that predicts a large one, so speculative decoding accepts more of its guesses.</p>
+        <dl class="specs">
+          <div><dt>v0</dt><dd>0.5B, distilled from Qwen2.5 7B. +3% accepted tokens.</dd></div>
+          <div><dt>v1</dt><dd>35,000 prompts, trained on the 7B's own probabilities. In training.</dd></div>
+          <div><dt>Bar</dt><dd>+3 points top-1 agreement over the stock draft.</dd></div>
+        </dl>
+        <a class="more" href="../research/spliced-drafter/">Note 15 <span aria-hidden="true">&rarr;</span></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="mrow">
+    <div class="wrap mgrid flip">
+      <figure><img src="../assets/img/wafer.jpg" alt="A silicon wafer" loading="lazy"></figure>
+      <div>
+        <span class="label">Lattice</span>
+        <h2>Answers that survive 2 bits.</h2>
+        <p class="sub">Models that keep their accuracy when compressed below 4 bits per weight.</p>
+        <dl class="specs">
+          <div><dt>v0</dt><dd>Calibrated Q2_K. GSM8K 21% &rarr; 42% at the same size.</dd></div>
+          <div><dt>v1</dt><dd>Quantization-aware training, and 7B to 32B on the Strix Halo.</dd></div>
+          <div><dt>Bar</dt><dd>At least 60% at Q2_K size, cheaper per answer than Q4_0.</dd></div>
+        </dl>
+        <a class="more" href="../research/lattice-v0/">Note 20 <span aria-hidden="true">&rarr;</span></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="mrow">
+    <div class="wrap mgrid">
+      <figure><img src="../assets/img/tray.webp" alt="An inference server tray" loading="lazy"></figure>
+      <div>
+        <span class="label">Kinetic</span>
+        <h2>A model shaped by energy.</h2>
+        <p class="sub">Width, depth and vocabulary chosen from what each costs per token on real hardware.</p>
+        <dl class="specs">
+          <div><dt>Status</dt><dd>Planned, after Trace v1.</dd></div>
+          <div><dt>Bar</dt><dd>Beat a same-size Qwen on joules per correct answer.</dd></div>
+        </dl>
+        <a class="more" href="https://github.com/splicedso/phase/blob/main/docs/program.md">The program <span aria-hidden="true">&rarr;</span></a>
+      </div>
+    </div>
+  </section>
+</main>

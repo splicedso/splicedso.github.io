@@ -326,6 +326,9 @@ def main():
     page("data/index.html", (SRC / "pages/data.html").read_text(),
          title="Data &middot; Spliced", description="Every Spliced decode-energy measurement in one downloadable table, with a comparison tool.",
          page="data", sheet="Data", sheetno=f"5 of {total}", scripts='<script src="{{root}}assets/data.js?v=' + VERSION + '"></script>')
+    page("models/index.html", (SRC / "pages/models.html").read_text(),
+         title="Models &middot; Spliced", description="Spliced models: Trace draft models, Lattice low-bit models, Kinetic.",
+         page="models", sheet="Models", sheetno="M")
     page("lab/index.html", (SRC / "pages/lab.html").read_text(),
          title="Lab &middot; Spliced", description="Spliced is a small research lab for efficient inference.",
          page="lab", sheet="Lab", sheetno=f"4 of {total}")
