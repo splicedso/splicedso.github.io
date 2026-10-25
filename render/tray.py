@@ -34,8 +34,8 @@ bump = nt.nodes.new("ShaderNodeBump"); bump.inputs["Strength"].default_value = 0
 nt.links.new(nz.outputs["Fac"], bump.inputs["Height"]); nt.links.new(bump.outputs["Normal"], p.inputs["Normal"])
 
 # Braided sleeve: a woven pattern from two crossed wave textures along the cable's length.
-braid, p = principled("braid", (0.03, 0.03, 0.032), rough=0.62)
-p.inputs["Sheen Weight"].default_value = 0.2; p.inputs["Sheen Roughness"].default_value = 0.5
+braid, p = principled("braid", (0.03, 0.03, 0.032), rough=0.72)
+p.inputs["Sheen Weight"].default_value = 0.08; p.inputs["Sheen Roughness"].default_value = 0.6
 nt = braid.node_tree
 tc = nt.nodes.new("ShaderNodeTexCoord")
 # Woven PET sleeve: two sets of fine diagonal strands in object space, crossed, with fibre noise.
@@ -99,29 +99,34 @@ v = [((x - 470) * k + 2.6, -2.378, -(y - 530) * k + 0.55) for x, y in A]
 me = bpy.data.meshes.new("mark"); me.from_pydata(v, [], [[0, 1, 2, 3]]); me.update()
 o = bpy.data.objects.new("mark", me); sc.collection.objects.link(o); o.data.materials.append(ink)
 
-# Cabling, as on photographs of cabled inference servers: thick braided cables leave the upper
-# unit through a comb bar on its front edge, hang in one even loop under the chassis, and go back up
-# into the lower unit's front. Every cable the same, a slight sway each, nothing loose or cut off.
-NC = 30
-pitch = 0.225
+# Cabling, as on photographs of cabled inference servers: thick braided cables leave a port cage
+# on the upper unit's front, hang in one long even service loop under the chassis, and come back
+# up into the lower unit's port cage. Every cable the same, a slight sway each, nothing loose or cut off.
+NC = 28
+pitch = 0.24
 cx0 = -(NC - 1) * pitch / 2
-comb, _ = principled("comb", (0.02, 0.02, 0.022), rough=0.6)
-for zc in (1.06, 0.12):                                                       # comb bars: upper unit's bottom edge, lower unit's bottom edge
-    box((NC * pitch + 0.3, 0.26, 0.12), (0, -2.12, zc), comb, 0.02)
-    for i in range(NC - 1):
-        S.box((0.08, 0.28, 0.14), (cx0 + i * pitch + pitch / 2, -2.12, zc), dark)
+cage, _ = principled("cage", (0.45, 0.45, 0.46), metal=1.0, rough=0.4)
+for zc in (1.5, 0.55):                                                        # port cages across both units' fronts
+    box((NC * pitch + 0.3, 0.12, 0.34), (0, -2.33, zc), cage, 0.01)
+    for i in range(NC):
+        S.box((0.17, 0.14, 0.24), (cx0 + i * pitch, -2.36, zc), dark)           # the port openings
+        S.box((0.19, 0.3, 0.2), (cx0 + i * pitch, -2.48, zc), steel, 0.01)     # the plug shells
 for i in range(NC):
     x = cx0 + i * pitch
-    sway = random.uniform(-0.03, 0.03)
-    drop = random.uniform(-0.04, 0.04)
+    sway = random.uniform(-0.035, 0.035)
+    drop = random.uniform(-0.06, 0.06)
     cu = bpy.data.curves.new("c", "CURVE"); cu.dimensions = "3D"
-    cu.bevel_depth = 0.085; cu.bevel_resolution = 10; cu.use_fill_caps = True; cu.resolution_u = 32
+    cu.bevel_depth = 0.075; cu.bevel_resolution = 10; cu.use_fill_caps = True; cu.resolution_u = 36
     sp = cu.splines.new("BEZIER"); sp.bezier_points.add(5)
-    pts = [(x, -1.4, 1.1), (x, -2.12, 1.0), (x + sway * 0.5, -2.45, -0.2),
-           (x + sway, -2.55, -1.55 + drop), (x + sway * 0.5, -2.4, -0.6), (x, -2.12, 0.05), ]
-    pts = [(x, -1.4, 1.1), (x, -2.12, 1.0), (x + sway, -2.6, -0.3), (x + sway, -2.75, -1.45 + drop), (x + sway * 0.4, -2.5, -0.9), (x, -2.12, 0.05)]
+    pts = [(x, -2.55, 1.5), (x, -3.1, 1.35), (x + sway, -3.35, -0.3), (x + sway, -3.3, -2.3 + drop),
+           (x + sway * 0.5, -3.05, -0.9), (x, -2.6, 0.55)]
     for bp, co in zip(sp.bezier_points, pts):
         bp.co = co; bp.handle_left_type = bp.handle_right_type = "AUTO"
+    # the cable leaves and re-enters its plug straight on
+    for k, y in ((0, -2.9), (-1, -2.95)):
+        bp = sp.bezier_points[k]; bp.handle_left_type = bp.handle_right_type = "ALIGNED"
+        z = pts[k][2]
+        bp.handle_left = (x, -2.3 if k == 0 else y, z); bp.handle_right = (x, y if k == 0 else -2.3, z)
     ob = bpy.data.objects.new("cable", cu); sc.collection.objects.link(ob)
     cu.materials.append(braid)
 
@@ -152,8 +157,8 @@ area((0, -9, -4), 160, 8)          # faint lift from below
 
 cam_d = bpy.data.cameras.new("cam"); cam_d.lens = 80
 cam = bpy.data.objects.new("cam", cam_d); sc.collection.objects.link(cam); sc.camera = cam
-cam.location = (-7.0, -27.0, -1.2)                     # low front three-quarter, the whole unit and its loops in frame
-target = Vector((0.2, -1.5, 0.1))
+cam.location = (-6.5, -23.5, -1.0)                     # low front three-quarter, the whole unit and its loops in frame
+target = Vector((0.2, -1.5, -0.2))
 cam.rotation_euler = (target - cam.location).to_track_quat("-Z", "Y").to_euler()
 cam_d.dof.use_dof = True; cam_d.dof.focus_distance = (target - cam.location).length; cam_d.dof.aperture_fstop = 7.0
 
