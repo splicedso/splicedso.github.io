@@ -1111,3 +1111,18 @@ section .wrap > .label::before { display: none; }
 .hero-object { width: 100vw; max-width: none; margin: 40px 0 0 calc(50% - 50vw); }
 .hero-object canvas { display: block; width: min(1200px, 100vw); height: auto; margin: 0 auto; object-fit: contain;
   -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent); mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent); }
+/* Aura pass: one soft easing for every reveal, no clipping wipes on headings. */
+:root { --ease: cubic-bezier(.2, .7, .2, 1); }
+.js .reveal { transform: translateY(12px); transition: opacity .7s var(--ease), transform .7s var(--ease); }
+.js .reveal h2, .js h2.reveal { clip-path: none !important; transform: none; transition: none; }
+/* Etched-style column rules, behind everything. */
+html::before { content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background: linear-gradient(#d9d9d9, #d9d9d9) calc(50% - 600px) 0 / 1px 100% no-repeat,
+              linear-gradient(#d9d9d9, #d9d9d9) calc(50% + 600px) 0 / 1px 100% no-repeat,
+              linear-gradient(#e2e2e2, #e2e2e2) calc(50% - 680px) 0 / 1px 100% no-repeat,
+              linear-gradient(#e2e2e2, #e2e2e2) calc(50% + 680px) 0 / 1px 100% no-repeat; }
+body { background: transparent; } html { background: #eee; }
+@media (max-width: 1400px) { html::before { display: none; } }
+/* Quieter cards: rule lines, no boxes. */
+.model, .note-card { background: transparent !important; box-shadow: none !important; border: 0 !important; border-top: 1px solid #d4d4d4 !important; border-radius: 0 !important; }
+.model:hover, .note-card:hover { border-top-color: #111 !important; background: transparent !important; }
