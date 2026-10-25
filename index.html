@@ -7,21 +7,21 @@
 <meta name="description" content="Research on efficient inference. We measure what a token costs, at the chip and at the board.">
 <meta property="og:title" content="Spliced">
 <meta property="og:description" content="Research on efficient inference. We measure what a token costs, at the chip and at the board.">
-<meta property="og:image" content="https://splicedso.github.io/assets/og.png?v=202610251250">
+<meta property="og:image" content="https://splicedso.github.io/assets/og.png?v=202610251301">
 <meta property="og:url" content="https://splicedso.github.io/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Spliced">
 <link rel="canonical" href="https://splicedso.github.io/">
 <meta name="color-scheme" content="light dark">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="assets/favicon.svg?v=202610251250" type="image/svg+xml">
-<link rel="icon" href="assets/favicon-32.png?v=202610251250" type="image/png" sizes="32x32">
-<link rel="apple-touch-icon" href="assets/apple-touch-icon.png?v=202610251250">
+<link rel="icon" href="assets/favicon.svg?v=202610251301" type="image/svg+xml">
+<link rel="icon" href="assets/favicon-32.png?v=202610251301" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png?v=202610251301">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>document.documentElement.classList.add("js");</script>
-<link rel="stylesheet" href="assets/style.css?v=202610251250">
+<link rel="stylesheet" href="assets/style.css?v=202610251301">
 <link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
 </head>
 <body data-root="" data-page="home">
@@ -58,71 +58,35 @@
   <div class="wrap hero-center">
     <div>
       <span class="label">Research</span>
-      <h1 id="h1" aria-label="Measuring frontier inference."></h1>
-      <p class="lede" id="lede" aria-label="What AI costs to run, and how to cut it."></p>
-      <div class="actions">
-        <a class="cta" href="research/">Research <span aria-hidden="true">&rarr;</span></a>
-        <a class="cta ghost" href="https://github.com/splicedso/phase">GitHub</a>
-      </div>
+      <h1>What a token costs.</h1>
+      <p class="lede">We measure the energy AI spends on every token and every correct answer, on hardware people own, and publish what we find.</p>
     </div>
   </div>
 </header>
 
 <main>
-  <section class="tight pillars">
-    <div class="wrap">
-      <h2 class="sr-only">What we do</h2>
-      <div class="three">
-        <div><h3>Measure</h3><p>Every joule, at the chip.</p></div>
-        <div><h3>Publish</h3><p>Code, data, and limits.</p></div>
-        <div><h3>Build</h3><p>Small models, one job each.</p></div>
+  <section class="etched">
+    <div class="etched-grid solo">
+      <div class="prose">
+        <h2>Measured, not estimated.</h2>
+        <p>Spliced is a small research group. We run open models on an Apple M5 Pro, an AMD Ryzen AI Max+ 395 and an RTX 5070 Ti Laptop GPU, read each chip's own power sensors while it works, and report the energy of every token and of every correct answer. Every run is repeated, warmed up, and published with its raw data.</p>
+        <h3>21 notes so far</h3>
+        <p>Each note asks one question: what a quantization format costs, when batching pays, whether speculative decoding saves energy or only time. The prediction is written down before the run and stays in the record when it turns out wrong.</p>
+        <h3>Two model families, both early</h3>
+        <p>Trace is a draft model trained to predict a larger one, for speculative decoding. Lattice is a model kept accurate below 4 bits per weight. Each has a first version and a measured result, and neither has beaten the stock model on our bar yet. The Models page says exactly where they stand.</p>
+        <h3>Two tools</h3>
+        <p>Phase is the open-source power meter behind every number here. Foundry is a desktop app, still in development, that runs a model on your own machine and shows the speed and energy of each answer.</p>
       </div>
-    </div>
-  </section>
-
-  <section class="stage">
-    <div class="wrap">
-      <h2 class="center">Every token has a cost.</h2>
-      <p class="center sub">We find it, and cut it.</p>
-    </div>
-  </section>
-
-  <section class="tight scope-sec">
-    <div class="wrap">
-      <div class="label">Live replay</div>
-      <h2>Watch a model spend energy.</h2>
-      <figure class="scope-panel">
-        <div class="scope-top mono">
-          <span><i class="sw chip"></i>chip <b id="sc-chip">0.0</b> W</span>
-          <span><i class="sw board"></i>board <b id="sc-board">0.0</b> W</span>
-          <span class="phase-pill" id="sc-phase">idle</span>
-          <span class="sc-t">t = <b id="sc-t">0.0</b> s</span>
-        </div>
-        <canvas id="scope2" aria-label="Power trace replay"></canvas>
-        <div class="scope-text mono" id="sc-text" aria-hidden="true"></div>
-      </figure>
     </div>
   </section>
 
   <section class="band">
-    <div class="band-photo" aria-hidden="true"></div>
     <div class="wrap">
       <h2 class="center">What we have measured.</h2>
       <div class="facts">
-        <div class="fact"><div class="n" data-count="72">72<small>%</small></div><p>less energy per token, eight requests at once.</p></div>
+        <div class="fact"><div class="n" data-count="72">72<small>%</small></div><p>less energy per token with eight requests at once.</p></div>
         <div class="fact"><div class="n" data-count="40">40<small>&times;</small></div><p>cheaper to read a token than to write one.</p></div>
-        <div class="fact"><div class="n" data-count="2">2<small>&times;</small></div><p>the accuracy of 2-bit, from calibration alone.</p></div>
-      </div>
-    </div>
-  </section>
-
-  <section class="tight">
-    <div class="wrap">
-      <div class="split"><h2>Our models.</h2><a class="more" href="models/">All models <span aria-hidden="true">&rarr;</span></a></div>
-      <div class="models">
-        <a class="model" href="research/spliced-drafter/"><h3>Trace</h3><p>Draft models that make large models faster.</p><dl class="mfacts"><div><dt>Speculation, energy</dt><dd>&minus;34%</dd></div><div><dt>Speculation, speed</dt><dd>1.5&times;</dd></div></dl><span class="status">v1 in progress</span></a>
-        <a class="model" href="research/lattice-v0/"><h3>Lattice</h3><p>Models that keep their answers at 2 bits.</p><dl class="mfacts"><div><dt>GSM8K at 2 bits</dt><dd>21% &rarr; 42%</dd></div><div><dt>Size</dt><dd>Same</dd></div></dl><span class="status">v0 published</span></a>
-        <a class="model" href="https://github.com/splicedso/phase/blob/main/docs/program.md"><h3>Kinetic</h3><p>A small model shaped by energy.</p><dl class="mfacts"><div><dt>Shapes</dt><dd>4 at 72M</dd></div><div><dt>Tokens</dt><dd>1B</dd></div></dl><span class="status">Planned</span></a>
+        <div class="fact"><div class="n" data-count="2">2<small>&times;</small></div><p>the accuracy of a 2-bit model, from calibration alone.</p></div>
       </div>
     </div>
   </section>
@@ -130,7 +94,7 @@
   <section class="tight">
     <div class="wrap">
       <div class="split">
-        <h2>Latest research.</h2>
+        <h2>Latest notes.</h2>
         <a class="more" href="research/">All 21 <span aria-hidden="true">&rarr;</span></a>
       </div>
       <div class="notes"><a class="note-card" href="research/trace-v1/"><span class="meta">Note 21 &middot; 25 October 2026</span><h3>Trace v1: a draft model trained on the target's probabilities</h3><p>Trace v1, trained on a 7B's probabilities: +0.7 points of agreement, no faster than the stock draft. On the Strix Halo, speculative decoding itself cuts energy per token by a third.</p><span class="go" aria-hidden="true">&rarr;</span></a><a class="note-card" href="research/lattice-v0/"><span class="meta">Note 20 &middot; 25 October 2026</span><h3>Calibration doubles 2-bit accuracy, and 4-bit is still cheaper per answer</h3><p>Calibration doubles 2-bit accuracy at the same size, 21% to 42% on GSM8K. 4-bit is still cheaper per correct answer: a 2-bit token costs more energy.</p><span class="go" aria-hidden="true">&rarr;</span></a><a class="note-card" href="research/joules-per-correct-answer/"><span class="meta">Note 19 &middot; 25 October 2026</span><h3>Per correct answer, how a model is served matters as much as its size</h3><p>Measured per correct answer, a 7B serving eight requests beats a 1.5B serving one, on two machines. Serving matters as much as size.</p><span class="go" aria-hidden="true">&rarr;</span></a></div>
@@ -140,10 +104,11 @@
   <section class="tight">
     <div class="wrap">
       <div class="closer">
-        <h2>Follow along.</h2>
+        <h2>Everything is public.</h2>
+        <p>The code, the raw measurements and the notes, including the ones that went wrong.</p>
         <div class="actions">
-          <a class="cta" href="https://www.linkedin.com/company/splicedso">LinkedIn</a>
-          <a class="cta ghost" href="https://github.com/splicedso">GitHub</a>
+          <a class="cta" href="research/">Read the notes <span aria-hidden="true">&rarr;</span></a>
+          <a class="cta ghost" href="https://github.com/splicedso/phase">The code</a>
         </div>
       </div>
     </div>
@@ -166,7 +131,7 @@
   </div>
 </footer>
 
-<script src="assets/site.js?v=202610251250"></script>
-<script src="assets/home.js?v=202610251250"></script>
+<script src="assets/site.js?v=202610251301"></script>
+
 </body>
 </html>

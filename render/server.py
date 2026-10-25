@@ -87,7 +87,6 @@ for col in range(4):
             bpy.context.object.data.materials.append(m)
 
 # the mark, top right of the bezel
-S.mark((Wd / 2 - 0.55, fy - 0.081, Hh - 0.07), 0.12, label, rot=(math.pi / 2, 0, 0))
 
 S.area((-7, -9, 9), 800, 9, (0, 0, 0.6))
 S.area((9, -5, 4), 500, 5, (0, 0, 0.6))

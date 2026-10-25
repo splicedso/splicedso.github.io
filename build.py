@@ -209,9 +209,7 @@ def chart_data():
             "results": results, "roofline": roofline}
 
 
-RENDERS = [("package.webp", "A processor package"), ("hgx.webp", "An eight-GPU server baseboard"), ("gpu.webp", "A datacenter GPU module"), ("server.webp", "A rack server"),
-           ("card.webp", "An accelerator card"), ("wafer.webp", "A silicon wafer"),
-           ("dimm.webp", "A server memory module"), ("package-top.webp", "A processor package, top view")]
+RENDERS = [("package.webp", "A processor package"), ("wafer.webp", "A silicon wafer"), ("package-top.webp", "A processor package, top view")]
 
 
 def figure(i, depth="../../"):
@@ -356,7 +354,7 @@ def main():
     page("index.html", (SRC / "pages/home.html").read_text().replace("{{latest}}", notes_list("", 3)).replace("{{note_count}}", str(len(NOTES))),
          title="Spliced", description="Research on efficient inference. We measure what a token costs, at the chip and at the board.",
          page="home", sheet="Spliced &middot; Efficient inference", sheetno=f"1 of {total}",
-         scripts='<script src="{{root}}assets/home.js?v=' + VERSION + '"></script>')
+         scripts='')
     page("research/index.html", (SRC / "pages/research.html").read_text().replace("{{notes}}", notes_list("../")),
          title="Research &middot; Spliced", description="Spliced research notes on inference energy, with method, code and raw data.",
          page="research", sheet="Research", sheetno=f"2 of {total}")
@@ -370,7 +368,7 @@ def main():
          title="Foundry &middot; Spliced", description="Foundry runs AI models on your own machine and shows what every answer costs.",
          page="foundry", sheet="Foundry", sheetno="F")
     page("models/index.html", (SRC / "pages/models.html").read_text(),
-         title="Models &middot; Spliced", description="Spliced models: Trace draft models, Lattice low-bit models, Kinetic.",
+         title="Models &middot; Spliced", description="Spliced models: Trace draft models and Lattice low-bit models, with where each stands.",
          page="models", sheet="Models", sheetno="M")
     page("lab/index.html", (SRC / "pages/lab.html").read_text(),
          title="Lab &middot; Spliced", description="Spliced does open research on efficient inference.",

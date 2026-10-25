@@ -61,8 +61,6 @@ for i in range(30):
         bpy.ops.object.shade_smooth(); bpy.context.object.data.materials.append(ball)
 
 S.mark((-0.25, 0.15, 0.2805), 1.0, etch)
-S.text("SPLICED", (0.55, -0.62, 0.2806), 0.13, laser)
-S.text("SPL-T1  2610  A0", (0.55, -0.82, 0.2806), 0.075, laser)
 # pin-1 marker
 bpy.ops.mesh.primitive_cylinder_add(radius=0.03, depth=0.002, location=(-0.98, -0.98, 0.2806), vertices=24)
 bpy.context.object.data.materials.append(laser)

@@ -91,14 +91,6 @@ for i in range(64):
         x = -3.6 + i * 0.115 + (0.057 if j % 2 else 0)
         bpy.ops.mesh.primitive_cylinder_add(radius=0.034, depth=0.05, location=(x, -2.33, 0.33 + j * 0.11), rotation=(math.pi / 2, 0, 0), vertices=10)
         bpy.context.object.data.materials.append(dark)
-# nameplate with the mark
-box((0.5, 0.03, 0.42), (2.6, -2.36, 0.55), plate, 0.01)
-A = [(639, 0), (941, 0), (301, 1059), (0, 1059)]
-k = 0.3 / 1059
-v = [((x - 470) * k + 2.6, -2.378, -(y - 530) * k + 0.55) for x, y in A]
-me = bpy.data.meshes.new("mark"); me.from_pydata(v, [], [[0, 1, 2, 3]]); me.update()
-o = bpy.data.objects.new("mark", me); sc.collection.objects.link(o); o.data.materials.append(ink)
-
 # Cabling, as on photographs of cabled inference servers: thick braided cables leave a port cage
 # on the upper unit's front, hang in one long even service loop under the chassis, and come back
 # up into the lower unit's port cage. Every cable the same, a slight sway each, nothing loose or cut off.

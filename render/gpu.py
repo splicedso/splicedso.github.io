@@ -74,7 +74,6 @@ def module(ox, oy, z=0.0, heatsink=False):
         S.box((0.05, 0.025, 0.025), (x, y, z + 0.093), cap, 0.003, 2)
     for i in range(10):
         S.box((0.22, 0.22, 0.12), (ox - 2.0 + i * 0.44, oy - 1.45 + 0.0, z + 0.14), choke, 0.02)
-    S.text("SPL-G1", (ox + 1.6, oy + 1.3, z + 0.081), 0.09, silk)
 
 
 if BOARD:
