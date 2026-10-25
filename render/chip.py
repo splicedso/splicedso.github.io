@@ -44,12 +44,11 @@ subst = mat("substrate", (0.03, 0.03, 0.03), rough=0.4)
 box("board", (16, 10, 0.1), (0, 0, -0.05), board)
 box("substrate", (2.6, 2.6, 0.08), (0, 0, 0.04), subst, 0.02)
 box("lid", (1.9, 1.9, 0.12), (0, 0, 0.14), lid, 0.05)
-A = [(0, 192), (418, 0), (418, 205), (145, 331), (145, 449), (0, 516)]
-B = [(197, 385), (500, 246), (500, 520), (197, 659)]
+A = [(639, 0), (941, 0), (301, 1059), (0, 1059)]  # the Spliced mark, as in brand/build.py
 etch = mat("etch", (0.08, 0.08, 0.08), metal=1.0, rough=0.7)
-for pts in (A, B):
-    k = 0.9 / 659
-    v = [((x - 250) * k, -(y - 330) * k, 0.201) for x, y in pts]
+for pts in (A,):
+    k = 1.0 / 1059
+    v = [((x - 470) * k, -(y - 530) * k, 0.201) for x, y in pts]
     me = bpy.data.meshes.new("m"); me.from_pydata(v, [], [list(range(len(v)))]); me.update()
     o = bpy.data.objects.new("mark", me); sc.collection.objects.link(o); o.data.materials.append(etch)
 
@@ -136,6 +135,15 @@ cam.location = (2.2, -6.2, 5.6)
 from mathutils import Vector
 cam.rotation_euler = (Vector((0.2, 0.3, 0)) - cam.location).to_track_quat("-Z", "Y").to_euler()
 
+if "--wide" in sys.argv:  # a low, wide shot for the LinkedIn banner
+    sc.render.resolution_x, sc.render.resolution_y = 3168, 792
+    cam_d.lens = 40
+    cam.location = (0.0, -7.4, 2.6)
+    cam.rotation_euler = (Vector((0, 0.4, 0)) - cam.location).to_track_quat("-Z", "Y").to_euler()
+    cam_d.dof.focus_distance = 7.8
+if "--size" in sys.argv:
+    w, h = sys.argv[sys.argv.index("--size") + 1].split("x")
+    sc.render.resolution_x, sc.render.resolution_y = int(w), int(h)
 r = sc.render; r.image_settings.file_format = "PNG"; r.filepath = OUT
 if "--still" in sys.argv:
     sc.frame_set(int(sys.argv[sys.argv.index("--still") + 1])); r.filepath = OUT + "still.png"
