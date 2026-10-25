@@ -1077,3 +1077,9 @@ body:has(.page-head + main > .page-object:first-child) .page-head { position: re
 .mrow .wrap.mgrid { max-width: none; padding-inline: 3vw; } .mgrid { grid-template-columns: 2fr 1fr; }
 .mgrid figure img, .mgrid figure video { max-height: 80vh; object-fit: contain; }
 .page-object img, .mgrid img, .stage-img img { animation: none !important; transform: none !important; }
+/* Renders fade out on every side so their soft studio shadows never end in a hard edge. */
+.page-object img, .mgrid figure img, .stage-img img, .page-head + main > .page-object:first-child :is(img, video) {
+  -webkit-mask-image: radial-gradient(ellipse 72% 70% at 50% 46%, #000 62%, transparent 100%);
+  mask-image: radial-gradient(ellipse 72% 70% at 50% 46%, #000 62%, transparent 100%); mix-blend-mode: normal; }
+body::before { display: none; }
+.page-head + main > .page-object:first-child { margin-top: clamp(-110px, -7vw, -40px); }
