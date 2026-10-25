@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Systems &middot; Spliced</title>
+<meta name="description" content="How to run a model well on one machine, decided by what we measured: format, batch, draft, prefix cache, clock.">
+<meta property="og:title" content="Systems &middot; Spliced">
+<meta property="og:description" content="How to run a model well on one machine, decided by what we measured: format, batch, draft, prefix cache, clock.">
+<meta property="og:image" content="https://splicedso.github.io/assets/og.png?v=202610251556">
+<meta property="og:url" content="https://splicedso.github.io/systems/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Spliced">
+<link rel="canonical" href="https://splicedso.github.io/systems/">
+<meta name="color-scheme" content="light dark">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="../assets/favicon.svg?v=202610251556" type="image/svg+xml">
+<link rel="icon" href="../assets/favicon-32.png?v=202610251556" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png?v=202610251556">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>document.documentElement.classList.add("js");</script>
+<link rel="stylesheet" href="../assets/style.css?v=202610251556">
+<link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
+</head>
+<body data-root="../" data-page="systems">
+<a class="skip" href="#content">Skip to content</a>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="../" aria-label="Spliced home">
+      <svg viewBox="-13 -13 966 1084" aria-hidden="true"><path fill="currentColor" stroke="currentColor" stroke-width="12.7" stroke-linejoin="round" d="M639.0 0.0 L941.0 0.0 L301.0 1059.0 L0.0 1059.0 Z"/></svg>
+      Spliced
+    </a>
+    <div class="nav-right">
+      <ul>
+        <li><a href="../research/" data-nav="research">Research</a></li>
+        <li><a href="../models/" data-nav="models">Models</a></li>
+        <li><a href="../foundry/" data-nav="foundry">Foundry</a></li>
+        <li><a href="../data/" data-nav="data">Data</a></li>
+        <li><a href="../tools/phase/" data-nav="tools">Phase</a></li>
+        <li><a href="../lab/" data-nav="lab">Lab</a></li>
+      </ul>
+      <a class="icon-link" href="https://github.com/splicedso" aria-label="Spliced on GitHub" title="GitHub"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a>
+      <a class="icon-link" href="https://www.linkedin.com/company/splicedso" aria-label="Spliced on LinkedIn" title="LinkedIn"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M0 1.15C0 .52.52 0 1.18 0h13.64C15.48 0 16 .52 16 1.15v13.7c0 .63-.52 1.15-1.18 1.15H1.18C.52 16 0 15.48 0 14.85V1.15zM4.75 13.39V6.17H2.35v7.22h2.4zM3.55 5.18c.84 0 1.36-.55 1.36-1.25-.02-.71-.52-1.25-1.34-1.25-.82 0-1.36.54-1.36 1.25 0 .7.52 1.25 1.33 1.25h.01zm4.91 8.21V9.36c0-.22.02-.43.08-.59.18-.43.57-.88 1.23-.88.87 0 1.22.66 1.22 1.64v3.86h2.4V9.25c0-2.22-1.18-3.25-2.76-3.25-1.27 0-1.84.7-2.16 1.19v.03h-.02l.02-.03V6.17h-2.4c.03.68 0 7.22 0 7.22h2.4z"/></svg></a>
+    </div>
+  </div>
+</nav>
+
+<svg id="bus" aria-hidden="true"></svg>
+
+<div id="content">
+<header class="page-head">
+  <div class="wrap">
+    <span class="label">Systems</span>
+    <h1>A local inference system, by the measurements</h1>
+    <p class="lede">How to run a model well on one machine, decided by what we have measured rather than by
+spec sheets. This is the recipe Foundry follows and the baseline every Spliced model has to
+beat. Each decision cites the note that measured it. Where a decision is still provisional, it
+says so. 25 October 2026.</p>
+  </div>
+</header>
+<main><article class="wrap note-body"><h2 data-via>Summary</h2>
+<p>Run a 7B model at Q4_0, serve several requests at once, draft with a small model only where a
+confidence threshold keeps the guesses good, cache the prompt prefix, and cap the shader clock on
+machines that allow it. On the hardware we own, that recipe costs a third to a half of the naive
+one per correct answer. Two-bit formats pay only from about 32B up.</p>
+<h2 data-via>Decisions</h2>
+<p><strong>Format: Q4_0, unless the model is 32B or larger.</strong> Q4_0 is the cheapest format per token at
+every model width we measured, on the M5 Pro, the RTX 5070 Ti Laptop GPU and the Strix Halo
+(notes 1, 4, 6). Below 4 bits the token gets more expensive, not cheaper, because unpacking the
+format costs more than the bytes it saves (note 5): on a 7B, a calibrated 2-bit token costs 18%
+more chip energy than a 4-bit one and Q4_0 is 21% cheaper per correct answer (note 22). At 32B
+the sign flips: calibrated Q2_K costs 16% less per correct answer at equal accuracy. The
+crossover sits between 7B and 32B on the Strix Halo and is machine dependent.</p>
+<p><strong>Model size: the largest that fits with room to batch.</strong> Per correct answer, a 7B serving eight
+requests beats a 1.5B serving one, on both machines (note 19). Accuracy buys more than speed
+loses. A 1.5B is the right choice only when memory forbids the 7B or when one request at a time
+is all there is.</p>
+<p><strong>Concurrency: as many requests at once as memory allows.</strong> Eight requests at once cut energy
+per token by 72% on the M5 Pro (note 1) and the second request alone saves 43% on a GPU that is
+already at its ceiling at batch 1 (note 10). Decode is bound by reading the weights once per
+step; every extra sequence in the step rides that read for free until memory or compute runs
+out. For a single user this means batching their own tool calls and sub-requests, not waiting
+for another user.</p>
+<p><strong>Prompt handling: cache the prefix.</strong> A prompt token costs about a fortieth of a generated one
+(note 18), so short prompts are nearly free. Long ones are not: at an 8,000-token prompt,
+prefill is 40% of a request's energy (note 18). Caching a shared prefix (a system prompt, a
+document) removes exactly that cost. A long context also raises the cost of every decoded
+token, because the key-value cache is read every step; an 8-bit cache does not win that back
+(notes 13, 16, 17).</p>
+<p><strong>Speculative decoding: on, with a confidence threshold, with the stock draft.</strong> Drafting without
+a threshold can be faster and more expensive at once; 16-token drafts on prose cost 3.6 to 3.95
+times plain decoding (notes 7, 11). With the draft's confidence threshold at about 0.5 the energy
+penalty disappears on every task tested and prose gets a free 1.3 times speed-up (note 9), and
+the result holds in llama-server, the program deployments use (note 11). On the Strix Halo the
+same setting cuts chip energy per token by a third (note 21). Our own Trace v1 draft raised
+agreement by 0.7 points and bought nothing; the stock 0.5B draft is the one to ship until a
+Trace clears the 3-point bar.</p>
+<p><strong>Clock: cap the shader clock where the platform allows it.</strong> On the Strix Halo, an 1,800 MHz cap
+through the OD table cuts 7B decode energy per token 37% at 4% less speed, and 42% at 8% less
+at 1,200 MHz (results/halo-clockcap.md). Per correct answer, the first pass of the capped
+quality run shows 15 to 28% less energy with accuracy within a point; the two-pass result is in
+note 23 when it lands. Decode is memory bound, so the shader clock buys little speed and costs
+much power. Prefill is compute bound and loses a third of its speed under the cap, so a system
+that does long prefill should lift the cap for it. This needs root and is Linux only so far.</p>
+<p><strong>Measure warm.</strong> A cold first measurement understates energy per token by 20 to 30%, because
+the package draws about a quarter more once warm (Linux handoff, warm 126 W against cold 100 W
+on the 7B). Every Phase run warms up first; every number here is a warm number.</p>
+<p><strong>Idle is the floor.</strong> The Strix Halo idles at 17 to 26 W across an afternoon; at a fifth of the
+speed, under force-low, that floor is half the reading (results/halo-clockcap.md). A system that
+runs slowly does not save energy per token. Finish fast, then idle.</p>
+<h2 data-via>The reference configuration</h2>
+<table>
+<thead>
+<tr>
+<th>machine</th>
+<th>model</th>
+<th>format</th>
+<th style="text-align: right;">slots</th>
+<th>draft</th>
+<th>clock</th>
+<th>expected</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Apple M5 Pro, 24 GB</td>
+<td>Qwen2.5 7B</td>
+<td>Q4_0</td>
+<td style="text-align: right;">8</td>
+<td>0.5B, p-min 0.5</td>
+<td>none available</td>
+<td>14.8 J per correct answer at 1.5B scale (note 20); 7B at 8 slots beats it (note 19)</td>
+</tr>
+<tr>
+<td>AMD Ryzen AI Max+ 395</td>
+<td>Qwen2.5 7B</td>
+<td>Q4_0</td>
+<td style="text-align: right;">8</td>
+<td>0.5B, p-min 0.5</td>
+<td>OD 1,800 MHz</td>
+<td>153.8 J per correct answer on auto (note 22); about 110 capped (note 23, pass 1)</td>
+</tr>
+<tr>
+<td>AMD Ryzen AI Max+ 395</td>
+<td>Qwen2.5 32B</td>
+<td>Q2_K, calibrated</td>
+<td style="text-align: right;">8</td>
+<td>none measured</td>
+<td>OD 1,800 MHz</td>
+<td>473.7 J per correct answer on auto (note 22); about 403 capped (note 23, pass 1)</td>
+</tr>
+</tbody>
+</table>
+<p>Foundry today ships the first row without the clock cap and with the draft off by default
+(Fast mode turns it on). The gaps between Foundry and this table are the next things to build.</p>
+<h2 data-via>Not yet measured</h2>
+<ul>
+<li>Joules per correct answer with the draft on, at 8 slots. Notes 9 and 11 are per token at batch 1;
+  batching may make the draft useless (the draft steals the bandwidth the batch would use).</li>
+<li>The clock cap on Apple silicon and on the RTX laptop. No control is known for the first; the second
+  has one and has not been tried.</li>
+<li>Whether an 8-slot 7B beats a 1-slot 32B per correct answer on the Strix Halo. Both are measured
+  alone; the comparison is not.</li>
+<li>Any of this on a model family other than Qwen2.5.</li>
+</ul></article></main>
+</div>
+
+<footer>
+  <div class="wrap foot">
+    <a class="brand" href="../" aria-label="Spliced home"><svg viewBox="-13 -13 966 1084" aria-hidden="true"><path fill="currentColor" stroke="currentColor" stroke-width="12.7" stroke-linejoin="round" d="M639.0 0.0 L941.0 0.0 L301.0 1059.0 L0.0 1059.0 Z"/></svg>Spliced</a>
+    <nav class="foot-nav" aria-label="Footer">
+      <a href="../research/">Research</a><a href="../models/">Models</a><a href="../systems/">Systems</a><a href="../foundry/">Foundry</a><a href="../learn/">Learn</a><a href="../data/">Data</a><a href="../tools/phase/">Phase</a><a href="../lab/">Lab</a>
+    </nav>
+    <div class="foot-social">
+      <a href="https://github.com/splicedso" aria-label="GitHub"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a>
+      <a href="https://www.linkedin.com/company/splicedso" aria-label="LinkedIn"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M0 1.15C0 .52.52 0 1.18 0h13.64C15.48 0 16 .52 16 1.15v13.7c0 .63-.52 1.15-1.18 1.15H1.18C.52 16 0 15.48 0 14.85V1.15zM4.75 13.39V6.17H2.35v7.22h2.4zM3.55 5.18c.84 0 1.36-.55 1.36-1.25-.02-.71-.52-1.25-1.34-1.25-.82 0-1.36.54-1.36 1.25 0 .7.52 1.25 1.33 1.25h.01zm4.91 8.21V9.36c0-.22.02-.43.08-.59.18-.43.57-.88 1.23-.88.87 0 1.22.66 1.22 1.64v3.86h2.4V9.25c0-2.22-1.18-3.25-2.76-3.25-1.27 0-1.84.7-2.16 1.19v.03h-.02l.02-.03V6.17h-2.4c.03.68 0 7.22 0 7.22h2.4z"/></svg></a>
+    </div>
+    <p class="foot-small">&copy; 2026 Spliced. Research and data are open.</p>
+  </div>
+</footer>
+
+<script src="../assets/site.js?v=202610251556"></script>
+
+</body>
+</html>

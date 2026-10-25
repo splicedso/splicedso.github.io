@@ -15,14 +15,14 @@
   <section class="etched">
     <div class="etched-grid solo">
       <div class="prose">
-        <h2>Every token has a price in joules.</h2>
-        <p>Benchmarks report speed. We report what speed costs. We run open models on the hardware people own, an Apple M5 Pro, an AMD Ryzen AI Max+ 395, an RTX 5070 Ti Laptop GPU, read each chip's own power sensors while it works, and publish the energy of every token and of every correct answer, with the raw data beside it.</p>
+        <h2>Models that cost less per answer.</h2>
+        <p>Spliced builds small models for the hardware people own, and measures what every token and every correct answer costs on it. The machines are an Apple M5 Pro, an AMD Ryzen AI Max+ 395 and an RTX 5070 Ti Laptop GPU; the numbers come from each chip's own power sensors and are published with the raw data beside them. Benchmarks report speed. We report what speed costs.</p>
         <h3>{{note_count}} notes. One question each.</h3>
         <p>What a quantization format costs. When batching pays. Whether speculative decoding saves energy or only time. Every note writes its prediction down before the run and keeps it when it is wrong. So far: eight requests at once cut energy per token by 72%, a read token costs a fortieth of a written one, and calibration doubles the accuracy of a 2-bit model at the same size.</p>
         <h3>Two model families, held to one bar.</h3>
         <p>Trace is a draft model trained to predict a larger one, for speculative decoding. Lattice keeps a model accurate below 4 bits per weight. A model ships only when it beats the stock model per correct answer on the same machine. Neither has yet. On a 32B model, calibrated 2-bit already beats 4-bit per correct answer by 16%.</p>
-        <h3>Two tools.</h3>
-        <p>Phase is the open-source power meter behind every number here. Foundry is a desktop app, in development, that runs a model on your own machine and shows the speed and energy of each answer.</p>
+        <h3>One recipe, two tools.</h3>
+        <p>The measurements add up to a way of running a model on one machine that costs a third to a half of the naive way per correct answer: the format, the batch, the draft, the clock, each decided by a note. It is written down on the <a href="systems/">Systems</a> page. Phase is the open-source power meter behind every number. Foundry is a desktop app, in development, that runs that recipe on your own machine and shows the speed and energy of each answer.</p>
       </div>
     </div>
   </section>

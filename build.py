@@ -374,7 +374,7 @@ def main():
          title="Models &middot; Spliced", description="Spliced models: Trace draft models and Lattice low-bit models, with where each stands.",
          page="models", sheet="Models", sheetno="M")
     page("lab/index.html", (SRC / "pages/lab.html").read_text(),
-         title="Lab &middot; Spliced", description="Spliced does open research on efficient inference.",
+         title="Lab &middot; Spliced", description="Spliced builds efficient inference systems: small models, measured on the hardware people own.",
          page="lab", sheet="Lab", sheetno=f"4 of {total}")
     for i, n in enumerate(NOTES):
         title, date = note_meta(n)
@@ -400,6 +400,9 @@ def main():
         t, c = article(i["file"], "../../", (f"P{i['n']}", "Primer"))
         page(f"learn/{i['slug']}/index.html", c, title=f"{t} &middot; Spliced", description=i["summary"],
              page="learn", sheet=f"P{i['n']} &middot; {t}", sheetno="L", ogtype="article")
+    t, c = article(PHASE / "docs" / "local-systems.md", "../", ("S", "Systems"))
+    page("systems/index.html", c, title="Systems &middot; Spliced", description="How to run a model well on one machine, decided by what we measured: format, batch, draft, prefix cache, clock.",
+         page="systems", sheet="Systems", sheetno="S")
     t, c = article(SRC / "methods.md", "../", ("M", "Methods"))
     page("methods/index.html", c, title="Methods &middot; Spliced", description="The rules every Spliced measurement follows.",
          page="methods", sheet="Methods", sheetno="M")
