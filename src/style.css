@@ -1147,3 +1147,11 @@ body { background: transparent; } html { background: #eee; }
 .tok { transition: opacity .45s var(--ease), filter .45s var(--ease); background: none !important; box-shadow: none !important; border: 0 !important; outline: 0 !important; } .tok.fresh { opacity: 0; filter: blur(4px); }
 .tok::before { display: none; }
 @media (max-width: 900px) { .etched-grid .prose { border-left: 0; } }
+/* Models rows in the Etched layout: render left, writing right, column rules. */
+.mrow { padding: 0 !important; }
+.mrow .wrap.mgrid { grid-template-columns: 1fr 1fr !important; max-width: 1200px !important; margin: 0 auto; padding: 0 !important; gap: 0 !important; text-align: left; justify-items: stretch; align-items: center; border-left: 1px solid #d9d9d9; border-right: 1px solid #d9d9d9; }
+.mrow .wrap.mgrid > figure { padding: 64px 40px; order: 0 !important; }
+.mrow .wrap.mgrid > div { padding: 72px 64px; max-width: none; border-left: 1px solid #d9d9d9; align-self: stretch; display: flex; flex-direction: column; justify-content: center; }
+.mrow .wrap.mgrid.solo { grid-template-columns: 1fr !important; } .mrow .wrap.mgrid.solo > div { border-left: 0; max-width: 640px; margin: 0 auto; }
+.mrow .mgrid .label, .mrow .mgrid h2, .mrow .mgrid p { text-align: left; margin-left: 0; }
+@media (max-width: 900px) { .mrow .wrap.mgrid { grid-template-columns: 1fr !important; border: 0; } .mrow .wrap.mgrid > div { border-left: 0; padding: 24px 16px 56px; } .mrow .wrap.mgrid > figure { padding: 24px 16px 0; } }
