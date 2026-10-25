@@ -132,3 +132,11 @@ const cssVar = name => getComputedStyle(document.documentElement).getPropertyVal
   }), { threshold: .15 });
   vids.forEach(v => io.observe(v));
 })();
+
+// The hero turntable plays at a third of its rendered speed: a slow plinth turn, not a spin.
+(function slowHero() {
+  const v = document.querySelector(".hero-object video");
+  if (!v) return;
+  const set = () => { v.playbackRate = 0.35; };
+  set(); v.addEventListener("play", set); v.addEventListener("loadeddata", set);
+})();
