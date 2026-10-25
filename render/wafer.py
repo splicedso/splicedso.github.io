@@ -117,7 +117,7 @@ if "--stand" in args:
     # most of the face stays dark silicon; one narrow soft window of light crosses it, as in a product shot
     if "--face" in args:
         # square on, the face mirrors what is in front of it: a soft window high and to one side, a weak fill
-        S.area((7.0, -14.0, R + 10.0), 650, 11, target=(0, 0, R))
+        S.area((7.0, -14.0, R + 10.0), 650, 16, target=(0, 0, R))   # larger: a softer window on the face and a softer shadow edge
         S.area((-10.0, -9.0, R - 1.0), 50, 8, target=(0, 0, R))
         # a wide, high softbox from the front: the wafer's shadow becomes a short soft pool at its foot,
         # not a long hard wedge off to one side
