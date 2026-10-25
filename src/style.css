@@ -1071,3 +1071,8 @@ body:has(.page-head + main > .page-object:first-child) .page-head { position: re
 .mgrid { grid-template-columns: 1.6fr 1fr; gap: 40px; } .mrow .wrap.mgrid { max-width: 1440px; }
 .page-object img, .page-object video { margin-inline: auto; } .mgrid figure img, .mgrid figure video { margin-inline: auto; object-position: center; }
 .mgrid.solo { grid-template-columns: minmax(0, 720px); justify-content: center; }
+/* Renders are full-bleed and large: the object spans the viewport. */
+.page-head + main > .page-object:first-child, .page-object { max-width: none; width: 100vw; margin-left: calc(50% - 50vw); margin-right: 0; padding: 0 2vw; box-sizing: border-box; }
+.page-object img, .page-object video, .page-head + main > .page-object:first-child :is(img, video) { width: 100%; max-height: 92vh; object-fit: contain; }
+.mrow .wrap.mgrid { max-width: none; padding-inline: 3vw; } .mgrid { grid-template-columns: 2fr 1fr; }
+.mgrid figure img, .mgrid figure video { max-height: 80vh; object-fit: contain; }
