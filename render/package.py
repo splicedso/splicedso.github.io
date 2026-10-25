@@ -65,8 +65,13 @@ S.mark((-0.25, 0.15, 0.2805), 1.0, etch)
 bpy.ops.mesh.primitive_cylinder_add(radius=0.03, depth=0.002, location=(-0.98, -0.98, 0.2806), vertices=24)
 bpy.context.object.data.materials.append(laser)
 
-S.area((-4, -3, 6), 600, 5)
-S.area((5, 2, 2.5), 450, 3)
+if ANGLE == "top":
+    # straight down: one big soft light overhead, a weak fill, so the shadow is a soft halo, not a long side cast
+    S.area((-4.0, -3.5, 9), 800, 9)
+    S.area((4, 3, 7), 160, 6)
+else:
+    S.area((-4, -3, 6), 600, 5)
+    S.area((5, 2, 2.5), 450, 3)
 if ANGLE == "low":
     S.camera((7.4, -11.4, 4.4), (0, 0, 0.1), lens=85, fstop=8)
 else:
