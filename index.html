@@ -20,7 +20,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>document.documentElement.classList.add("js");</script>
-<link rel="stylesheet" href="assets/style.css?v=202610250200">
+<link rel="stylesheet" href="assets/style.css?v=202610250204">
 <link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
 </head>
 <body data-root="" data-page="home">
@@ -64,19 +64,45 @@
 </header>
 
 <main>
-  <section>
+  <section class="tight scope-sec">
     <div class="wrap">
-      <h2 class="center">Three questions, one standard.</h2>
-      <div class="areas">
-        <a class="area" href="research/">
-          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>
-          <h3>Inference engineering</h3><p>Where the time and energy of every token go.</p></a>
-        <a class="area" href="data/">
-          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>
-          <h3>Data science</h3><p>Repeated, held out, and honest about its limits.</p></a>
-        <a class="area" href="tools/phase/">
-          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m8 6-6 6 6 6M16 6l6 6-6 6"/></svg>
-          <h3>Open tools</h3><p>Every result reruns from public code and data.</p></a>
+      <div class="label">Live replay &middot; real recording</div>
+      <h2>Watch a model spend energy.</h2>
+      <p class="sub">Qwen2.5 1.5B on an M5 Pro, recorded with Phase at 10 samples a second. It reads a prompt, then writes an answer.</p>
+      <figure class="scope-panel">
+        <div class="scope-top mono">
+          <span><i class="sw chip"></i>chip <b id="sc-chip">0.0</b> W</span>
+          <span><i class="sw board"></i>whole board <b id="sc-board">0.0</b> W</span>
+          <span class="phase-pill" id="sc-phase">idle</span>
+          <span class="sc-t">t = <b id="sc-t">0.0</b> s</span>
+        </div>
+        <canvas id="scope2" aria-label="Power trace replay"></canvas>
+        <div class="scope-text mono" id="sc-text" aria-hidden="true"></div>
+      </figure>
+    </div>
+  </section>
+
+  <section class="tight">
+    <div class="wrap">
+      <div class="label">Instruments</div>
+      <h2>Three of our results, running.</h2>
+      <div class="inst-grid">
+        <figure class="inst">
+          <div class="inst-head"><span class="mono">Note 1 &middot; batching</span><b><span id="bt-mj">104.7</span> mJ<small>/token</small></b></div>
+          <div class="lanes" id="lanes"></div>
+          <div class="inst-ctrl"><span class="mono">requests at once</span><input type="range" id="bt" min="1" max="8" value="1" aria-label="Batch size"><b id="bt-n">1</b></div>
+          <figcaption>Serving more requests at once shares each weight read. Eight at a time cuts energy per token 72%.</figcaption>
+        </figure>
+        <figure class="inst">
+          <div class="inst-head"><span class="mono">Note 19 &middot; per correct answer</span><b>0.68<small>&times;</small></b></div>
+          <svg id="jpc" viewBox="0 0 360 220" role="img" aria-label="Joules per correct answer by model and serving"></svg>
+          <figcaption>A 7B serving eight requests beats a 1.5B serving one, per right answer, on two machines.</figcaption>
+        </figure>
+        <figure class="inst term">
+          <div class="inst-head"><span class="mono">Phase &middot; open source</span><span class="dots"><i></i><i></i><i></i></span></div>
+          <pre id="term" aria-label="Phase measuring three models"></pre>
+          <figcaption>One command measures energy per token, prompt and answer apart. <a href="tools/phase/">Phase</a>.</figcaption>
+        </figure>
       </div>
     </div>
   </section>
@@ -88,6 +114,35 @@
         <div class="fact"><div class="n" data-count="72">72<small>%</small></div><p>less energy per token when serving eight requests at once.</p></div>
         <div class="fact"><div class="n" data-count="40">40<small>&times;</small></div><p>cheaper to read a prompt token than to write an answer token.</p></div>
         <div class="fact"><div class="n" data-count="2.1">2.1<small>&times;</small></div><p>the true energy cost of full precision over 4-bit.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="tight">
+    <div class="wrap">
+      <div class="label">The bench</div>
+      <h2>Three machines. One 7B model.</h2>
+      <p class="sub">Energy to write one token, measured on each machine's chip.</p>
+      <div class="bench">
+        <div class="rig"><svg class="die" viewBox="0 0 120 120" aria-hidden="true"><rect x="20" y="20" width="80" height="80" rx="10"/><rect x="34" y="34" width="52" height="52" rx="4" class="core"/><path d="M20 40H8M20 60H8M20 80H8M100 40h12M100 60h12M100 80h12M40 20V8M60 20V8M80 20V8M40 100v12M60 100v12M80 100v12"/></svg>
+          <h3>Apple M5 Pro</h3><p class="mono">24 GB unified &middot; macOS</p><div class="meter"><i style="--w:19%"></i></div><b>389 mJ</b></div>
+        <div class="rig"><svg class="die" viewBox="0 0 120 120" aria-hidden="true"><rect x="10" y="30" width="100" height="60" rx="8"/><rect x="24" y="42" width="44" height="36" rx="3" class="core"/><rect x="76" y="42" width="22" height="16" rx="2" class="core"/><rect x="76" y="62" width="22" height="16" rx="2" class="core"/><path d="M10 50H2M10 70H2M110 50h8M110 70h8"/></svg>
+          <h3>NVIDIA RTX 5070 Ti</h3><p class="mono">12 GB &middot; Windows laptop</p><div class="meter"><i style="--w:51%"></i></div><b>1,027 mJ</b></div>
+        <div class="rig"><svg class="die" viewBox="0 0 120 120" aria-hidden="true"><rect x="14" y="14" width="92" height="92" rx="12"/><rect x="26" y="26" width="30" height="30" rx="3" class="core"/><rect x="64" y="26" width="30" height="30" rx="3" class="core"/><rect x="26" y="64" width="68" height="30" rx="3" class="core"/></svg>
+          <h3>AMD Strix Halo</h3><p class="mono">125 GB unified &middot; Linux</p><div class="meter"><i style="--w:100%"></i></div><b>2,015 mJ</b></div>
+      </div>
+      <p class="fine">Qwen2.5 7B Q4_0, one request, chip power: the M5 Pro SoC (note 3), the RTX GPU (note 13), the Halo APU package (its baseline run, three passes). Different boundaries, so read them as each machine's own chip, not one meter.</p>
+    </div>
+  </section>
+
+  <section class="tight">
+    <div class="wrap">
+      <div class="label">Our models</div>
+      <h2>Small models, built for one job each.</h2>
+      <div class="models">
+        <div class="model m-trace"><canvas class="mviz" data-viz="trace"></canvas><h3>Trace</h3><p>Draft models that predict a larger model, to make it faster and cheaper.</p><span class="status">v0 measured &middot; v1 data building</span></div>
+        <div class="model m-lattice"><canvas class="mviz" data-viz="lattice"></canvas><h3>Lattice</h3><p>Models that keep their answers at 3 bits or fewer per weight.</p><span class="status">Baseline running</span></div>
+        <div class="model m-kinetic"><canvas class="mviz" data-viz="kinetic"></canvas><h3>Kinetic</h3><p>A small model shaped by what each part costs in energy.</p><span class="status">Planned</span></div>
       </div>
     </div>
   </section>
@@ -132,7 +187,7 @@
   </div>
 </footer>
 
-<script src="assets/site.js?v=202610250200"></script>
-<script src="assets/home.js?v=202610250200"></script>
+<script src="assets/site.js?v=202610250204"></script>
+<script src="assets/home.js?v=202610250204"></script>
 </body>
 </html>
