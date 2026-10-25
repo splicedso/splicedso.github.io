@@ -118,8 +118,9 @@ for i in range(NC):
     cu = bpy.data.curves.new("c", "CURVE"); cu.dimensions = "3D"
     cu.bevel_depth = 0.075; cu.bevel_resolution = 10; cu.use_fill_caps = True; cu.resolution_u = 36
     sp = cu.splines.new("BEZIER"); sp.bezier_points.add(5)
-    pts = [(x, -2.55, 1.5), (x, -3.1, 1.35), (x + sway, -3.35, -0.3), (x + sway, -3.3, -2.3 + drop),
-           (x + sway * 0.5, -3.05, -0.9), (x, -2.6, 0.55)]
+    # shorter loops: the slack hangs just under the chassis, not far below it
+    pts = [(x, -2.55, 1.5), (x, -3.1, 1.35), (x + sway, -3.35, 0.2), (x + sway, -3.3, -1.0 + drop * 0.5),
+           (x + sway * 0.5, -3.05, -0.1), (x, -2.6, 0.55)]
     for bp, co in zip(sp.bezier_points, pts):
         bp.co = co; bp.handle_left_type = bp.handle_right_type = "AUTO"
     # the cable leaves and re-enters its plug straight on
@@ -157,8 +158,8 @@ area((0, -9, -4), 160, 8)          # faint lift from below
 
 cam_d = bpy.data.cameras.new("cam"); cam_d.lens = 80
 cam = bpy.data.objects.new("cam", cam_d); sc.collection.objects.link(cam); sc.camera = cam
-cam.location = (-6.5, -23.5, -1.0)                     # low front three-quarter, the whole unit and its loops in frame
-target = Vector((0.2, -1.5, -0.2))
+cam.location = (-6.5, -22.0, -0.4)                     # low front three-quarter, the whole unit and its loops in frame
+target = Vector((0.2, -1.5, 0.2))
 cam.rotation_euler = (target - cam.location).to_track_quat("-Z", "Y").to_euler()
 cam_d.dof.use_dof = True; cam_d.dof.focus_distance = (target - cam.location).length; cam_d.dof.aperture_fstop = 7.0
 

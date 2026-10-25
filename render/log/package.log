@@ -1,0 +1,2 @@
+/Users/martinmuskov/Docs/GitHub/spliced/site/render/package.py:25: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  lid = bpy.data.materials.new("lid"); lid.use_nodes = True
