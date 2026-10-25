@@ -400,6 +400,9 @@ def main():
         t, c = article(i["file"], "../../", (f"P{i['n']}", "Primer"))
         page(f"learn/{i['slug']}/index.html", c, title=f"{t} &middot; Spliced", description=i["summary"],
              page="learn", sheet=f"P{i['n']} &middot; {t}", sheetno="L", ogtype="article")
+    page("designs/index.html", (SRC / "pages/designs.html").read_text(),
+         title="Designs &middot; Spliced", description="Concepts drawn from our measurements: a decode-first inference module and a sled that splits prefill from decode. Designs, not products.",
+         page="designs", sheet="Designs", sheetno="D")
     t, c = article(PHASE / "docs" / "local-systems.md", "../", ("S", "Systems"))
     page("systems/index.html", c, title="Systems &middot; Spliced", description="How to run a model well on one machine, decided by what we measured: format, batch, draft, prefix cache, clock.",
          page="systems", sheet="Systems", sheetno="S")

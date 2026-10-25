@@ -1,0 +1,37 @@
+<header class="page-head">
+  <div class="wrap">
+    <span class="label">Designs</span>
+    <h1>What the measurements would build.</h1>
+    <p class="lede">Concepts drawn from our numbers. Designs, not products: nothing here exists in hardware, and every claim says what would have to be measured for it to hold.</p>
+  </div>
+</header>
+
+<main>
+  <section class="etched">
+    <div class="etched-grid">
+      <figure><img src="../assets/img/decode.webp" alt="A concept inference module: a small compute die ringed by eight memory stacks on one interposer" loading="lazy"></figure>
+      <div class="prose">
+        <h2>A decode-first module.</h2>
+        <p>Decode reads every weight and every cached token once per step and does little arithmetic on them. The part that serves it well is memory first: a small compute die in the middle of a ring of eight memory stacks, on one interposer. The ring sets the footprint, not the die.</p>
+        <h3>Sized to its bandwidth</h3>
+        <p>The die is only as large as the memory can feed, and it runs at a capped clock by design. On the AMD Ryzen AI Max+ 395, capping the shader clock at 1,800 MHz cut 7B decode energy per token 37% at 4% less speed. A decode part lives there permanently, so its power stage row is short and its cooling is a flat vapour-chamber plate rather than a fin stack.</p>
+        <h3>Paid for by the batch</h3>
+        <p>Eight requests at once cut energy per token by 72% on one chip. The module is meant to run eight or more sequences per step, always, and the sled's scheduler keeps it there.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="etched">
+    <div class="etched-grid">
+      <figure><img src="../assets/img/sled.webp" alt="A concept 1U sled: six decode modules behind one prefill module and a switch" loading="lazy"></figure>
+      <div class="prose">
+        <h2>A sled that splits prefill from decode.</h2>
+        <p>Prefill is compute bound; a prompt token costs about a fortieth of a generated one. Putting both on one die buys compute that idles during decode and bandwidth that idles during prefill. The sled puts six decode modules behind one compute-dense prefill module with a tall heat sink, and a switch between them, so the cache handoff stays on one board.</p>
+        <h3>One prefill, one life</h3>
+        <p>A request is prefilled once on the front module and its cache handed to a decode module, where it lives for the rest of the request. A prefix cache hit skips the front module entirely.</p>
+        <h3>What would have to be true</h3>
+        <p>Joules per correct answer at eight slots under a cap, below the single-chip figure by the idle and prefill share it no longer carries. The cache transfer hidden under decode time up to the prompt length where the board link saturates. Six capped modules idling for less than one chip at 17 to 26 W. None of these are measured yet; the <a href="../systems/">Systems</a> page is where the measured recipe lives, and the plan for measuring these is in the research repository.</p>
+      </div>
+    </div>
+  </section>
+</main>
