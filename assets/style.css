@@ -1139,3 +1139,9 @@ body { background: transparent; } html { background: #eee; }
 @media (max-width: 900px) { .etched-grid { grid-template-columns: 1fr; border: 0; } .etched-grid > figure { position: static; border: 0; padding: 0 16px; } .etched-grid .prose { padding: 32px 16px; } }
 .etched-grid > figure { border-right: 0; } .etched-grid .prose { border-left: 1px solid #d9d9d9; }
 .etched-grid > figure img { -webkit-mask-image: radial-gradient(ellipse 60% 62% at 50% 50%, #000 70%, transparent 100%); mask-image: radial-gradient(ellipse 60% 62% at 50% 50%, #000 70%, transparent 100%); }
+/* Announcement bar, Etched style: black, monospace, one line. */
+.announce { background: #0b0b0b; text-align: center; padding: 9px 16px; position: relative; z-index: 60; }
+.announce a { color: #eee; font: 400 12.5px/1.4 ui-monospace, "JetBrains Mono", Menlo, monospace; letter-spacing: .02em; text-decoration: none; }
+.announce a span { color: #8a8a8a; margin-left: 6px; }
+.announce a:hover span { color: #eee; }
+.tok { transition: opacity .45s var(--ease), filter .45s var(--ease); background: none !important; box-shadow: none !important; border: 0 !important; outline: 0 !important; } .tok.fresh { opacity: 0; filter: blur(4px); }
