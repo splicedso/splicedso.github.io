@@ -1,0 +1,2 @@
+/Users/martinmuskov/Docs/GitHub/spliced/site/render/cell.py:31: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  led = bpy.data.materials.new("led"); led.use_nodes = True
