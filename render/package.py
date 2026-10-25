@@ -77,13 +77,15 @@ if "--fall" in args:
     # the package stands facing the camera, then falls flat onto the floor (scrubbed by scroll on the site)
     from mathutils import Vector, Quaternion
     frames = int(args[args.index("--fall") + 1])
-    sc.cycles.samples = 24
+    sc.cycles.samples = 32
     sc.frame_start, sc.frame_end = 1, frames
     pivot = bpy.data.objects.new("pivot", None); sc.collection.objects.link(pivot)
     for o in list(sc.objects):
         if o.type == "MESH" and o.name != "floor" and o.parent is None and o.location.z > -0.05:
             o.parent = pivot
     sc.camera.data.lens = 50
+    sc.camera.data.dof.use_dof = False
+    sc.cycles.use_denoising = True
     d = (sc.camera.location - Vector((0, 0, 0.1))).normalized()
     axis = Vector((0, 0, 1)).cross(d).normalized()
     yaw = Quaternion((0, 0, 1), math.atan2(d.y, d.x) + math.pi / 2)

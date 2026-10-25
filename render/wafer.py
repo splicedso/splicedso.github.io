@@ -90,7 +90,17 @@ notch.hide_render = True
 S.area((-3, 5, 5), 260, 3)
 S.area((5, 3, 2.5), 160, 2)
 S.area((-6, -2, 2), 90, 2)
-S.camera((7.5, -13.5, 6.4), (0, 0.3, 0), lens=70, fstop=6.3)
+if "--stand" in args:
+    # the wafer stands on its edge facing the camera, as if held in a carrier
+    import math
+    pivot = bpy.data.objects.new("pivot", None); bpy.context.scene.collection.objects.link(pivot)
+    for o in list(bpy.context.scene.objects):
+        if o.type == "MESH" and o.name != "Plane" and o.parent is None:
+            o.parent = pivot
+    pivot.rotation_euler = (math.radians(78), 0, math.radians(28)); pivot.location = (0, 0, R * math.sin(math.radians(78)) + 0.03)
+    S.camera((3.0, -16.0, R + 2.4), (0, 0, R * 0.95), lens=70, fstop=11)
+else:
+    S.camera((7.5, -13.5, 6.4), (0, 0.3, 0), lens=70, fstop=6.3)
 if "--turntable" in args:
     S.turntable(OUT, int(args[args.index("--turntable") + 1]))
 else:
