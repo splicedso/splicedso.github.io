@@ -14,14 +14,14 @@
 <link rel="canonical" href="https://splicedso.github.io/data/">
 <meta name="color-scheme" content="light dark">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="../assets/favicon.svg?v=202610250411" type="image/svg+xml">
-<link rel="icon" href="../assets/favicon-32.png?v=202610250411" type="image/png" sizes="32x32">
-<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png?v=202610250411">
+<link rel="icon" href="../assets/favicon.svg?v=202610250420" type="image/svg+xml">
+<link rel="icon" href="../assets/favicon-32.png?v=202610250420" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png?v=202610250420">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>document.documentElement.classList.add("js");</script>
-<link rel="stylesheet" href="../assets/style.css?v=202610250411">
+<link rel="stylesheet" href="../assets/style.css?v=202610250420">
 <link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
 </head>
 <body data-root="../" data-page="data">
@@ -87,6 +87,15 @@
 
   <section class="tight">
     <div class="wrap">
+      <div class="label">Per correct answer</div>
+      <h2>Energy per right answer.</h2>
+      <div class="dtable-wrap"><table class="dtable"><tr><th>machine</th><th>model</th><th>format</th><th>calibration</th><th>at once</th><th>correct</th><th>J per correct</th><th>tok/s</th><th>note</th></tr><tr><td>Apple M5 Pro</td><td>1.5B</td><td>Q4_0</td><td>none</td><td>1</td><td>66.0%</td><td><b>40.2</b></td><td>197</td><td>19</td></tr><tr><td>Apple M5 Pro</td><td>1.5B</td><td>Q4_0</td><td>none</td><td>8</td><td>65.6%</td><td><b>13.7</b></td><td>866</td><td>19</td></tr><tr><td>Apple M5 Pro</td><td>7B</td><td>Q4_0</td><td>none</td><td>1</td><td>88.4%</td><td><b>101.9</b></td><td>60</td><td>19</td></tr><tr><td>Apple M5 Pro</td><td>7B</td><td>Q4_0</td><td>none</td><td>8</td><td>88.0%</td><td><b>35.1</b></td><td>279</td><td>19</td></tr><tr><td>AMD Ryzen AI Max+ 395</td><td>1.5B</td><td>Q4_0</td><td>none</td><td>1</td><td>66.0%</td><td><b>230.9</b></td><td>178</td><td>19</td></tr><tr><td>AMD Ryzen AI Max+ 395</td><td>1.5B</td><td>Q4_0</td><td>none</td><td>8</td><td>66.6%</td><td><b>65.2</b></td><td>648</td><td>19</td></tr><tr><td>AMD Ryzen AI Max+ 395</td><td>7B</td><td>Q4_0</td><td>none</td><td>1</td><td>88.8%</td><td><b>609.0</b></td><td>48</td><td>19</td></tr><tr><td>AMD Ryzen AI Max+ 395</td><td>7B</td><td>Q4_0</td><td>none</td><td>8</td><td>88.4%</td><td><b>156.6</b></td><td>210</td><td>19</td></tr><tr><td>Apple M5 Pro</td><td>1.5B</td><td>Q2_K</td><td>none</td><td>8</td><td>21.0%</td><td><b>39.2</b></td><td>773</td><td>20</td></tr><tr><td>Apple M5 Pro</td><td>1.5B</td><td>Q2_K</td><td>imatrix, general text</td><td>8</td><td>37.2%</td><td><b>28.4</b></td><td>836</td><td>20</td></tr><tr><td>Apple M5 Pro</td><td>1.5B</td><td>Q2_K</td><td>imatrix, GSM8K-train</td><td>8</td><td>42.4%</td><td><b>23.8</b></td><td>818</td><td>20</td></tr><tr><td>Apple M5 Pro</td><td>1.5B</td><td>Q4_0</td><td>none</td><td>8</td><td>65.8%</td><td><b>14.8</b></td><td>851</td><td>20</td></tr></table></div>
+      <p class="note">GSM8K, first 250 test questions. Chip energy. <a href="https://github.com/splicedso/phase/blob/main/results/spliced-quality.csv">spliced-quality.csv</a>.</p>
+    </div>
+  </section>
+
+  <section class="tight">
+    <div class="wrap">
       <div class="label">The table</div>
       <div class="filters mono" id="filters"></div>
       <div class="dtable-wrap"><table class="dtable" id="dtable"></table></div>
@@ -124,7 +133,7 @@
   </div>
 </footer>
 
-<script src="../assets/site.js?v=202610250411"></script>
-<script src="../assets/data.js?v=202610250411"></script>
+<script src="../assets/site.js?v=202610250420"></script>
+<script src="../assets/data.js?v=202610250420"></script>
 </body>
 </html>

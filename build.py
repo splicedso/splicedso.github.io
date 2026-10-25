@@ -7,6 +7,7 @@ Notes are written once, as markdown in phase/notes, and rendered here. A line
 generated from phase/results, so the site cannot drift from the measurements.
 """
 
+import csv
 import json
 import re
 import shutil
@@ -216,6 +217,17 @@ def figure(i, depth="../../"):
     return f'<figure class="page-object slim"><img src="{depth}assets/img/{img}" alt="{alt}" loading="lazy"></figure>'
 
 
+def quality_table():
+    """The joules-per-correct-answer dataset as a plain table."""
+    rows = list(csv.DictReader(open(PHASE / "results" / "spliced-quality.csv")))
+    head = "<tr><th>machine</th><th>model</th><th>format</th><th>calibration</th><th>at once</th><th>correct</th><th>J per correct</th><th>tok/s</th><th>note</th></tr>"
+    body = "".join(
+        f"<tr><td>{r['machine'].split(',')[0]}</td><td>{r['model'].replace('Qwen2.5 ', '')}</td><td>{r['format']}</td>"
+        f"<td>{r['calibration']}</td><td>{r['slots']}</td><td>{float(r['accuracy']) * 100:.1f}%</td>"
+        f"<td><b>{float(r['chip_j_per_correct']):.1f}</b></td><td>{float(r['tok_s']):.0f}</td><td>{r['note']}</td></tr>" for r in rows)
+    return f'<div class="dtable-wrap"><table class="dtable">{head}{body}</table></div>'
+
+
 def notes_list(root, limit=None):
     items = []
     for n in list(reversed(NOTES))[:limit]:
@@ -334,7 +346,7 @@ def main():
     page("tools/phase/index.html", (SRC / "pages/phase.html").read_text(),
          title="Phase &middot; Spliced", description="Energy per token for local LLM inference, at the chip and the board.",
          page="tools", sheet="Tools / Phase", sheetno=f"3 of {total}", scripts=charts)
-    page("data/index.html", (SRC / "pages/data.html").read_text(),
+    page("data/index.html", (SRC / "pages/data.html").read_text().replace("{{quality}}", quality_table()),
          title="Data &middot; Spliced", description="Every Spliced decode-energy measurement in one downloadable table, with a comparison tool.",
          page="data", sheet="Data", sheetno=f"5 of {total}", scripts='<script src="{{root}}assets/data.js?v=' + VERSION + '"></script>')
     page("models/index.html", (SRC / "pages/models.html").read_text(),
