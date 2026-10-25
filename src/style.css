@@ -1104,3 +1104,4 @@ section .wrap > .label::before { display: none; }
   -webkit-mask-composite: source-in;
   mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent), linear-gradient(transparent, #000 5%, #000 92%, transparent);
   mask-composite: intersect; }
+.hero-object canvas { height: min(72vh, 680px); width: 100%; object-fit: cover; }
