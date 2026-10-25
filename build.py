@@ -358,7 +358,7 @@ def main():
          title="Spliced", description="Efficient inference systems. What AI costs to run, and the models that cut it.",
          page="home", sheet="Spliced &middot; Efficient inference", sheetno=f"1 of {total}",
          scripts='')
-    page("research/index.html", (SRC / "pages/research.html").read_text().replace("{{notes}}", notes_list("../")),
+    page("research/index.html", (SRC / "pages/research.html").read_text().replace("{{notes}}", notes_list("../")).replace("{{note_count}}", str(len(NOTES))),
          title="Research &middot; Spliced", description="Spliced research notes on inference energy, with method, code and raw data.",
          page="research", sheet="Research", sheetno=f"2 of {total}")
     page("tools/phase/index.html", (SRC / "pages/phase.html").read_text(),

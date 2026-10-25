@@ -1,8 +1,7 @@
-"""LinkedIn banners from photographs, black and white variants.
+"""LinkedIn banners, black and white variants, from our own eight-GPU baseboard render.
 
-Both: a silicon wafer (Laura Ockel, Unsplash License), graded light and dark. The lockup sits upper left, inside the
-area LinkedIn keeps on phones (the sides crop) and above where the profile photo covers on
-desktop (lower left).
+The lockup sits on the right, inside the band LinkedIn keeps on phones (the sides crop) and away from
+where the profile photo covers on desktop (lower left).
 """
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageEnhance, ImageFont, ImageOps
@@ -48,13 +47,23 @@ def band(path, focus, contrast, bright):
     return im.crop((0, top, w, top + ch)).resize((W, H), Image.LANCZOS).convert("RGB")
 
 
-# Black: the same wafer, graded dark.
-dark = band(HERE.parent / "render" / "photo-wafer.jpg", 0.5, 1.6, 0.55)
-lockup(shade(dark, (0, 0, 0), right=True), (255, 255, 255), x=1960, y=280,
-       sub="Measuring Frontier Inference").save(HERE / "linkedin-banner-black.png")
-# White: the lockup on the right, where the company logo (lower left on desktop) never covers it
-# and inside the band phones keep.
-light = band(HERE.parent / "render" / "photo-wafer.jpg", 0.5, 1.25, 1.3)
-lockup(shade(light, (255, 255, 255), right=True), (0, 0, 0), x=1960, y=280,
-       sub="Measuring Frontier Inference").save(HERE / "linkedin-banner-white.png")
+def render_band(path, bg, focus, contrast, bright, zoom=1.0):
+    """A band through one of our own renders (transparent PNG) on a flat background, graded."""
+    src = Image.open(path).convert("RGBA")
+    base = Image.new("RGBA", src.size, (*bg, 255)); base.alpha_composite(src)
+    im = ImageOps.grayscale(base.convert("RGB"))
+    im = ImageEnhance.Brightness(ImageEnhance.Contrast(im).enhance(contrast)).enhance(bright)
+    w, h = im.size
+    cw = int(w / zoom); ch = int(cw * H / W)
+    left = (w - cw) // 2
+    top = max(0, min(h - ch, int(h * focus - ch / 2)))
+    return im.crop((left, top, left + cw, top + ch)).resize((W, H), Image.LANCZOS).convert("RGB")
+
+
+# Both banners: our own eight-GPU baseboard render (render/hgx.png), no photograph, no third-party credit.
+SUB = "Efficient inference systems"
+dark = render_band(HERE.parent / "render" / "hgx.png", (0, 0, 0), 0.52, 1.25, 0.8, zoom=1.15)
+lockup(shade(dark, (0, 0, 0), right=True), (255, 255, 255), x=1960, y=280, sub=SUB).save(HERE / "linkedin-banner-black.png")
+light = render_band(HERE.parent / "render" / "hgx.png", (238, 238, 238), 0.52, 1.1, 1.05, zoom=1.15)
+lockup(shade(light, (255, 255, 255), right=True), (0, 0, 0), x=1960, y=280, sub=SUB).save(HERE / "linkedin-banner-white.png")
 print("ok")

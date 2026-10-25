@@ -63,7 +63,7 @@ def banner(fg, bg, w=1584, h=396):
             f'<text x="{tx:.1f}" y="{my + 70}" font-family="Helvetica Neue" font-weight="600" '
             f'font-size="66" letter-spacing="-2.4" fill="{fg}">Spliced</text>'
             f'<text x="{tx + 3:.1f}" y="{my + 104}" font-family="Helvetica Neue" '
-            f'font-size="19" fill="{fg}" opacity=".6">Efficient inference.</text>'
+            f'font-size="19" fill="{fg}" opacity=".6">Efficient inference systems.</text>'
             f'</svg>\n')
 
 
