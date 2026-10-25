@@ -109,12 +109,15 @@ const cssVar = name => getComputedStyle(document.documentElement).getPropertyVal
 
 // Large images drift a little as they pass through the viewport.
 (function parallax() {
-  const imgs = [...document.querySelectorAll(".stage-img img")];
-  if (reduced || !imgs.length) return;
-  const tick = () => imgs.forEach(img => {
-    const r = img.getBoundingClientRect(), p = (r.top + r.height / 2) / innerHeight - .5;
-    img.style.setProperty("--sy", Math.max(-1, Math.min(1, p)).toFixed(3));
-  });
+  const imgs = [...document.querySelectorAll(".stage-img img")], hero = document.querySelector(".hero-object img");
+  if (reduced || (!imgs.length && !hero)) return;
+  const tick = () => {
+    imgs.forEach(img => {
+      const r = img.getBoundingClientRect(), p = (r.top + r.height / 2) / innerHeight - .5;
+      img.style.setProperty("--sy", Math.max(-1, Math.min(1, p)).toFixed(3));
+    });
+    if (hero) hero.style.setProperty("--hy", Math.min(1, scrollY / innerHeight).toFixed(3));
+  };
   addEventListener("scroll", () => requestAnimationFrame(tick), { passive: true });
   tick();
 })();

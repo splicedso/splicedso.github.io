@@ -14,24 +14,9 @@ OUT = args[0]
 W, H = (int(v) for v in (args[1] if len(args) > 1 and "x" in args[1] else "2800x1600").split("x"))
 random.seed(11)
 
-bpy.ops.wm.read_factory_settings(use_empty=True)
-sc = bpy.context.scene
-sc.render.engine = "CYCLES"
-prefs = bpy.context.preferences.addons["cycles"].preferences
-try:
-    prefs.compute_device_type = "METAL"; prefs.get_devices()
-    for d in prefs.devices: d.use = True
-    sc.cycles.device = "GPU"
-except Exception:
-    pass
-sc.cycles.samples = 192; sc.cycles.use_denoising = True
-sc.render.film_transparent = True
-sc.render.resolution_x, sc.render.resolution_y = W, H
-sc.view_settings.view_transform = "AgX"; sc.view_settings.look = "AgX - Medium High Contrast"
-world = bpy.data.worlds.new("w"); sc.world = world; world.use_nodes = True
-world.node_tree.nodes["Background"].inputs[0].default_value = (0.85, 0.85, 0.85, 1)
-world.node_tree.nodes["Background"].inputs[1].default_value = 0.3
-
+sys.path.insert(0, str(__import__("pathlib").Path(__file__).parent))
+import studio as S  # noqa: E402
+sc = S.setup(W, H)
 
 def principled(name, color, metal=0.0, rough=0.5):
     m = bpy.data.materials.new(name); m.use_nodes = True
@@ -60,7 +45,7 @@ for rot in (0.6, -0.6):
     waves.append(wv)
 mul = nt.nodes.new("ShaderNodeMath"); mul.operation = "MULTIPLY"
 nt.links.new(waves[0].outputs["Fac"], mul.inputs[0]); nt.links.new(waves[1].outputs["Fac"], mul.inputs[1])
-bump = nt.nodes.new("ShaderNodeBump"); bump.inputs["Strength"].default_value = 0.6
+bump = nt.nodes.new("ShaderNodeBump"); bump.inputs["Strength"].default_value = 0.9
 nt.links.new(mul.outputs[0], bump.inputs["Height"]); nt.links.new(bump.outputs["Normal"], p.inputs["Normal"])
 
 steel, _ = principled("steel", (0.6, 0.6, 0.6), metal=1.0, rough=0.28)
@@ -114,9 +99,23 @@ for i in range(26):
         bp.co = co; bp.handle_left_type = bp.handle_right_type = "AUTO"
     ob = bpy.data.objects.new("cable", cu); sc.collection.objects.link(ob)
     cu.materials.append(braid)
-    # metal ferrule where each cable leaves the chassis
-    bpy.ops.mesh.primitive_cylinder_add(radius=0.095, depth=0.16, location=(x, -1.2, 0.05), vertices=24)
-    bpy.context.object.data.materials.append(steel)
+    # a QSFP-style connector where each cable leaves the chassis: steel shell, dark pull tab
+    S.box((0.2, 0.34, 0.14), (x, -1.2, 0.03), steel, 0.015)
+    S.box((0.16, 0.06, 0.1), (x, -1.4, 0.0), dark, 0.01)
+
+
+# Screws on the rack ears, pull handles and two status lights.
+for x in (-4.2, 4.2):
+    for z in (0.15, 0.85, 1.55):
+        S.screw((x, -2.18, z), steel, 0.07, axis="y")
+    bpy.ops.mesh.primitive_torus_add(major_radius=0.32, minor_radius=0.05, location=(x * 0.93, -2.5, 0.9), rotation=(0, math.pi / 2, 0))
+    bpy.ops.object.shade_smooth(); bpy.context.object.data.materials.append(steel)
+led = bpy.data.materials.new("led"); led.use_nodes = True
+e = led.node_tree.nodes.new("ShaderNodeEmission"); e.inputs["Color"].default_value = (1, 1, 1, 1); e.inputs["Strength"].default_value = 6
+led.node_tree.links.new(e.outputs[0], led.node_tree.nodes["Material Output"].inputs[0])
+for k, x in enumerate((3.15, 3.3)):
+    bpy.ops.mesh.primitive_cylinder_add(radius=0.028, depth=0.02, location=(x, -2.385, 0.36), rotation=(math.pi / 2, 0, 0), vertices=16)
+    bpy.context.object.data.materials.append(led if k == 0 else dark)
 
 
 def area(loc, energy, size):
@@ -125,8 +124,8 @@ def area(loc, energy, size):
     ob.rotation_euler = (Vector((0, 0, 0.5)) - Vector(loc)).to_track_quat("-Z", "Y").to_euler()
 
 
-area((-6, -8, 7), 1800, 8)
-area((7, -5, 3), 1400, 5)
+area((-6, -8, 7), 1100, 8)
+area((7, -5, 3), 800, 5)
 area((0, 6, 6), 900, 8)
 area((0, -9, -2), 500, 8)
 
@@ -135,5 +134,4 @@ cam = bpy.data.objects.new("cam", cam_d); sc.collection.objects.link(cam); sc.ca
 cam.location = (0.0, -21.5, 3.0)
 cam.rotation_euler = (Vector((0, 0, -0.55)) - cam.location).to_track_quat("-Z", "Y").to_euler()
 
-r = sc.render; r.image_settings.file_format = "PNG"; r.image_settings.color_mode = "RGBA"; r.filepath = OUT
-bpy.ops.render.render(write_still=True)
+S.render(OUT)
