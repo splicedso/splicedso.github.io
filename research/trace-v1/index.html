@@ -14,14 +14,14 @@
 <link rel="canonical" href="https://splicedso.github.io/research/trace-v1/">
 <meta name="color-scheme" content="light dark">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="../../assets/favicon.svg?v=202610251044" type="image/svg+xml">
-<link rel="icon" href="../../assets/favicon-32.png?v=202610251044" type="image/png" sizes="32x32">
-<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png?v=202610251044">
+<link rel="icon" href="../../assets/favicon.svg?v=202610251050" type="image/svg+xml">
+<link rel="icon" href="../../assets/favicon-32.png?v=202610251050" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png?v=202610251050">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>document.documentElement.classList.add("js");</script>
-<link rel="stylesheet" href="../../assets/style.css?v=202610251044">
+<link rel="stylesheet" href="../../assets/style.css?v=202610251050">
 <link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
 </head>
 <body data-root="../../" data-page="research">
@@ -58,7 +58,7 @@
     <p class="setup">Spliced research note 21, 25 October 2026. Training on the AMD Ryzen AI Max+ 395 (Strix Halo, Radeon 8060S, 128 GB, Linux, PyTorch 2.10 on ROCm 7.2). Draft Qwen2.5 0.5B Instruct, target Qwen2.5 7B Instruct Q4_0.</p>
   </div>
 </header>
-<main><figure class="page-object slim"><img src="../../assets/img/wafer.webp" alt="A silicon wafer" loading="lazy"></figure><article class="wrap note-body"><p>Trace is our line of draft models: small models trained to predict one large one, so speculative decoding accepts more of their guesses. Trace v0 (note 15) imitated the 7B's text and gained about 3% acceptance. Trace v1 learns from the 7B's probabilities instead.</p>
+<main><figure class="page-object slim"><img src="../../assets/img/wafer.webp" width="2162" height="962" alt="A silicon wafer"></figure><article class="wrap note-body"><p>Trace is our line of draft models: small models trained to predict one large one, so speculative decoding accepts more of their guesses. Trace v0 (note 15) imitated the 7B's text and gained about 3% acceptance. Trace v1 learns from the 7B's probabilities instead.</p>
 <p><strong>Prediction</strong> (<code>docs/predictions.md</code>, committed before the runs): held-out top-1 agreement plateaus between 0.78 and 0.80, clearing the +3 point bar on the full 35,000 prompts but not on the first 8,000. The partial-data half held (no run on 9,000 prompts cleared the bar); the plateau did not reach 0.78, and the full-data half is untested.</p>
 <h2 data-via>Method</h2>
 <p>The 7B Q4_0 answered each training prompt greedily, and llama-server recorded its top 20 candidates and their log-probabilities at every token (<code>experiments/drafter/teacher.py</code>). The draft trains on those distributions, renormalized, with positions where the stock draft's top guess differs from the 7B's weighted 3 times (<code>train_trace.py</code>, ALPHA=2). AdamW, one epoch, held-out top-1 agreement on 180 validation prompts every 200 steps. The trainer reproduces the stock draft's agreement on both machines (0.7606 M5 Pro, 0.7616 Strix Halo).</p>
@@ -180,7 +180,7 @@ python experiments/drafter/evaluate.py results/drafter/eval-v1-halo.json plain,s
   </div>
 </footer>
 
-<script src="../../assets/site.js?v=202610251044"></script>
-<script src="../../assets/charts.js?v=202610251044"></script>
+<script src="../../assets/site.js?v=202610251050"></script>
+<script src="../../assets/charts.js?v=202610251050"></script>
 </body>
 </html>

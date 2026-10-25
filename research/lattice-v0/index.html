@@ -14,14 +14,14 @@
 <link rel="canonical" href="https://splicedso.github.io/research/lattice-v0/">
 <meta name="color-scheme" content="light dark">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="../../assets/favicon.svg?v=202610251044" type="image/svg+xml">
-<link rel="icon" href="../../assets/favicon-32.png?v=202610251044" type="image/png" sizes="32x32">
-<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png?v=202610251044">
+<link rel="icon" href="../../assets/favicon.svg?v=202610251050" type="image/svg+xml">
+<link rel="icon" href="../../assets/favicon-32.png?v=202610251050" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png?v=202610251050">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>document.documentElement.classList.add("js");</script>
-<link rel="stylesheet" href="../../assets/style.css?v=202610251044">
+<link rel="stylesheet" href="../../assets/style.css?v=202610251050">
 <link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
 </head>
 <body data-root="../../" data-page="research">
@@ -58,7 +58,7 @@
     <p class="setup">Spliced research note 20, 25 October 2026. Apple M5 Pro, 24 GB, Metal. llama.cpp (Homebrew build) llama-imatrix, llama-quantize and llama-server. Qwen2.5 1.5B Instruct, from the F16 GGUF.</p>
   </div>
 </header>
-<main><figure class="page-object slim"><img src="../../assets/img/card.webp" alt="An accelerator card" loading="lazy"></figure><article class="wrap note-body"><p>Lattice is our line of models that keep their answers at fewer bits. Its starting point (<code>docs/program.md</code>): standard 2-bit quantization (Q2_K) drops the 1.5B from 66% to 21% on GSM8K. Before training anything, the cheapest fix is an importance matrix: llama.cpp measures which weights matter on sample text and spends its bits there.</p>
+<main><figure class="page-object slim"><img src="../../assets/img/card.webp" width="2048" height="1217" alt="An accelerator card"></figure><article class="wrap note-body"><p>Lattice is our line of models that keep their answers at fewer bits. Its starting point (<code>docs/program.md</code>): standard 2-bit quantization (Q2_K) drops the 1.5B from 66% to 21% on GSM8K. Before training anything, the cheapest fix is an importance matrix: llama.cpp measures which weights matter on sample text and spends its bits there.</p>
 <p><strong>Prediction.</strong> A calibrated Q2_K recovers a large share of the lost accuracy at an unchanged file size, and costs less per correct answer than standard Q2_K, but not less than Q4_0.</p>
 <h2 data-via>Method</h2>
 <p>Two importance matrices from the F16 model, 200 chunks each. One from 1,500 GSM8K training problems with their worked answers (the test set is separate), one from 1,500 general chat and code prompts with answers (the drafter set, note 15). Each was used to quantize the same F16 model to Q2_K; a plain Q2_K is the control. All three files are 753 MB. Then <code>experiments/quality.py</code> ran the first 250 GSM8K test questions, 8 at a time, two passes with the second reversed, with chip energy sampled over each run, against standard Q4_0 for reference. Passes agreed within 3.5% on joules per correct answer, except the maths-calibrated file at 5.5%, whose second pass overlapped other work on the machine.</p>
@@ -141,7 +141,7 @@ uv run python experiments/quality.py models/lattice/1.5b-Q2_K-imat.gguf results/
   </div>
 </footer>
 
-<script src="../../assets/site.js?v=202610251044"></script>
-<script src="../../assets/charts.js?v=202610251044"></script>
+<script src="../../assets/site.js?v=202610251050"></script>
+<script src="../../assets/charts.js?v=202610251050"></script>
 </body>
 </html>

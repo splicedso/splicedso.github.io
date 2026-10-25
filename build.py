@@ -217,7 +217,7 @@ RENDERS = [("package.webp", "A processor package"), ("hgx.webp", "An eight-GPU s
 def figure(i, depth="../../"):
     """One of the product renders, rotating so neighbouring pages differ."""
     img, alt = RENDERS[i % len(RENDERS)]
-    return f'<figure class="page-object slim"><img src="{depth}assets/img/{img}" alt="{alt}" loading="lazy"></figure>'
+    return f'<figure class="page-object slim"><img src="{depth}assets/img/{img}" alt="{alt}"></figure>'
 
 
 def quality_table():
@@ -313,6 +313,17 @@ def feed():
         '<author><name>Spliced</name></author>' + "".join(entries) + "</feed>\n")
 
 
+def webp_size(src):
+    """Pixel size of an assets/img WebP, read from its header."""
+    b = (HERE / "assets/img" / src.rsplit("/", 1)[1]).read_bytes()[:30]
+    if b[12:16] == b"VP8X":
+        return 1 + int.from_bytes(b[24:27], "little"), 1 + int.from_bytes(b[27:30], "little")
+    if b[12:16] == b"VP8L":
+        v = int.from_bytes(b[21:25], "little")
+        return 1 + (v & 0x3FFF), 1 + ((v >> 14) & 0x3FFF)
+    return int.from_bytes(b[26:28], "little") & 0x3FFF, int.from_bytes(b[28:30], "little") & 0x3FFF
+
+
 def page(path, content, *, title, description, page, sheet, sheetno, scripts="", root=None, ogtype="website"):
     depth = len(Path(path).parts) - 1
     root = "../" * depth if root is None else root
@@ -325,6 +336,8 @@ def page(path, content, *, title, description, page, sheet, sheetno, scripts="",
                  "scripts": scripts.replace("{{root}}", root), "root": root, "version": VERSION,
                  "site": SITE, "path": url_path, "ogtype": ogtype}.items():
         html = html.replace("{{" + k + "}}", v)
+    html = html.replace(" \u2014 ", ", ")  # notes in ../phase may carry em dashes; the site does not
+    html = re.sub(r'<img src="([^"]+\.webp)"', lambda m: m.group(0) + ' width="%d" height="%d"' % webp_size(m.group(1)), html)
     out = HERE / path
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(html)

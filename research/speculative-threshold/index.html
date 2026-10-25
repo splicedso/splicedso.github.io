@@ -14,14 +14,14 @@
 <link rel="canonical" href="https://splicedso.github.io/research/speculative-threshold/">
 <meta name="color-scheme" content="light dark">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="../../assets/favicon.svg?v=202610251044" type="image/svg+xml">
-<link rel="icon" href="../../assets/favicon-32.png?v=202610251044" type="image/png" sizes="32x32">
-<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png?v=202610251044">
+<link rel="icon" href="../../assets/favicon.svg?v=202610251050" type="image/svg+xml">
+<link rel="icon" href="../../assets/favicon-32.png?v=202610251050" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png?v=202610251050">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>document.documentElement.classList.add("js");</script>
-<link rel="stylesheet" href="../../assets/style.css?v=202610251044">
+<link rel="stylesheet" href="../../assets/style.css?v=202610251050">
 <link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
 </head>
 <body data-root="../../" data-page="research">
@@ -58,7 +58,7 @@
     <p class="setup">Spliced research note 9, 24 October 2026. Apple M5 Pro, 24 GB, llama.cpp build 11669. Target Qwen2.5 7B Q4_0, draft Qwen2.5 0.5B Q4_0.</p>
   </div>
 </header>
-<main><figure class="page-object slim"><img src="../../assets/img/hgx.webp" alt="An eight-GPU server baseboard" loading="lazy"></figure><article class="wrap note-body"><p>Note 7 found that speculative decoding can make decoding faster and more expensive at once, and that long drafts on unpredictable text are an energy disaster: drafting 16 tokens on prose cost 3.95 times the energy of plain decoding. The cause is wasted guesses. llama.cpp already has a control for that: <code>--spec-draft-p-min</code>, a confidence threshold. The draft model stops guessing as soon as its confidence in its next token falls below the threshold, so it drafts long runs where text is predictable and short ones where it is not. This note asks whether that one setting removes the penalty, and what value to use.</p>
+<main><figure class="page-object slim"><img src="../../assets/img/hgx.webp" width="2400" height="1269" alt="An eight-GPU server baseboard"></figure><article class="wrap note-body"><p>Note 7 found that speculative decoding can make decoding faster and more expensive at once, and that long drafts on unpredictable text are an energy disaster: drafting 16 tokens on prose cost 3.95 times the energy of plain decoding. The cause is wasted guesses. llama.cpp already has a control for that: <code>--spec-draft-p-min</code>, a confidence threshold. The draft model stops guessing as soon as its confidence in its next token falls below the threshold, so it drafts long runs where text is predictable and short ones where it is not. This note asks whether that one setting removes the penalty, and what value to use.</p>
 <h2 data-via>Method</h2>
 <p>As in note 7 (<code>experiments/speculative.py</code>), with the conditions given on the command line: plain decoding; drafts of up to 8 tokens with no threshold and with thresholds of 0.5, 0.8 and 0.95; drafts of up to 16 with no threshold and with 0.8. Code, prose and edit prompts, 384 generated tokens, greedy, three runs each in a shuffled order. Chip energy only, for the reason note 7 gives.</p>
 <p>Plain decoding cost 394 to 404 mJ per token in this run, 9% to 11% more than in note 7. Since both notes were run on the same machine with the same settings, the difference is a property of the session (temperature, background load), and so every comparison here is against plain decoding <strong>within this run</strong>. Most conditions repeated within 10%; a few threshold conditions varied by up to 23%, and those spreads are reported.</p>
@@ -336,7 +336,7 @@
   </div>
 </footer>
 
-<script src="../../assets/site.js?v=202610251044"></script>
-<script src="../../assets/charts.js?v=202610251044"></script>
+<script src="../../assets/site.js?v=202610251050"></script>
+<script src="../../assets/charts.js?v=202610251050"></script>
 </body>
 </html>

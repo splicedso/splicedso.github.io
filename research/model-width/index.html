@@ -14,14 +14,14 @@
 <link rel="canonical" href="https://splicedso.github.io/research/model-width/">
 <meta name="color-scheme" content="light dark">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="../../assets/favicon.svg?v=202610251044" type="image/svg+xml">
-<link rel="icon" href="../../assets/favicon-32.png?v=202610251044" type="image/png" sizes="32x32">
-<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png?v=202610251044">
+<link rel="icon" href="../../assets/favicon.svg?v=202610251050" type="image/svg+xml">
+<link rel="icon" href="../../assets/favicon-32.png?v=202610251050" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png?v=202610251050">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>document.documentElement.classList.add("js");</script>
-<link rel="stylesheet" href="../../assets/style.css?v=202610251044">
+<link rel="stylesheet" href="../../assets/style.css?v=202610251050">
 <link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
 </head>
 <body data-root="../../" data-page="research">
@@ -58,7 +58,7 @@
     <p class="setup">Spliced research note 6, 24 October 2026. Apple M5 Pro, 24 GB, llama.cpp build 11669. Qwen2.5 0.5B, 1.5B, 3B and 7B, five formats each.</p>
   </div>
 </header>
-<main><figure class="page-object slim"><img src="../../assets/img/dimm.webp" alt="A server memory module" loading="lazy"></figure><article class="wrap note-body"><p>Note 3 saw the 7B model use the memory system better than the 1.5B. Note 5 measured each format's kernel at one large matrix size and found Q5_K and Q6_K cost the same per weight, which left open why their order changes between models and between machines. This note sweeps model width to answer both: how much does matrix size matter, and where does it change the ranking?</p>
+<main><figure class="page-object slim"><img src="../../assets/img/dimm.webp" width="2701" height="1169" alt="A server memory module"></figure><article class="wrap note-body"><p>Note 3 saw the 7B model use the memory system better than the 1.5B. Note 5 measured each format's kernel at one large matrix size and found Q5_K and Q6_K cost the same per weight, which left open why their order changes between models and between machines. This note sweeps model width to answer both: how much does matrix size matter, and where does it change the ranking?</p>
 <h2 data-via>Why real models, not one matrix</h2>
 <p>The obvious instrument, one matrix-vector kernel at several sizes, is the wrong one here. A 1536 x 1536 matrix is 1.3 to 4.7 MB depending on format. Repeated in a loop, it stays in the chip's cache, and the benchmark measures cache bandwidth, not memory: a first test reported 288 GB/s for it. Real decode streams every layer's weights once per token, far more than any cache holds.</p>
 <p>So the sweep uses real models whose layers have different widths: Qwen2.5 0.5B, 1.5B, 3B and 7B, with hidden sizes 896, 1536, 2048 and 3584. Each was quantized from its own F16 GGUF into Q4_0, Q4_K_M, Q5_K_M, Q6_K and Q8_0, and decoded with <code>phase --seconds 12</code>, two passes, the second in reverse order. 18 of the 20 models repeated within 3% at the board; the 0.5B Q4_0 and Q4_K_M, which decode fastest and so have the shortest windows, repeated within 8% and 5%.</p>
@@ -243,7 +243,7 @@ uv run --with gguf python experiments/width.py results/width-run1.json results/w
   </div>
 </footer>
 
-<script src="../../assets/site.js?v=202610251044"></script>
-<script src="../../assets/charts.js?v=202610251044"></script>
+<script src="../../assets/site.js?v=202610251050"></script>
+<script src="../../assets/charts.js?v=202610251050"></script>
 </body>
 </html>

@@ -14,14 +14,14 @@
 <link rel="canonical" href="https://splicedso.github.io/learn/what-quantization-is/">
 <meta name="color-scheme" content="light dark">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="../../assets/favicon.svg?v=202610251044" type="image/svg+xml">
-<link rel="icon" href="../../assets/favicon-32.png?v=202610251044" type="image/png" sizes="32x32">
-<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png?v=202610251044">
+<link rel="icon" href="../../assets/favicon.svg?v=202610251050" type="image/svg+xml">
+<link rel="icon" href="../../assets/favicon-32.png?v=202610251050" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png?v=202610251050">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>document.documentElement.classList.add("js");</script>
-<link rel="stylesheet" href="../../assets/style.css?v=202610251044">
+<link rel="stylesheet" href="../../assets/style.css?v=202610251050">
 <link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
 </head>
 <body data-root="../../" data-page="learn">
@@ -57,7 +57,7 @@
     <p class="lede">Primer 3. Builds on primer 2.</p>
   </div>
 </header>
-<main><figure class="page-object slim"><img src="../../assets/img/hgx.webp" alt="An eight-GPU server baseboard" loading="lazy"></figure><article class="wrap note-body"><p>Decode is limited by how many bytes it reads (primer 2). The most direct way to read fewer bytes is to store each weight in fewer bits. That is <strong>quantization</strong>.</p>
+<main><figure class="page-object slim"><img src="../../assets/img/hgx.webp" width="2400" height="1269" alt="An eight-GPU server baseboard"></figure><article class="wrap note-body"><p>Decode is limited by how many bytes it reads (primer 2). The most direct way to read fewer bytes is to store each weight in fewer bits. That is <strong>quantization</strong>.</p>
 <h2 data-via>From 16 bits to 4</h2>
 <p>Weights are trained as 16-bit (or 32-bit) numbers. A 16-bit number can hold about 65,000 different values. Most models still work well if each weight is rounded to one of only 16 values, which needs just <strong>4 bits</strong>. The model shrinks to a quarter of the size and decodes nearly four times faster.</p>
 <p>The trick is choosing which 16 values. Weights in one part of a matrix might range from -0.02 to 0.02, and in another from -1 to 1. One fixed set of 16 values would waste most of them.</p>
@@ -101,7 +101,7 @@
   </div>
 </footer>
 
-<script src="../../assets/site.js?v=202610251044"></script>
+<script src="../../assets/site.js?v=202610251050"></script>
 
 </body>
 </html>

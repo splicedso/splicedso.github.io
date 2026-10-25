@@ -14,14 +14,14 @@
 <link rel="canonical" href="https://splicedso.github.io/research/roofline-and-energy-model/">
 <meta name="color-scheme" content="light dark">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="../../assets/favicon.svg?v=202610251044" type="image/svg+xml">
-<link rel="icon" href="../../assets/favicon-32.png?v=202610251044" type="image/png" sizes="32x32">
-<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png?v=202610251044">
+<link rel="icon" href="../../assets/favicon.svg?v=202610251050" type="image/svg+xml">
+<link rel="icon" href="../../assets/favicon-32.png?v=202610251050" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png?v=202610251050">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>document.documentElement.classList.add("js");</script>
-<link rel="stylesheet" href="../../assets/style.css?v=202610251044">
+<link rel="stylesheet" href="../../assets/style.css?v=202610251050">
 <link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
 </head>
 <body data-root="../../" data-page="research">
@@ -58,7 +58,7 @@
     <p class="setup">Spliced research note 2, 24 October 2026. Apple M5 Pro, 24 GB, llama.cpp build 11669, MLX 0.32. Uses the format sweep from note 1.</p>
   </div>
 </header>
-<main><figure class="page-object slim"><img src="../../assets/img/gpu.webp" alt="A datacenter GPU module" loading="lazy"></figure><article class="wrap note-body"><p>Note 1 measured that energy per token does not fall with bit width. This note asks why, with two standard tools: a roofline, which says how fast decode could possibly go, and a fitted model, which says what the energy is spent on. It is written to be followed step by step, mistakes included, because two of the three first attempts were wrong in instructive ways.</p>
+<main><figure class="page-object slim"><img src="../../assets/img/gpu.webp" width="2271" height="1194" alt="A datacenter GPU module"></figure><article class="wrap note-body"><p>Note 1 measured that energy per token does not fall with bit width. This note asks why, with two standard tools: a roofline, which says how fast decode could possibly go, and a fitted model, which says what the energy is spent on. It is written to be followed step by step, mistakes included, because two of the three first attempts were wrong in instructive ways.</p>
 <h2 data-via>1. The roof: how fast can memory be read?</h2>
 <p>Decoding one token multiplies every weight matrix by one vector. Each weight is read once and used for two operations, so the arithmetic is tiny compared with the reading. That makes decode <strong>memory bound</strong>: the speed limit is memory bandwidth divided by the bytes read per token.</p>
 <p>So the first job is the real bandwidth, not the spec sheet. <code>experiments/bandwidth.py</code> times four patterns on 1 GiB of float16 with MLX:</p>
@@ -297,7 +297,7 @@ uv run --with numpy python experiments/energy_model.py results/energy-model-1.5b
   </div>
 </footer>
 
-<script src="../../assets/site.js?v=202610251044"></script>
-<script src="../../assets/charts.js?v=202610251044"></script>
+<script src="../../assets/site.js?v=202610251050"></script>
+<script src="../../assets/charts.js?v=202610251050"></script>
 </body>
 </html>

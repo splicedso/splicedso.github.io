@@ -14,14 +14,14 @@
 <link rel="canonical" href="https://splicedso.github.io/research/speculative-decoding/">
 <meta name="color-scheme" content="light dark">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="../../assets/favicon.svg?v=202610251044" type="image/svg+xml">
-<link rel="icon" href="../../assets/favicon-32.png?v=202610251044" type="image/png" sizes="32x32">
-<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png?v=202610251044">
+<link rel="icon" href="../../assets/favicon.svg?v=202610251050" type="image/svg+xml">
+<link rel="icon" href="../../assets/favicon-32.png?v=202610251050" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png?v=202610251050">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>document.documentElement.classList.add("js");</script>
-<link rel="stylesheet" href="../../assets/style.css?v=202610251044">
+<link rel="stylesheet" href="../../assets/style.css?v=202610251050">
 <link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
 </head>
 <body data-root="../../" data-page="research">
@@ -58,7 +58,7 @@
     <p class="setup">Spliced research note 7, 24 October 2026. Apple M5 Pro, 24 GB, llama.cpp build 11669. Target Qwen2.5 7B Q4_0, draft Qwen2.5 0.5B Q4_0.</p>
   </div>
 </header>
-<main><figure class="page-object slim"><img src="../../assets/img/package-top.webp" alt="A processor package, top view" loading="lazy"></figure><article class="wrap note-body"><p>Speculative decoding is in every serious serving stack. A small draft model guesses the next k tokens; the large model checks all k in one forward pass and keeps the ones it agrees with. Decode is memory bound (note 2), so checking k tokens costs about as many weight reads as generating one, and every accepted guess is a token the large model did not have to produce alone. It is sold, and measured, as a latency win. Whether it saves energy is a separate question: the draft model's work costs energy, and so does the large model's work on every guess it throws away.</p>
+<main><figure class="page-object slim"><img src="../../assets/img/package-top.webp" width="1192" height="1130" alt="A processor package, top view"></figure><article class="wrap note-body"><p>Speculative decoding is in every serious serving stack. A small draft model guesses the next k tokens; the large model checks all k in one forward pass and keeps the ones it agrees with. Decode is memory bound (note 2), so checking k tokens costs about as many weight reads as generating one, and every accepted guess is a token the large model did not have to produce alone. It is sold, and measured, as a latency win. Whether it saves energy is a separate question: the draft model's work costs energy, and so does the large model's work on every guess it throws away.</p>
 <h2 data-via>Method</h2>
 <p><code>experiments/speculative.py</code>. Greedy decoding, a fixed 384 generated tokens, 7B Q4_0 target. Six strategies:</p>
 <ul>
@@ -275,7 +275,7 @@
   </div>
 </footer>
 
-<script src="../../assets/site.js?v=202610251044"></script>
-<script src="../../assets/charts.js?v=202610251044"></script>
+<script src="../../assets/site.js?v=202610251050"></script>
+<script src="../../assets/charts.js?v=202610251050"></script>
 </body>
 </html>
