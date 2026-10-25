@@ -1,0 +1,2 @@
+/Users/martinmuskov/Docs/GitHub/spliced/site/render/wafer.py:36: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  wafer = bpy.data.materials.new("wafer"); wafer.use_nodes = True
