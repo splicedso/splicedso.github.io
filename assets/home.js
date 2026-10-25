@@ -2,8 +2,8 @@
 
 // Hero: the headline is written one real Qwen2.5 token at a time, as an example of what we measure. At the measured 198 tokens
 // per second it would be over in a fifth of a second, so it is replayed 30 times slower.
-const HEAD = ["The", " engineering", " of", " efficient", " inference", "."];
-const LEDE = ["We", " measure", " what", " it", " costs", " to", " run", " AI", ",", " and", " publish", " everything", "."];
+const HEAD = ["Me", "asuring", " frontier", " inference", "."];
+const LEDE = ["What", " AI", " costs", " to", " run", ",", " and", " how", " to", " cut", " it", "."];
 (function typeTokens() {
   const h1 = document.getElementById("h1"), lede = document.getElementById("lede");
   const all = [...HEAD.map(t => [h1, t]), ...LEDE.map(t => [lede, t])];

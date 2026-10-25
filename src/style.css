@@ -973,3 +973,29 @@ footer { border-top-color: #d9d9d9; } .foot-nav a, .foot-social a { color: #6b6b
 .label.light { color: #9a9a9a; } .label.light::before { background: #fff; }
 @media (prefers-reduced-motion: reduce) { .hero-object img { animation: none; } .band-video { display: none; } }
 @media (max-width: 1200px) { body::before { display: none; } }
+
+/* ---- image-led home ---- */
+.hero-center h1 { font-size: clamp(52px, 8.6vw, 128px); max-width: 11ch; line-height: .95; }
+.hero-center .lede { font-size: 20px; color: #3d3d3d; }
+.hero-object { margin-top: 40px; max-width: 1240px; }
+.pillars { padding: 40px 0 100px; }
+.three { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; text-align: center; }
+.three h3 { font-size: 22px; font-weight: 500; letter-spacing: -.01em; }
+.three p { margin-top: 6px; color: #5a5a5a; font-size: 16px; }
+.stage { padding: 80px 0 0; overflow: hidden; }
+.stage h2.center { margin-bottom: 10px; font-weight: 500; }
+.stage .sub.center { text-align: center; margin: 0 auto; }
+.stage-img { margin: 40px auto 0; max-width: 1400px; padding: 0 16px; }
+.stage-img img { display: block; width: 100%; height: auto; -webkit-mask-image: linear-gradient(#000 72%, transparent); mask-image: linear-gradient(#000 72%, transparent);
+  transform: translateY(calc(var(--sy, 0) * -60px)) scale(calc(1 + var(--sy, 0) * .04)); will-change: transform; }
+.models { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.model { display: block; text-decoration: none; padding: 0 0 22px; overflow: hidden; }
+.model img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; background: #f4f4f4; transition: transform 1.2s var(--ease); }
+.model:hover img { transform: scale(1.04); }
+.model h3 { margin: 18px 22px 4px; font-size: 26px; font-weight: 500; }
+.model p { margin: 0 22px; }
+.status { margin: 14px 22px 0; }
+h2.center { font-weight: 500; }
+.closer { padding: 64px 24px; }
+@media (max-width: 900px) { .three { grid-template-columns: 1fr; gap: 18px; } }
+.three h3 { font-size: 26px; } .three p { font-size: 18px; } .stage .sub.center { font-size: 20px; }

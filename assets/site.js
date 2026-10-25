@@ -106,3 +106,15 @@ const cssVar = name => getComputedStyle(document.documentElement).getPropertyVal
   }), { threshold: .6 });
   nums.forEach(n => io.observe(n));
 })();
+
+// Large images drift a little as they pass through the viewport.
+(function parallax() {
+  const imgs = [...document.querySelectorAll(".stage-img img")];
+  if (reduced || !imgs.length) return;
+  const tick = () => imgs.forEach(img => {
+    const r = img.getBoundingClientRect(), p = (r.top + r.height / 2) / innerHeight - .5;
+    img.style.setProperty("--sy", Math.max(-1, Math.min(1, p)).toFixed(3));
+  });
+  addEventListener("scroll", () => requestAnimationFrame(tick), { passive: true });
+  tick();
+})();

@@ -20,7 +20,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>document.documentElement.classList.add("js");</script>
-<link rel="stylesheet" href="assets/style.css?v=202610250239">
+<link rel="stylesheet" href="assets/style.css?v=202610250244">
 <link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
 </head>
 <body data-root="" data-page="home">
@@ -53,11 +53,11 @@
   <div class="wrap hero-center">
     <div>
       <span class="label">Research lab</span>
-      <h1 id="h1" aria-label="The engineering of efficient inference."></h1>
-      <p class="lede" id="lede" aria-label="We measure what it costs to run AI, and publish everything."></p>
+      <h1 id="h1" aria-label="Measuring frontier inference."></h1>
+      <p class="lede" id="lede" aria-label="What AI costs to run, and how to cut it."></p>
       <div class="actions">
-        <a class="cta" href="research/">Read the research <span aria-hidden="true">&rarr;</span></a>
-        <a class="cta ghost" href="https://github.com/splicedso/phase">View on GitHub</a>
+        <a class="cta" href="research/">Research <span aria-hidden="true">&rarr;</span></a>
+        <a class="cta ghost" href="https://github.com/splicedso/phase">GitHub</a>
       </div>
     </div>
     <figure class="hero-object"><img src="assets/img/package.webp" alt="A processor package with the Spliced mark engraved in its lid" width="2203" height="805" fetchpriority="high"></figure>
@@ -65,15 +65,32 @@
 </header>
 
 <main>
+  <section class="tight pillars">
+    <div class="wrap">
+      <div class="three">
+        <div><h3>Measure</h3><p>Every joule, at the chip.</p></div>
+        <div><h3>Publish</h3><p>Code, data, and limits.</p></div>
+        <div><h3>Build</h3><p>Small models, one job each.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="stage">
+    <div class="wrap">
+      <h2 class="center">Every token has a cost.</h2>
+      <p class="center sub">We find it, and cut it.</p>
+    </div>
+    <figure class="stage-img"><img src="assets/img/tray.webp" alt="An inference server tray with braided cables" loading="lazy" width="2244" height="1231"></figure>
+  </section>
+
   <section class="tight scope-sec">
     <div class="wrap">
-      <div class="label">01 / Live replay</div>
+      <div class="label">Live replay</div>
       <h2>Watch a model spend energy.</h2>
-      <p class="sub">A real recording. Qwen2.5 1.5B reads a prompt, then writes.</p>
       <figure class="scope-panel">
         <div class="scope-top mono">
           <span><i class="sw chip"></i>chip <b id="sc-chip">0.0</b> W</span>
-          <span><i class="sw board"></i>whole board <b id="sc-board">0.0</b> W</span>
+          <span><i class="sw board"></i>board <b id="sc-board">0.0</b> W</span>
           <span class="phase-pill" id="sc-phase">idle</span>
           <span class="sc-t">t = <b id="sc-t">0.0</b> s</span>
         </div>
@@ -83,79 +100,34 @@
     </div>
   </section>
 
-  <section class="tight">
-    <div class="wrap">
-      <div class="label">02 / Instruments</div>
-      <h2>Results, running.</h2>
-      <div class="inst-grid">
-        <figure class="inst">
-          <div class="inst-head"><span class="mono">Note 1 &middot; batching</span><span class="mono" id="bt-w">18 W</span></div>
-          <div class="readout"><b id="bt-mj">104.7</b><span>mJ per token</span><em id="bt-cut">baseline</em></div>
-          <div class="cols" id="cols"></div>
-          <input type="range" id="bt" min="1" max="8" value="1" step="1" aria-label="Requests served at once">
-          <div class="ticks mono"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span></div>
-          <figcaption>Requests served at once. Drag it.</figcaption>
-        </figure>
-        <figure class="inst">
-          <div class="inst-head"><span class="mono">Note 19 &middot; per correct answer</span><b>0.68<small>&times;</small></b></div>
-          <svg id="jpc" viewBox="0 0 360 220" role="img" aria-label="Joules per correct answer by model and serving"></svg>
-          <figcaption>Energy per correct answer. 7B &times; 8 vs 1.5B &times; 1.</figcaption>
-        </figure>
-        <figure class="inst term">
-          <div class="inst-head"><span class="mono">Phase &middot; open source</span><span class="dots"><i></i><i></i><i></i></span></div>
-          <pre id="term" aria-label="Phase measuring three models"></pre>
-          <figcaption>One command. <a href="tools/phase/">Phase</a>, open source.</figcaption>
-        </figure>
-      </div>
-    </div>
-  </section>
-
   <section class="band">
     <video class="band-video" autoplay muted loop playsinline preload="metadata" poster="assets/hero-poster.jpg" aria-hidden="true"><source src="assets/hero.webm" type="video/webm"><source src="assets/hero.mp4" type="video/mp4"></video>
     <div class="wrap">
-      <div class="label light">03 / Findings</div>
       <h2 class="center">What we have measured.</h2>
       <div class="facts">
-        <div class="fact"><div class="n" data-count="72">72<small>%</small></div><p>less energy per token when serving eight requests at once.</p></div>
-        <div class="fact"><div class="n" data-count="40">40<small>&times;</small></div><p>cheaper to read a prompt token than to write an answer token.</p></div>
-        <div class="fact"><div class="n" data-count="2.1">2.1<small>&times;</small></div><p>the true energy cost of full precision over 4-bit.</p></div>
+        <div class="fact"><div class="n" data-count="72">72<small>%</small></div><p>less energy per token, eight requests at once.</p></div>
+        <div class="fact"><div class="n" data-count="40">40<small>&times;</small></div><p>cheaper to read a token than to write one.</p></div>
+        <div class="fact"><div class="n" data-count="2">2<small>&times;</small></div><p>the accuracy of 2-bit, from calibration alone.</p></div>
       </div>
     </div>
   </section>
 
   <section class="tight">
     <div class="wrap">
-      <div class="label">04 / The bench</div>
-      <h2>Three machines. One 7B token.</h2>
-      <div class="bench">
-        <div class="rig"><svg class="die" viewBox="0 0 120 120" aria-hidden="true"><rect x="20" y="20" width="80" height="80" rx="10"/><rect x="34" y="34" width="52" height="52" rx="4" class="core"/><path d="M20 40H8M20 60H8M20 80H8M100 40h12M100 60h12M100 80h12M40 20V8M60 20V8M80 20V8M40 100v12M60 100v12M80 100v12"/></svg>
-          <h3>Apple M5 Pro</h3><p class="mono">24 GB unified memory</p><div class="meter"><i style="--w:19%"></i></div><b>389 mJ</b></div>
-        <div class="rig"><svg class="die" viewBox="0 0 120 120" aria-hidden="true"><rect x="10" y="30" width="100" height="60" rx="8"/><rect x="24" y="42" width="44" height="36" rx="3" class="core"/><rect x="76" y="42" width="22" height="16" rx="2" class="core"/><rect x="76" y="62" width="22" height="16" rx="2" class="core"/><path d="M10 50H2M10 70H2M110 50h8M110 70h8"/></svg>
-          <h3>RTX 5070 Ti Laptop GPU</h3><p class="mono">12 GB GDDR7</p><div class="meter"><i style="--w:51%"></i></div><b>1,027 mJ</b></div>
-        <div class="rig"><svg class="die" viewBox="0 0 120 120" aria-hidden="true"><rect x="14" y="14" width="92" height="92" rx="12"/><rect x="26" y="26" width="30" height="30" rx="3" class="core"/><rect x="64" y="26" width="30" height="30" rx="3" class="core"/><rect x="26" y="64" width="68" height="30" rx="3" class="core"/></svg>
-          <h3>Ryzen AI Max+ 395</h3><p class="mono">128 GB unified memory</p><div class="meter"><i style="--w:100%"></i></div><b>2,015 mJ</b></div>
-      </div>
-      <p class="fine">Chip energy, Qwen2.5 7B Q4_0. Each chip measured at its own boundary.</p>
-    </div>
-  </section>
-
-  <section class="tight">
-    <div class="wrap">
-      <div class="label">05 / Models</div>
-      <h2>Small models. One job each.</h2>
+      <h2 class="center">Our models.</h2>
       <div class="models">
-        <div class="model m-trace"><canvas class="mviz" data-viz="trace"></canvas><h3>Trace</h3><p>Draft models that predict a larger model, to make it faster and cheaper.</p><span class="status">v0 measured &middot; v1 data building</span></div>
-        <div class="model m-lattice"><canvas class="mviz" data-viz="lattice"></canvas><h3>Lattice</h3><p>Models that keep their answers at 3 bits or fewer per weight.</p><span class="status">Baseline running</span></div>
-        <div class="model m-kinetic"><canvas class="mviz" data-viz="kinetic"></canvas><h3>Kinetic</h3><p>A small model shaped by what each part costs in energy.</p><span class="status">Planned</span></div>
+        <a class="model" href="research/spliced-drafter/"><img src="assets/img/package-top.webp" alt="" loading="lazy"><h3>Trace</h3><p>Draft models that make large models faster.</p><span class="status">v1 in progress</span></a>
+        <a class="model" href="https://github.com/splicedso/phase/blob/main/docs/program.md"><img src="assets/img/wafer.jpg" alt="" loading="lazy"><h3>Lattice</h3><p>Models that keep their answers at 2 bits.</p><span class="status">v0 measured</span></a>
+        <a class="model" href="https://github.com/splicedso/phase/blob/main/docs/program.md"><img src="assets/img/rack.jpg" alt="" loading="lazy"><h3>Kinetic</h3><p>A small model shaped by energy.</p><span class="status">Planned</span></a>
       </div>
     </div>
   </section>
 
-  <section>
+  <section class="tight">
     <div class="wrap">
       <div class="split">
         <h2>Latest research.</h2>
-        <a class="more" href="research/">All 19 notes <span aria-hidden="true">&rarr;</span></a>
+        <a class="more" href="research/">All 19 <span aria-hidden="true">&rarr;</span></a>
       </div>
       <div class="notes"><a class="note-card" href="research/joules-per-correct-answer/"><span class="meta">Note 19 &middot; 25 October 2026</span><h3>Per correct answer, how a model is served matters as much as its size</h3><p>Measured per correct answer, a 7B serving eight requests beats a 1.5B serving one, on two machines. Serving matters as much as size.</p><span class="go" aria-hidden="true">&rarr;</span></a><a class="note-card" href="research/prefill/"><span class="meta">Note 18 &middot; 24 October 2026</span><h3>Reading the prompt: what prefill costs, and when it dominates</h3><p>Reading the prompt: a prompt token costs about 40 times less than a generated one, yet at an 8000-token prompt prefill is 40% of a request's energy. Caching the prefix saves exactly that.</p><span class="go" aria-hidden="true">&rarr;</span></a><a class="note-card" href="research/longest-contexts/"><span class="meta">Note 17 &middot; 24 October 2026</span><h3>The 8-bit cache does not win even when it fits an extra sequence</h3><p>A prediction that failed: at 65536 tokens an 8-bit cache fits a third sequence where f16 fits two, and still costs 1.58 times as much. The context long enough to force the batch down also erases what batching saves.</p><span class="go" aria-hidden="true">&rarr;</span></a></div>
     </div>
@@ -165,9 +137,8 @@
     <div class="wrap">
       <div class="closer">
         <h2>Follow the lab.</h2>
-        <p>New research as it lands.</p>
         <div class="actions">
-          <a class="cta" href="https://www.linkedin.com/company/splicedso">Follow on LinkedIn</a>
+          <a class="cta" href="https://www.linkedin.com/company/splicedso">LinkedIn</a>
           <a class="cta ghost" href="https://github.com/splicedso">GitHub</a>
         </div>
       </div>
@@ -191,7 +162,7 @@
   </div>
 </footer>
 
-<script src="assets/site.js?v=202610250239"></script>
-<script src="assets/home.js?v=202610250239"></script>
+<script src="assets/site.js?v=202610250244"></script>
+<script src="assets/home.js?v=202610250244"></script>
 </body>
 </html>
