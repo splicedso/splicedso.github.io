@@ -73,4 +73,23 @@ if ANGLE == "low":
     S.camera((7.4, -11.4, 4.4), (0, 0, 0.1), lens=85, fstop=8)
 else:
     S.camera((0.0, -3.2, 12.0), (0, 0, 0.1), lens=85, fstop=11)
-S.render(OUT)
+if "--turntable" in args:
+    # a seamless orbit: the camera circles the package once over the loop
+    frames = int(args[args.index("--turntable") + 1])
+    sc.cycles.samples = 96
+    sc.frame_start, sc.frame_end = 1, frames
+    sc.render.fps = 30
+    cam = sc.camera
+    pivot = bpy.data.objects.new("pivot", None); sc.collection.objects.link(pivot)
+    cam.parent = pivot
+    pivot.rotation_euler = (0, 0, 0); pivot.keyframe_insert("rotation_euler", index=2, frame=1)
+    pivot.rotation_euler = (0, 0, 2 * math.pi); pivot.keyframe_insert("rotation_euler", index=2, frame=frames + 1)
+    for fc in (pivot.animation_data.action.fcurves if hasattr(pivot.animation_data.action, "fcurves") else
+               [c for l in pivot.animation_data.action.layers for st in l.strips for bag in st.channelbags for c in bag.fcurves]):
+        for k in fc.keyframe_points:
+            k.interpolation = "LINEAR"
+    r = sc.render
+    r.image_settings.file_format = "PNG"; r.image_settings.color_mode = "RGBA"; r.filepath = OUT
+    bpy.ops.render.render(animation=True)
+else:
+    S.render(OUT)

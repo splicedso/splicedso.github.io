@@ -109,7 +109,7 @@ const cssVar = name => getComputedStyle(document.documentElement).getPropertyVal
 
 // Large images drift a little as they pass through the viewport.
 (function parallax() {
-  const imgs = [...document.querySelectorAll(".stage-img img")], hero = document.querySelector(".hero-object img");
+  const imgs = [...document.querySelectorAll(".stage-img img")], hero = document.querySelector(".hero-object img, .hero-object video");
   if (reduced || (!imgs.length && !hero)) return;
   const tick = () => {
     imgs.forEach(img => {
