@@ -137,9 +137,15 @@ const cssVar = name => getComputedStyle(document.documentElement).getPropertyVal
 (function fall() {
   const c = document.getElementById("fall");
   if (!c) return;
-  const n = 36, ctx = c.getContext("2d"), frames = [];
+  const n = 72, ctx = c.getContext("2d"), frames = [];
   let cur = 0, goal = 0, running = false;
+  const stage = c.closest(".fall-stage");
   const target = () => {
+    if (stage) {
+      // the canvas is stuck to the top while the stage scrolls past: the chip falls over that distance
+      const s = stage.getBoundingClientRect(), range = Math.max(1, s.height - c.getBoundingClientRect().height);
+      return Math.min(1, Math.max(0, -s.top / range)) * (n - 1);
+    }
     const r = c.getBoundingClientRect();
     return Math.min(1, Math.max(0, (innerHeight * 0.9 - r.top) / (r.height + innerHeight * 0.3))) * (n - 1);
   };

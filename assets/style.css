@@ -1174,3 +1174,15 @@ body { background: transparent; } html { background: #eee; }
 nav { background: transparent !important; box-shadow: none !important; backdrop-filter: none !important; position: relative; z-index: 50; }
 .top-render { margin-top: -88px; padding: 0; position: relative; z-index: 0; }
 .top-render img { width: min(1800px, 100%); max-height: 92vh; }
+/* Home, as on the other pages: the chip runs up under the navbar at the top, falls flat as you scroll, and the headline follows. */
+.fall-stage { position: relative; z-index: 0; margin-top: -88px; height: calc(min(1500px, 100vw) * 0.625 + 80px + 80vh); }
+.fall-stage .hero-object { position: sticky; top: 0; width: 100%; max-width: none; margin: 0; padding-top: 80px; pointer-events: none; }
+.fall-stage .hero-object canvas { display: block; width: min(1500px, 100vw); max-width: none; height: auto; margin: 0 auto; transform: none !important; }
+.fall-stage + .hero { padding-top: 0; }
+/* Phones: the nav wraps to two rows, so renders start below it instead of running under it; the chip is drawn larger than the screen. */
+@media (max-width: 700px) {
+  .fall-stage { height: calc(150vw * 0.625 + 50vh); margin-top: 0; }
+  .fall-stage .hero-object { margin: 0 !important; padding-top: 0; overflow: hidden; }
+  .fall-stage .hero-object canvas { width: 150vw; max-width: none; margin-left: -25vw; }
+  .top-render { margin-top: 0; }
+}

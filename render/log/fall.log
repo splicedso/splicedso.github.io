@@ -1,0 +1,23 @@
+/Users/martinmuskov/Docs/GitHub/spliced/site/render/package.py:25: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  lid = bpy.data.materials.new("lid"); lid.use_nodes = True
+00:40.159  render           | Saved: '/Users/martinmuskov/Docs/GitHub/spliced/site/render/frames-fall/0055.png'
+00:48.332  render           | Saved: '/Users/martinmuskov/Docs/GitHub/spliced/site/render/frames-fall/0056.png'
+01:05.558  render           | Saved: '/Users/martinmuskov/Docs/GitHub/spliced/site/render/frames-fall/0057.png'
+01:14.670  render           | Saved: '/Users/martinmuskov/Docs/GitHub/spliced/site/render/frames-fall/0058.png'
+01:21.868  render           | Saved: '/Users/martinmuskov/Docs/GitHub/spliced/site/render/frames-fall/0059.png'
+01:33.173  render           | Saved: '/Users/martinmuskov/Docs/GitHub/spliced/site/render/frames-fall/0060.png'
+01:41.184  render           | Saved: '/Users/martinmuskov/Docs/GitHub/spliced/site/render/frames-fall/0061.png'
+01:51.202  render           | Saved: '/Users/martinmuskov/Docs/GitHub/spliced/site/render/frames-fall/0062.png'
+01:58.791  render           | Saved: '/Users/martinmuskov/Docs/GitHub/spliced/site/render/frames-fall/0063.png'
+02:11.652  render           | Saved: '/Users/martinmuskov/Docs/GitHub/spliced/site/render/frames-fall/0064.png'
+02:17.660  render           | Saved: '/Users/martinmuskov/Docs/GitHub/spliced/site/render/frames-fall/0065.png'
+02:31.157  render           | Saved: '/Users/martinmuskov/Docs/GitHub/spliced/site/render/frames-fall/0066.png'
+02:39.098  render           | Saved: '/Users/martinmuskov/Docs/GitHub/spliced/site/render/frames-fall/0067.png'
+02:50.522  render           | Saved: '/Users/martinmuskov/Docs/GitHub/spliced/site/render/frames-fall/0068.png'
+02:59.063  render           | Saved: '/Users/martinmuskov/Docs/GitHub/spliced/site/render/frames-fall/0069.png'
+03:13.873  render           | Saved: '/Users/martinmuskov/Docs/GitHub/spliced/site/render/frames-fall/0070.png'
+03:22.371  render           | Saved: '/Users/martinmuskov/Docs/GitHub/spliced/site/render/frames-fall/0071.png'
+03:31.595  render           | Saved: '/Users/martinmuskov/Docs/GitHub/spliced/site/render/frames-fall/0072.png'
+Blender 5.2.2 LTS (hash d13f752e3b9c built 2026-09-15 01:49:19)
+
+Blender quit
