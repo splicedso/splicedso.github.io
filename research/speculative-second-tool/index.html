@@ -14,14 +14,14 @@
 <link rel="canonical" href="https://splicedso.github.io/research/speculative-second-tool/">
 <meta name="color-scheme" content="light dark">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="../../assets/favicon.svg?v=202610251109" type="image/svg+xml">
-<link rel="icon" href="../../assets/favicon-32.png?v=202610251109" type="image/png" sizes="32x32">
-<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png?v=202610251109">
+<link rel="icon" href="../../assets/favicon.svg?v=202610251114" type="image/svg+xml">
+<link rel="icon" href="../../assets/favicon-32.png?v=202610251114" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png?v=202610251114">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>document.documentElement.classList.add("js");</script>
-<link rel="stylesheet" href="../../assets/style.css?v=202610251109">
+<link rel="stylesheet" href="../../assets/style.css?v=202610251114">
 <link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
 </head>
 <body data-root="../../" data-page="research">
@@ -59,7 +59,7 @@
     <p class="setup">Spliced research note 11, 24 October 2026. Apple M5 Pro, 24 GB, llama.cpp build 11669. Target Qwen2.5 7B Q4_0, draft Qwen2.5 0.5B Q4_0.</p>
   </div>
 </header>
-<main><figure class="page-object slim"><img src="../../assets/img/server.webp" width="2590" height="1268" alt="A rack server"></figure><article class="wrap note-body"><p>Notes 7 and 9 measured speculative decoding with <code>llama-speculative-simple</code>, an example program in llama.cpp. Real deployments use <code>llama-server</code>, a different program with its own scheduling, batching and request handling. A result that holds in one tool might be a property of that tool. This note repeats both experiments through <code>llama-server</code>, and records why the same experiment could not be run on our Windows laptop.</p>
+<main><article class="wrap note-body"><p>Notes 7 and 9 measured speculative decoding with <code>llama-speculative-simple</code>, an example program in llama.cpp. Real deployments use <code>llama-server</code>, a different program with its own scheduling, batching and request handling. A result that holds in one tool might be a property of that tool. This note repeats both experiments through <code>llama-server</code>, and records why the same experiment could not be run on our Windows laptop.</p>
 <h2 data-via>Method</h2>
 <p><code>experiments/speculative_server.py</code>. Every condition, plain decoding included, runs through <code>llama-server</code>: one server process per condition, warmed up with a short request before measurement, then the three prompts of note 7 (new code, prose, an edit), 384 generated tokens each, greedy. The server reports its own decode time and the numbers of drafted and accepted tokens; the measurement window is aligned to that decode time as in note 7. Chip energy only, for the reason note 7 gives. Three repetitions per condition in a shuffled order. Two sessions: the strategies of note 7, then the thresholds of note 9.</p>
 <p>Plain decoding repeated within 2% to 7% in the first session and within 17% to 20% in the second, so the second session's percentages are less precise. Every comparison is against plain decoding within the same session.</p>
@@ -238,7 +238,7 @@ uv run python experiments/speculative_server.py results/speculative-pmin-server-
   </div>
 </footer>
 
-<script src="../../assets/site.js?v=202610251109"></script>
-<script src="../../assets/charts.js?v=202610251109"></script>
+<script src="../../assets/site.js?v=202610251114"></script>
+<script src="../../assets/charts.js?v=202610251114"></script>
 </body>
 </html>

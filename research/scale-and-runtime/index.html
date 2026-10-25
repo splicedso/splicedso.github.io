@@ -14,14 +14,14 @@
 <link rel="canonical" href="https://splicedso.github.io/research/scale-and-runtime/">
 <meta name="color-scheme" content="light dark">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="../../assets/favicon.svg?v=202610251109" type="image/svg+xml">
-<link rel="icon" href="../../assets/favicon-32.png?v=202610251109" type="image/png" sizes="32x32">
-<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png?v=202610251109">
+<link rel="icon" href="../../assets/favicon.svg?v=202610251114" type="image/svg+xml">
+<link rel="icon" href="../../assets/favicon-32.png?v=202610251114" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png?v=202610251114">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>document.documentElement.classList.add("js");</script>
-<link rel="stylesheet" href="../../assets/style.css?v=202610251109">
+<link rel="stylesheet" href="../../assets/style.css?v=202610251114">
 <link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
 </head>
 <body data-root="../../" data-page="research">
@@ -59,7 +59,7 @@
     <p class="setup">Spliced research note 3, 24 October 2026. Apple M5 Pro, 24 GB, llama.cpp build 11669, MLX 0.32.4 with mlx-lm 0.32.2.</p>
   </div>
 </header>
-<main><figure class="page-object slim"><img src="../../assets/img/server.webp" width="2590" height="1268" alt="A rack server"></figure><article class="wrap note-body"><p>Note 1 found that energy per token does not follow bit width, and that Q4_0 is the efficient 4-bit format on this machine. A finding from one model in one runtime might be a property of that model or that runtime. This note repeats the study on Qwen2.5 7B, and on Apple's own runtime, MLX. It also reports where the repeat runs did not agree, because that decides what can be claimed.</p>
+<main><article class="wrap note-body"><p>Note 1 found that energy per token does not follow bit width, and that Q4_0 is the efficient 4-bit format on this machine. A finding from one model in one runtime might be a property of that model or that runtime. This note repeats the study on Qwen2.5 7B, and on Apple's own runtime, MLX. It also reports where the repeat runs did not agree, because that decides what can be claimed.</p>
 <h2 data-via>Method</h2>
 <ul>
 <li><strong>7B, llama.cpp.</strong> Qwen2.5 7B Instruct, the official F16 GGUF, quantized with <code>llama-quantize</code> into the same seven formats as note 1. Perplexity as before: WikiText-2 raw test, 512-token windows, 60 chunks. Energy: <code>phase --seconds 15</code>, two passes, the second in reverse order.</li>
@@ -269,7 +269,7 @@ uv run --extra mlx python experiments/mlx_formats.py models/mlx/1.5b-mlx-* resul
   </div>
 </footer>
 
-<script src="../../assets/site.js?v=202610251109"></script>
-<script src="../../assets/charts.js?v=202610251109"></script>
+<script src="../../assets/site.js?v=202610251114"></script>
+<script src="../../assets/charts.js?v=202610251114"></script>
 </body>
 </html>

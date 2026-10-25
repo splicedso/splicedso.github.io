@@ -14,14 +14,14 @@
 <link rel="canonical" href="https://splicedso.github.io/learn/why-batching-is-cheap/">
 <meta name="color-scheme" content="light dark">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="../../assets/favicon.svg?v=202610251109" type="image/svg+xml">
-<link rel="icon" href="../../assets/favicon-32.png?v=202610251109" type="image/png" sizes="32x32">
-<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png?v=202610251109">
+<link rel="icon" href="../../assets/favicon.svg?v=202610251114" type="image/svg+xml">
+<link rel="icon" href="../../assets/favicon-32.png?v=202610251114" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png?v=202610251114">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>document.documentElement.classList.add("js");</script>
-<link rel="stylesheet" href="../../assets/style.css?v=202610251109">
+<link rel="stylesheet" href="../../assets/style.css?v=202610251114">
 <link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
 </head>
 <body data-root="../../" data-page="learn">
@@ -58,7 +58,7 @@
     <p class="lede">Primer 4. Builds on primer 2.</p>
   </div>
 </header>
-<main><figure class="page-object slim"><img src="../../assets/img/package.webp" width="2219" height="866" alt="A processor package"></figure><article class="wrap note-body"><p>A datacenter GPU can serve a token for a fraction of the energy a laptop needs. Most of that difference is not the chip. It is <strong>batching</strong>.</p>
+<main><article class="wrap note-body"><p>A datacenter GPU can serve a token for a fraction of the energy a laptop needs. Most of that difference is not the chip. It is <strong>batching</strong>.</p>
 <h2 data-via>The idea</h2>
 <p>Decode reads every weight for every token (primer 1), and the reading is the slow part (primer 2). If eight people are waiting for their next token at the same moment, you can read each weight <strong>once</strong> and use it for all eight. The memory traffic barely changes; the useful work goes up eight times.</p>
 <p>In matrix terms, one user means a matrix times a vector. Eight users means a matrix times eight vectors, a small matrix. The same bytes, eight times the arithmetic. Batching raises arithmetic intensity, which pushes decode up the roofline.</p>
@@ -86,7 +86,7 @@
   </div>
 </footer>
 
-<script src="../../assets/site.js?v=202610251109"></script>
+<script src="../../assets/site.js?v=202610251114"></script>
 
 </body>
 </html>

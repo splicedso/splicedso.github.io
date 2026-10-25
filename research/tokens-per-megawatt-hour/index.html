@@ -14,14 +14,14 @@
 <link rel="canonical" href="https://splicedso.github.io/research/tokens-per-megawatt-hour/">
 <meta name="color-scheme" content="light dark">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="../../assets/favicon.svg?v=202610251109" type="image/svg+xml">
-<link rel="icon" href="../../assets/favicon-32.png?v=202610251109" type="image/png" sizes="32x32">
-<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png?v=202610251109">
+<link rel="icon" href="../../assets/favicon.svg?v=202610251114" type="image/svg+xml">
+<link rel="icon" href="../../assets/favicon-32.png?v=202610251114" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png?v=202610251114">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>document.documentElement.classList.add("js");</script>
-<link rel="stylesheet" href="../../assets/style.css?v=202610251109">
+<link rel="stylesheet" href="../../assets/style.css?v=202610251114">
 <link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
 </head>
 <body data-root="../../" data-page="research">
@@ -59,7 +59,7 @@
     <p class="setup">Spliced research note 8, 24 October 2026. An analysis of published datacenter measurements, set beside our own laptop data.</p>
   </div>
 </header>
-<main><figure class="page-object slim"><img src="../../assets/img/package.webp" width="2219" height="866" alt="A processor package"></figure><article class="wrap note-body"><p>Notes 1 to 7 measured inference on laptops. The AI build-out is happening in datacenters, where the question is the same one at a different scale: how many tokens does a unit of energy buy, and what decides it? This note answers it from measured wall power, not from spec sheets or estimates.</p>
+<main><article class="wrap note-body"><p>Notes 1 to 7 measured inference on laptops. The AI build-out is happening in datacenters, where the question is the same one at a different scale: how many tokens does a unit of energy buy, and what decides it? This note answers it from measured wall power, not from spec sheets or estimates.</p>
 <h2 data-via>The data, and how little of it there is</h2>
 <p>MLCommons publishes every MLPerf Inference submission with a summary file. Submitters may also measure the whole system's power at the wall, under MLPerf's power rules, and a few do. We took the v5.0 and v5.1 summary files from <code>mlcommons/inference_results_v5.0</code> and <code>v5.1</code> and kept every closed-division datacenter LLM result with measured power (<code>results/mlperf-llm-power.csv</code>).</p>
 <p>There are two systems. In v5.0, Fujitsu's 8x NVIDIA H100 NVL server on Llama 2 70B. In v5.1, Lenovo's 8x NVIDIA B200 server on Llama 2 70B, Llama 3.1 8B and Llama 3.1 405B. Every other LLM result in those rounds reports speed only. That two systems are all the public, audited, wall-measured LLM inference energy data in the current rounds is itself a finding.</p>
@@ -229,7 +229,7 @@
   </div>
 </footer>
 
-<script src="../../assets/site.js?v=202610251109"></script>
-<script src="../../assets/charts.js?v=202610251109"></script>
+<script src="../../assets/site.js?v=202610251114"></script>
+<script src="../../assets/charts.js?v=202610251114"></script>
 </body>
 </html>

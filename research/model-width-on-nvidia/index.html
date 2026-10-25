@@ -14,14 +14,14 @@
 <link rel="canonical" href="https://splicedso.github.io/research/model-width-on-nvidia/">
 <meta name="color-scheme" content="light dark">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="../../assets/favicon.svg?v=202610251109" type="image/svg+xml">
-<link rel="icon" href="../../assets/favicon-32.png?v=202610251109" type="image/png" sizes="32x32">
-<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png?v=202610251109">
+<link rel="icon" href="../../assets/favicon.svg?v=202610251114" type="image/svg+xml">
+<link rel="icon" href="../../assets/favicon-32.png?v=202610251114" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png?v=202610251114">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>document.documentElement.classList.add("js");</script>
-<link rel="stylesheet" href="../../assets/style.css?v=202610251109">
+<link rel="stylesheet" href="../../assets/style.css?v=202610251114">
 <link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
 </head>
 <body data-root="../../" data-page="research">
@@ -59,7 +59,7 @@
     <p class="setup">Spliced research note 12, 24 October 2026. Windows 11 laptop: Intel Core Ultra 9 285H, NVIDIA GeForce RTX 5070 Ti Laptop GPU (12 GB, Blackwell), 32 GB RAM, on AC. llama.cpp build 11851 (prebuilt CUDA 13.4 x64), CUDA backend, all layers on the GPU. Qwen2.5 0.5B, 1.5B, 3B and 7B, five formats each.</p>
   </div>
 </header>
-<main><figure class="page-object slim"><img src="../../assets/img/card.webp" width="2442" height="1387" alt="An accelerator card"></figure><article class="wrap note-body"><p>Note 6 (<code>notes/2026-10-model-width.md</code>, Apple M5 Pro) found that the same format costs more energy per weight in a small model than a large one, and that some format rankings hold across widths while others do not. This note repeats the sweep on a discrete NVIDIA GPU. The effect is present here too, and for the 4-bit formats it is larger.</p>
+<main><article class="wrap note-body"><p>Note 6 (<code>notes/2026-10-model-width.md</code>, Apple M5 Pro) found that the same format costs more energy per weight in a small model than a large one, and that some format rankings hold across widths while others do not. This note repeats the sweep on a discrete NVIDIA GPU. The effect is present here too, and for the 4-bit formats it is larger.</p>
 <h2 data-via>Method, and what this machine measures</h2>
 <p>Real models of four widths, as in note 6: a single matrix in a loop fits in cache and measures cache bandwidth, not memory; real decode streams every layer's weights once per token. Qwen2.5 0.5B, 1.5B, 3B and 7B (hidden sizes 896, 1536, 2048, 3584), each quantized from its own F16 GGUF into Q4_0, Q4_K_M, Q5_K_M, Q6_K and Q8_0, decoded with <code>phase --seconds 12</code>, two passes, the second in reverse order. All 20 models repeated within about 5% on chip energy per token between the two passes.</p>
 <p>Energy per token is divided by the weights read per token (every tensor except the token embedding table), giving <strong>energy per weight</strong>.</p>
@@ -252,7 +252,7 @@
   </div>
 </footer>
 
-<script src="../../assets/site.js?v=202610251109"></script>
-<script src="../../assets/charts.js?v=202610251109"></script>
+<script src="../../assets/site.js?v=202610251114"></script>
+<script src="../../assets/charts.js?v=202610251114"></script>
 </body>
 </html>
