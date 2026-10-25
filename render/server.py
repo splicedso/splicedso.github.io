@@ -93,4 +93,7 @@ S.area((-7, -9, 9), 800, 9, (0, 0, 0.6))
 S.area((9, -5, 4), 500, 5, (0, 0, 0.6))
 S.area((0, 9, 7), 350, 8, (0, 0, 0.6))
 S.camera((-17.5, -27.5, 12.0), (0.3, -0.4, 0.5), lens=100, fstop=4.5)
-S.render(OUT)
+if "--turntable" in args:
+    S.turntable(OUT, int(args[args.index("--turntable") + 1]))
+else:
+    S.render(OUT)

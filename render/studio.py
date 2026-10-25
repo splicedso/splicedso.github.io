@@ -131,3 +131,23 @@ def render(out):
     r.image_settings.file_format = "PNG"; r.image_settings.color_mode = "RGBA"; r.image_settings.color_depth = "16"
     r.filepath = out
     bpy.ops.render.render(write_still=True)
+
+
+def turntable(out, frames, samples=96):
+    """Orbit the camera once around the origin over `frames` and render PNG frames to `out`."""
+    sc = bpy.context.scene
+    sc.cycles.samples = samples
+    sc.frame_start, sc.frame_end = 1, frames
+    sc.render.fps = 30
+    pivot = bpy.data.objects.new("pivot", None); sc.collection.objects.link(pivot)
+    sc.camera.parent = pivot
+    pivot.rotation_euler = (0, 0, 0); pivot.keyframe_insert("rotation_euler", index=2, frame=1)
+    pivot.rotation_euler = (0, 0, 2 * math.pi); pivot.keyframe_insert("rotation_euler", index=2, frame=frames + 1)
+    act = pivot.animation_data.action
+    curves = getattr(act, "fcurves", None) or [c for l in act.layers for st in l.strips for bag in st.channelbags for c in bag.fcurves]
+    for fc in curves:
+        for k in fc.keyframe_points:
+            k.interpolation = "LINEAR"
+    r = sc.render
+    r.image_settings.file_format = "PNG"; r.image_settings.color_mode = "RGBA"; r.filepath = out
+    bpy.ops.render.render(animation=True)
