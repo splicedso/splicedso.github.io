@@ -1070,3 +1070,4 @@ body:has(.page-head + main > .page-object:first-child) .page-head :is(.cta, .act
 body:has(.page-head + main > .page-object:first-child) .page-head { position: relative; z-index: 1; }
 .mgrid { grid-template-columns: 1.6fr 1fr; gap: 40px; } .mrow .wrap.mgrid { max-width: 1440px; }
 .page-object img, .page-object video { margin-inline: auto; } .mgrid figure img, .mgrid figure video { margin-inline: auto; object-position: center; }
+.mgrid.solo { grid-template-columns: minmax(0, 720px); justify-content: center; }
