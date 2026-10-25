@@ -97,8 +97,6 @@ for i in range(46):
 S.box((px1 - px0, 0.02, 0.025), ((px0 + px1) / 2, fy - 0.058, gz0 - 0.03), hole)           # seam under grille
 
 # Our mark and the laser-etched model line, small, on the front panel.
-S.mark((px0 + 0.55, fy - 0.061, (sz0 + gz0) / 2 + 0.22), 0.5, mark_m, rot=(math.pi / 2, 0, 0), depth=0.006)
-S.text("SPLICED TRACE-1", (px0 + 1.45, fy - 0.0605, (sz0 + gz0) / 2 - 0.42), 0.13, laser, rot=(math.pi / 2, 0, 0))
 for x in (px0 + 0.12, px1 - 0.12):
     for z in (sz0 + 0.14, gz0 - 0.16):
         S.screw((x, fy - 0.07, z), screw_m, 0.04, axis="y")

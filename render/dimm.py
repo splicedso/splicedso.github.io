@@ -55,7 +55,6 @@ for i in range(60):
     S.box((0.06, 0.03, 0.03), (x, -T / 2 - 0.016, z), cap, 0.004, 2)
 # silkscreen label strip and the mark
 S.box((1.6, 0.003, 0.32), (-3.6, -T / 2 - 0.0016, z0 + 2.75), silk)
-S.mark((4.5, -T / 2 - 0.002, z0 + 2.72), 0.32, silk, rot=(math.pi / 2, 0, 0))
 
 S.area((-6, -8, 7), 700, 8)
 S.area((7, -3, 3), 450, 4)

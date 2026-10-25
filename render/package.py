@@ -73,7 +73,32 @@ if ANGLE == "low":
     S.camera((7.4, -11.4, 4.4), (0, 0, 0.1), lens=85, fstop=8)
 else:
     S.camera((0.0, -3.2, 12.0), (0, 0, 0.1), lens=85, fstop=11)
-if "--turntable" in args:
+if "--fall" in args:
+    # the package stands facing the camera, then falls flat onto the floor (scrubbed by scroll on the site)
+    from mathutils import Vector, Quaternion
+    frames = int(args[args.index("--fall") + 1])
+    sc.cycles.samples = 24
+    sc.frame_start, sc.frame_end = 1, frames
+    pivot = bpy.data.objects.new("pivot", None); sc.collection.objects.link(pivot)
+    for o in list(sc.objects):
+        if o.type == "MESH" and o.name != "floor" and o.parent is None and o.location.z > -0.05:
+            o.parent = pivot
+    sc.camera.data.lens = 50
+    d = (sc.camera.location - Vector((0, 0, 0.1))).normalized()
+    axis = Vector((0, 0, 1)).cross(d).normalized()
+    yaw = Quaternion((0, 0, 1), math.atan2(d.y, d.x) + math.pi / 2)
+    up = Quaternion(axis, Vector((0, 0, 1)).angle(d)) @ yaw
+    pivot.rotation_mode = "QUATERNION"
+    for f in range(1, frames + 1):
+        t = (f - 1) / (frames - 1)
+        e = t * t * (3 - 2 * t)
+        pivot.rotation_quaternion = up.slerp(yaw, e)
+        pivot.location = (0, 0, 1.7 * (1 - e))
+        pivot.keyframe_insert("rotation_quaternion", frame=f); pivot.keyframe_insert("location", frame=f)
+    r = sc.render
+    r.image_settings.file_format = "PNG"; r.image_settings.color_mode = "RGBA"; r.filepath = OUT
+    bpy.ops.render.render(animation=True)
+elif "--turntable" in args:
     # a seamless orbit: the camera circles the package once over the loop
     frames = int(args[args.index("--turntable") + 1])
     sc.cycles.samples = 96

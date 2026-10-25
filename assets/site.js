@@ -134,9 +134,23 @@ const cssVar = name => getComputedStyle(document.documentElement).getPropertyVal
 })();
 
 // The hero turntable plays at a third of its rendered speed: a slow plinth turn, not a spin.
-(function slowHero() {
-  const v = document.querySelector(".hero-object video");
-  if (!v) return;
-  const set = () => { v.playbackRate = 0.35; };
-  set(); v.addEventListener("play", set); v.addEventListener("loadeddata", set);
+(function fall() {
+  const c = document.getElementById("fall");
+  if (!c) return;
+  const n = 36, ctx = c.getContext("2d"), frames = [];
+  let shown = -1;
+  const draw = () => {
+    const r = c.getBoundingClientRect();
+    const t = Math.min(1, Math.max(0, (innerHeight * 0.85 - r.top) / (r.height + innerHeight * 0.35)));
+    const i = Math.round(t * (n - 1));
+    const im = frames[i];
+    if (i !== shown && im && im.complete && im.naturalWidth) { ctx.drawImage(im, 0, 0, c.width, c.height); shown = i; }
+  };
+  for (let i = 0; i < n; i++) {
+    const im = new Image();
+    im.src = "assets/fall/" + String(i + 1).padStart(4, "0") + ".jpg";
+    im.onload = () => { shown = -1; draw(); };
+    frames.push(im);
+  }
+  addEventListener("scroll", () => requestAnimationFrame(draw), { passive: true });
 })();
