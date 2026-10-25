@@ -1156,3 +1156,11 @@ body { background: transparent; } html { background: #eee; }
 .mrow .mgrid .label, .mrow .mgrid h2, .mrow .mgrid p { text-align: left; margin-left: 0; }
 @media (max-width: 900px) { .mrow .wrap.mgrid { grid-template-columns: 1fr !important; border: 0; } .mrow .wrap.mgrid > div { border-left: 0; padding: 24px 16px 56px; } .mrow .wrap.mgrid > figure { padding: 24px 16px 0; } }
 .etched-grid > figure img { -webkit-mask-image: radial-gradient(ellipse 54% 58% at 50% 50%, #000 66%, transparent 100%); mask-image: radial-gradient(ellipse 54% 58% at 50% 50%, #000 66%, transparent 100%); }
+/* Etched hero: a full-width render across the top of the page, the headline beneath it. */
+.top-render { margin: 0 0 -40px calc(50% - 50vw); width: 100vw; padding: 24px 2vw 0; box-sizing: border-box; }
+.top-render img { display: block; width: min(1500px, 100%); height: auto; max-height: 78vh; object-fit: contain; margin: 0 auto; }
+.top-render + .page-head { padding-top: 0; }
+.etched-grid.solo { grid-template-columns: minmax(0, 760px); justify-content: center; }
+.etched-grid.solo .prose { border-left: 0; padding: 56px 32px; }
+/* Renders fade on their own now; no CSS masks. */
+.page-object img, .mgrid figure img, .etched-grid > figure img, .top-render img, .stage-img img { -webkit-mask-image: none !important; mask-image: none !important; }
