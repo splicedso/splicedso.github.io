@@ -7,21 +7,21 @@
 <meta name="description" content="Concepts drawn from our measurements: a decode-first inference module and a sled that splits prefill from decode. Designs, not products.">
 <meta property="og:title" content="Designs &middot; Spliced">
 <meta property="og:description" content="Concepts drawn from our measurements: a decode-first inference module and a sled that splits prefill from decode. Designs, not products.">
-<meta property="og:image" content="https://splicedso.github.io/assets/og.png?v=202610251630">
+<meta property="og:image" content="https://splicedso.github.io/assets/og.png?v=202610251636">
 <meta property="og:url" content="https://splicedso.github.io/designs/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Spliced">
 <link rel="canonical" href="https://splicedso.github.io/designs/">
 <meta name="color-scheme" content="light dark">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="../assets/favicon.svg?v=202610251630" type="image/svg+xml">
-<link rel="icon" href="../assets/favicon-32.png?v=202610251630" type="image/png" sizes="32x32">
-<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png?v=202610251630">
+<link rel="icon" href="../assets/favicon.svg?v=202610251636" type="image/svg+xml">
+<link rel="icon" href="../assets/favicon-32.png?v=202610251636" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png?v=202610251636">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>document.documentElement.classList.add("js");</script>
-<link rel="stylesheet" href="../assets/style.css?v=202610251630">
+<link rel="stylesheet" href="../assets/style.css?v=202610251636">
 <link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
 </head>
 <body data-root="../" data-page="designs">
@@ -62,7 +62,7 @@
 <main>
   <section class="etched">
     <div class="etched-grid">
-      <figure><img src="../assets/img/decode.webp?v=202610251630" width="2532" height="1432" alt="A concept inference module: a small compute die ringed by eight memory stacks on one interposer" loading="lazy"></figure>
+      <figure><img src="../assets/img/decode.webp?v=202610251636" width="2532" height="1432" alt="A concept inference module: a small compute die ringed by eight memory stacks on one interposer" loading="lazy"></figure>
       <div class="prose">
         <h2>A decode-first module.</h2>
         <p>Decode reads every weight and every cached token once per step and does little arithmetic on them. The part that serves it well is memory first: a small compute die in the middle of a ring of eight memory stacks, on one interposer. The ring sets the footprint, not the die.</p>
@@ -76,7 +76,7 @@
 
   <section class="etched">
     <div class="etched-grid">
-      <figure><img src="../assets/img/sled.webp?v=202610251630" width="2746" height="1371" alt="A concept 1U sled: six decode modules behind one prefill module and a switch" loading="lazy"></figure>
+      <figure><img src="../assets/img/sled.webp?v=202610251636" width="2746" height="1371" alt="A concept 1U sled: six decode modules behind one prefill module and a switch" loading="lazy"></figure>
       <div class="prose">
         <h2>A sled that splits prefill from decode.</h2>
         <p>Prefill is compute bound; a prompt token costs about a fortieth of a generated one. Putting both on one die buys compute that idles during decode and bandwidth that idles during prefill. The sled puts six decode modules behind one compute-dense prefill module with a tall heat sink, and a switch between them, so the cache handoff stays on one board.</p>
@@ -89,7 +89,7 @@
   </section>
   <section class="etched">
     <div class="etched-grid">
-      <figure><img src="../assets/img/rack.webp?v=202610251630" width="1292" height="1950" alt="A concept liquid-cooled rack: twenty-four decode sleds, a coolant distribution unit, a top-of-rack switch" loading="lazy"></figure>
+      <figure><img src="../assets/img/rack.webp?v=202610251636" width="1292" height="1950" alt="A concept liquid-cooled rack: twenty-four decode sleds, a coolant distribution unit, a top-of-rack switch" loading="lazy"></figure>
       <div class="prose">
         <h2>A rack built around the sled.</h2>
         <p>Twenty-four sleds, a coolant distribution unit in the bottom four units, a switch at the top, and a vertical busbar at the rear so no sled carries its own power supply. Every sled face has two quick-disconnect couplers on the left, because the cold plates on the decode modules are liquid cooled from the start; there is no air path through the module and no fan in the sled.</p>
@@ -102,22 +102,22 @@
   </section>
   <section class="etched">
     <div class="etched-grid">
-      <figure><img src="../assets/img/cell.webp?v=202610251630" width="1312" height="1600" alt="A concept portable datacenter cell: a sealed pallet-sized enclosure with heat rejection on top and a dock on each side" loading="lazy"></figure>
+      <figure><img src="../assets/img/cell.webp?v=202610251636" width="2026" height="1590" alt="A concept portable datacenter cell: a sealed pallet-sized enclosure with heat rejection on top and a dock on each side" loading="lazy"></figure>
       <div class="prose">
         <h2>A cell that is a datacenter on its own.</h2>
-        <p>One rack of decode sleds in a sealed, pallet-sized enclosure: forklift pockets below, lifting eyes above, heat rejection on top fed by the sleds' liquid loop. Alone, it needs only power and a network drop. Each side is a blind-mate dock with two coolant couplers, a fibre plate and a busbar cover, so a second cell pushed against the first connects without anyone opening either.</p>
+        <p>A low, narrow, deep block, 0.6 by 1.2 by 3.0 metres, the proportions of an accelerator card lying flat and stretched back. Decode sleds load from the narrow front in one column and run the depth of the cell; heat leaves through a louvred band along the whole top, fed by the sleds' liquid loop. Alone, it needs only power and a network drop. Each long side is a blind-mate dock with two coolant couplers, a fibre plate and a busbar cover, so a second cell pushed against the first connects without anyone opening either.</p>
         <h3>Alone, or a hundred in a row</h3>
-        <p>Docked end to end, the coolant trunk, the busbar and the fibre pass through every cell: a row takes power at one end, rejects heat along its whole top, and its switches form one fabric. A row of a hundred is one unit to the scheduler and a hundred units to the forklift. Pull one out and its neighbours' docks close.</p>
+        <p>Docked side by side, the coolant trunk, the busbar and the fibre pass through every cell: a row takes power at one end, rejects heat along its whole top, and its switches form one fabric. A row of a hundred is one unit to the scheduler and a hundred units to the forklift. Pull one out and its neighbours' docks close.</p>
         <h3>Why one is cheap, and the hundredth cheaper</h3>
         <p>The sleds spend their silicon on commodity stacked memory rather than a large die and run capped, which leaves out the expensive part of an accelerator. No power supply per cell, no raised floor, no chilled-water plant, no building: the cell is its own room. One enclosure, one door, one dock, built in volume. We have not costed it and will not print a price until a bill of materials exists.</p>
         <h3>What would have to be true</h3>
-        <p>The top block rejects a full rack's heat at the design ambient without a chiller, at a fan power that keeps wall energy per correct answer below the single-chip figure. The couplers hold pressure through a hundred dockings. The busbar carries a row's current and a cell can be pulled live. None of these are measured.</p>
+        <p>The top band rejects a full cell's heat at the design ambient without a chiller, at a fan power that keeps wall energy per correct answer below the single-chip figure. The couplers hold pressure through a hundred dockings. The busbar carries a row's current and a cell can be pulled live. None of these are measured.</p>
       </div>
     </div>
   </section>
   <section class="etched">
     <div class="etched-grid solo">
-      <figure class="wide"><img src="../assets/img/cell-row.webp?v=202610251630" width="2800" height="1400" alt="Eight concept cells docked end to end into one row" loading="lazy"></figure>
+      <figure class="wide"><img src="../assets/img/cell-row.webp?v=202610251636" width="2402" height="1308" alt="Eight concept cells docked side by side into one row" loading="lazy"></figure>
     </div>
   </section>
 </main>
@@ -138,7 +138,7 @@
   </div>
 </footer>
 
-<script src="../assets/site.js?v=202610251630"></script>
+<script src="../assets/site.js?v=202610251636"></script>
 
 </body>
 </html>
