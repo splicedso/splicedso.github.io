@@ -118,14 +118,17 @@ if "--stand" in args:
     if "--face" in args:
         # square on, the face mirrors what is in front of it: a soft window high and to one side, a weak fill
         S.area((7.0, -14.0, R + 10.0), 650, 16, target=(0, 0, R))   # larger: a softer window on the face and a softer shadow edge
-        S.area((-10.0, -9.0, R - 1.0), 50, 8, target=(0, 0, R))
+        fill = S.area((-7.0, -8.0, R + 11.0), 520, 14, target=(0, 0, R))    # a real fill from the upper left, so the dark side reads
+        fill.data.use_shadow = False                                             # it lifts the face but throws no second shadow
+        low = S.area((-5.0, -15.0, 2.5), 380, 18, target=(0, 0, R * 0.6))       # a low frontal fill the lower face mirrors
+        low.data.use_shadow = False
         # a wide, high softbox from the front: the wafer's shadow becomes a short soft pool at its foot,
         # not a long hard wedge off to one side
         S.area((0.0, -6.0, R + 16.0), 400, 20, target=(0, 0, R * 0.5))
     else:
         S.area((11.0, -8.0, R + 7.0), 420, 7, target=(0, 0, R))
         S.area((-9.0, -7.0, R + 1.0), 60, 8, target=(0, 0, R))
-    sc.world.node_tree.nodes["Background"].inputs["Strength"].default_value = 0.08
+    sc.world.node_tree.nodes["Background"].inputs["Strength"].default_value = 0.08   # the shadowless fill does the lifting; a brighter HDRI cast a second shadow
     for m in bpy.data.materials:
         if m.name == "wafer":
             mx = next(n for n in m.node_tree.nodes if n.type == "MIX" and n.inputs["A"].default_value[0] > 0.6)
