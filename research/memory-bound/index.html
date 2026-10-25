@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The memory-bound regime: when a long context caps the batch &middot; Spliced</title>
+<meta name="description" content="When a long context caps the batch: a 12 GB card fits only 8 sequences of a 7B at 8k or 16k tokens. An 8-bit cache buys at most one batch doubling, and here that never pays for its 1.5 times penalty.">
+<meta property="og:title" content="The memory-bound regime: when a long context caps the batch &middot; Spliced">
+<meta property="og:description" content="When a long context caps the batch: a 12 GB card fits only 8 sequences of a 7B at 8k or 16k tokens. An 8-bit cache buys at most one batch doubling, and here that never pays for its 1.5 times penalty.">
+<meta property="og:image" content="https://splicedso.github.io/assets/og.png">
+<meta property="og:url" content="https://splicedso.github.io/research/memory-bound/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Spliced">
+<link rel="canonical" href="https://splicedso.github.io/research/memory-bound/">
+<meta name="color-scheme" content="light dark">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>try { const t = localStorage.getItem("theme"); if (t) document.documentElement.dataset.theme = t; } catch {}</script>
+<link rel="stylesheet" href="../../assets/style.css?v=202610241731">
+<link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
+</head>
+<body data-root="../../" data-page="research">
+<a class="skip" href="#content">Skip to content</a>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="../../" aria-label="Spliced home">
+      <svg viewBox="0 0 500 659" aria-hidden="true"><path fill="currentColor" d="M0 192 L418 0 L418 205 L145 331 L145 449 L0 516 Z M197 385 L500 246 L500 520 L197 659 Z"/></svg>
+      Spliced
+    </a>
+    <div class="nav-right">
+      <ul>
+        <li><a href="../../research/" data-nav="research">Research</a></li>
+        <li><a href="../../learn/" data-nav="learn">Learn</a></li>
+        <li><a href="../../data/" data-nav="data">Data</a></li>
+        <li><a href="../../tools/phase/" data-nav="tools">Tools</a></li>
+        <li><a href="../../lab/" data-nav="lab">Lab</a></li>
+      </ul>
+      <a class="icon-link" href="https://github.com/splicedso" aria-label="Spliced on GitHub" title="GitHub"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a>
+      <a class="icon-link" href="https://www.linkedin.com/company/splicedso" aria-label="Spliced on LinkedIn" title="LinkedIn"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M0 1.15C0 .52.52 0 1.18 0h13.64C15.48 0 16 .52 16 1.15v13.7c0 .63-.52 1.15-1.18 1.15H1.18C.52 16 0 15.48 0 14.85V1.15zM4.75 13.39V6.17H2.35v7.22h2.4zM3.55 5.18c.84 0 1.36-.55 1.36-1.25-.02-.71-.52-1.25-1.34-1.25-.82 0-1.36.54-1.36 1.25 0 .7.52 1.25 1.33 1.25h.01zm4.91 8.21V9.36c0-.22.02-.43.08-.59.18-.43.57-.88 1.23-.88.87 0 1.22.66 1.22 1.64v3.86h2.4V9.25c0-2.22-1.18-3.25-2.76-3.25-1.27 0-1.84.7-2.16 1.19v.03h-.02l.02-.03V6.17h-2.4c.03.68 0 7.22 0 7.22h2.4z"/></svg></a>
+      <button class="theme" id="theme" type="button" aria-label="Dark mode" aria-pressed="false">
+        <svg class="moon" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M10.5 1.5a6.5 6.5 0 1 0 4 11.6A7 7 0 0 1 10.5 1.5Z"/></svg>
+        <svg class="sun" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="3.2" fill="currentColor"/><path stroke="currentColor" stroke-width="1.4" stroke-linecap="round" d="M8 1v1.6M8 13.4V15M1 8h1.6M13.4 8H15M3 3l1.1 1.1M11.9 11.9 13 13M3 13l1.1-1.1M11.9 4.1 13 3"/></svg>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<svg id="bus" aria-hidden="true"></svg>
+
+<div id="content">
+<header class="page-head">
+  <div class="wrap">
+    <span class="refdes mono" data-via><b>N16</b> Research note &middot; 24 October 2026</span>
+    <h1>The memory-bound regime: when a long context caps the batch</h1>
+    <p class="lede">Spliced research note 16 (Windows half), 24 October 2026. Windows 11 laptop: Intel Core Ultra 9 285H, NVIDIA GeForce RTX 5070 Ti Laptop GPU (12 GB, Blackwell), 32 GB RAM, on AC. llama.cpp build 11851 (prebuilt CUDA 13.4 x64), CUDA backend, all layers on the GPU. Qwen2.5 7B Q4_0.</p>
+  </div>
+</header>
+<main><article class="wrap note-body"><p>Note 14 found that a 4096-token context barely dents the batching saving, and said why: the cache still fit, so batching was never forced down, and note 8's lost-batching effect needs memory to be the binding constraint. This note forces that constraint. At 8192 and 16384 tokens of context on a 12 GB card, how large a batch still fits, what does the forced-smaller batch cost, and can an 8-bit KV cache, which note 13 found costs more energy per token, win it back by letting a bigger batch fit?</p>
+<h2 data-via>Method</h2>
+<p>7B Q4_0, <code>experiments/batching.py</code> with 512 generated tokens per sequence, three passes. Each batch size was run in its own invocation, so its key-value cache is sized to that batch alone: <code>batching.py</code> allocates the context for the largest batch in a run, which would spill every batch in a shared run, so a per-batch invocation is the only way to find the true fit boundary. Context lengths 8192 and 16384. Three cache settings: the default f16 cache, the f16 cache with flash attention (<code>-fa on</code>), and an 8-bit cache (<code>-ctk q8_0 -ctv q8_0 -fa on</code>). GPU (chip) energy only.</p>
+<p>This card does not hard-fail when a run exceeds VRAM: the NVIDIA driver spills to shared system memory and the run crawls. So a spill shows as peak dedicated memory pegged near the 12 GB cap with throughput collapsing, not as an out-of-memory error. Fit and spill were judged by peak <code>nvidia-smi</code> memory and completion, not by a timeout, because a large batch at a long context has a slow prefill that is not itself a spill. <code>batching.py</code> was given a minimal optional passthrough so trailing flags reach llama-batched-bench (noted in the PR); nothing else in it changed.</p>
+<p>Per-cell spread (max over min of three passes) was under 2% at batch 4 and above, where the comparisons below are made. Batch 1 and 2 at these lengths, with few short decode windows, spread up to 15% and are the least precise cells.</p>
+<h2 data-via>What fits</h2>
+<p>Largest batch that fit in 12 GB, with peak dedicated VRAM:</p>
+<table>
+<thead>
+<tr>
+<th>context</th>
+<th>f16 cache</th>
+<th>q8_0 cache</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>8192</td>
+<td>batch 8 (8.4 GB); batch 16 spills (11.9 GB, pegged)</td>
+<td>batch 16 (8.6 GB); batch 32 spills</td>
+</tr>
+<tr>
+<td>16384</td>
+<td>batch 8 (11.9 GB); batch 16 spills</td>
+<td>batch 8 (8.4 GB); batch 16 spills (11.9 GB, pegged)</td>
+</tr>
+</tbody>
+</table>
+<p>The 4.4 GB of weights plus the cache decide this. At 8192 the f16 cache for 16 sequences is about 7.8 GB and with the weights does not fit; at 16384 it is about 15 GB and does not fit for 16 at either precision.</p>
+<h2 data-via>Energy, at equal flash attention</h2>
+<p>Chip energy per token (mJ) and decode speed (tok/s), mean of three passes. The f16 cache with and without flash attention agreed within about 1% (for example batch 8 at 8192: 313.3 against 315.7 mJ), so the q8 comparison below is not a flash-attention artifact.</p>
+<table>
+<thead>
+<tr>
+<th>context</th>
+<th>setting</th>
+<th style="text-align: right;">batch</th>
+<th style="text-align: right;">mJ/tok</th>
+<th style="text-align: right;">tok/s</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>8192</td>
+<td>f16 (fa)</td>
+<td style="text-align: right;">8 (its max)</td>
+<td style="text-align: right;">313.3</td>
+<td style="text-align: right;">310.9</td>
+</tr>
+<tr>
+<td>8192</td>
+<td>q8_0</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">463.8</td>
+<td style="text-align: right;">210.6</td>
+</tr>
+<tr>
+<td>8192</td>
+<td>q8_0</td>
+<td style="text-align: right;">16 (its max)</td>
+<td style="text-align: right;">333.1</td>
+<td style="text-align: right;">286.4</td>
+</tr>
+<tr>
+<td>16384</td>
+<td>f16 (fa)</td>
+<td style="text-align: right;">8 (its max)</td>
+<td style="text-align: right;">420.1</td>
+<td style="text-align: right;">230.3</td>
+</tr>
+<tr>
+<td>16384</td>
+<td>q8_0</td>
+<td style="text-align: right;">8 (its max)</td>
+<td style="text-align: right;">689.6</td>
+<td style="text-align: right;">141.1</td>
+</tr>
+</tbody>
+</table>
+<h2 data-via>1. A long context caps the batch, and that is the whole cost</h2>
+<p>On this card the f16 cache fits only 8 sequences at 8192 or 16384 tokens; batch 16 spills at both. Batching is the lever that makes a token cheap (note 8), and here memory caps it at 8 exactly because the context is long. This is note 8's lost-batching effect made concrete on one machine: not that a long context makes each token's compute dearer (note 13 found that direct cost small), but that it takes away the batch headroom that would have made the token cheap.</p>
+<h2 data-via>2. The 8-bit cache does not win the batch back</h2>
+<p>Note 13 found an 8-bit cache costs more energy per token than f16 when the f16 cache already fits. The hope was that by halving the cache it could let a larger batch fit and so pay for itself. It does not, in either length tested.</p>
+<ul>
+<li>At 16384 it cannot fit a larger batch than f16 does: q8 batch 16 spills just as f16 batch 16 does, because sixteen sequences' 8-bit cache, about 7.5 GB, plus 4.4 GB of weights and the compute buffers still exceeds 12 GB. So the 8-bit cache buys no extra batch and is a pure loss, 689.6 against 420.1 mJ per token at batch 8, 1.64 times the energy, and slower (141 against 230 tok/s).</li>
+<li>At 8192 it does let batch 16 fit, where f16 is stuck at 8. The extra batching recovers most of its own penalty: q8 at batch 16 costs 333.1 mJ per token against q8 at batch 8's 463.8, a 28% drop. But that still does not beat the f16 cache at its own largest batch: f16 batch 8 is 313.3 mJ per token, so q8 batch 16 costs 6% more, and runs slower (286.4 against 310.9 tok/s).</li>
+</ul>
+<p>So even in the one case where the 8-bit cache buys a bigger batch, the bigger batch only draws level with, and stays just behind, what the f16 cache already did at batch 8.</p>
+<h2 data-via>3. Why halving the cache was not enough</h2>
+<p>Halving the cache can at most double the batch that fits, and here it did less than that or exactly that: no extra step at 16384, one step from 8 to 16 at 8192. So the 8-bit cache wins only where one batch doubling saves more than its own per-token penalty, about 1.5 times here. At these batch sizes it does not. Going from batch 8 to 16 with the 8-bit cache saved 28%, a factor of 1.39, short of the 1.48 times the 8-bit cache costs at batch 8 and 8192 tokens.</p>
+<p>The doubling saves most when the batch is small: in this note, batch 1 to 2 saved 40 to 43% with the f16 cache. So the 8-bit cache has its best chance when the long context leaves room for only one or two sequences in f16, and halving the cache lets a second fit. That is the regime of a larger model or a smaller card, not tested here.</p>
+<h2 data-via>What to take from this</h2>
+<ol>
+<li>A long context's real cost on a memory-limited device is the batch it forbids. Memory caps the batch at 8 for a 7B model at 8192 to 16384 tokens on a 12 GB card, which caps how cheap a token can get.</li>
+<li>An 8-bit KV cache does not undo that here. At 16384 it fits no larger batch and costs 1.64 times the energy; at 8192 it fits one step larger and still lands 6% above the f16 cache's best.</li>
+<li>Halving the cache can at most double the batch, so the 8-bit cache pays only where one doubling saves more than its roughly 1.5 times penalty. That means very small batches, where memory leaves room for one or two sequences; at batch 8 to 16 it does not.</li>
+</ol>
+<h2 data-via>Limits</h2>
+<p>GPU (chip) energy only; no whole-system figure on AC. One model (7B Q4_0), two context lengths, one card. Spill was judged by peak VRAM and a throughput collapse, not a hard error, because the driver spills to shared memory. Each batch was measured in its own invocation, so these are single-stream batch runs, not a server scheduler packing mixed-length sequences. The spilled runs were stopped and not saved, so the fit boundaries rest on the peak-memory readings in this note, not on committed result files. <code>batching.py</code> gained a minimal flag passthrough. Build 11851 (CUDA).</p>
+<h2 data-via>Reproduce</h2>
+<p>Windows, no admin, plugged in. With a clone and a prebuilt llama.cpp CUDA build on <code>PATH</code>:</p>
+<pre><code class="language-powershell">.\.venv\Scripts\python -m pip install -e .
+# f16 cache, one batch per invocation so the cache is sized to that batch:
+.\.venv\Scripts\python experiments/batching.py models/quant/7b-Q4_0.gguf results/membound-7b-p16384-b8-f16.json 8 16384
+# 8-bit cache at the length where f16 first fails to fit a larger batch:
+.\.venv\Scripts\python experiments/batching.py models/quant/7b-Q4_0.gguf results/membound-7b-p8192-b16-q8.json 16 8192 -ctk q8_0 -ctv q8_0 -fa on
+</code></pre>
+<p>Watch <code>nvidia-smi</code> memory.used: a batch that pegs it near 12 GB and then crawls has spilled to shared memory. Raw results: <code>results/membound-7b-p{8192,16384}-b*-{f16,f16fa,q8}.json</code>, <code>results/summary-memory-bound-windows.json</code>.</p>
+<p class="source mono">Source, scripts and raw data: <a href="https://github.com/splicedso/phase/blob/main/notes/2026-10-windows-memory-bound.md">phase/notes/2026-10-windows-memory-bound.md</a></p>
+</article></main>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="titleblock mono" data-via>
+      <div><svg viewBox="0 0 500 659" aria-hidden="true"><path fill="currentColor" d="M0 192 L418 0 L418 205 L145 331 L145 449 L0 516 Z M197 385 L500 246 L500 520 L197 659 Z"/></svg><span><span class="k">Title</span>N16 &middot; The memory-bound regime: when a long context caps the batch</span></div>
+      <div><span class="k">Drawn</span>2026-10</div>
+      <div><span class="k">Sheet</span>21 of 21</div>
+      <div><span class="k">Elsewhere</span><span class="foot-links"><a href="https://github.com/splicedso" aria-label="GitHub"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>GitHub</a><a href="https://www.linkedin.com/company/splicedso" aria-label="LinkedIn"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M0 1.15C0 .52.52 0 1.18 0h13.64C15.48 0 16 .52 16 1.15v13.7c0 .63-.52 1.15-1.18 1.15H1.18C.52 16 0 15.48 0 14.85V1.15zM4.75 13.39V6.17H2.35v7.22h2.4zM3.55 5.18c.84 0 1.36-.55 1.36-1.25-.02-.71-.52-1.25-1.34-1.25-.82 0-1.36.54-1.36 1.25 0 .7.52 1.25 1.33 1.25h.01zm4.91 8.21V9.36c0-.22.02-.43.08-.59.18-.43.57-.88 1.23-.88.87 0 1.22.66 1.22 1.64v3.86h2.4V9.25c0-2.22-1.18-3.25-2.76-3.25-1.27 0-1.84.7-2.16 1.19v.03h-.02l.02-.03V6.17h-2.4c.03.68 0 7.22 0 7.22h2.4z"/></svg>LinkedIn</a></span></div>
+    </div>
+  </div>
+</footer>
+
+<script src="../../assets/site.js?v=202610241731"></script>
+<script src="../../assets/charts.js?v=202610241731"></script>
+</body>
+</html>

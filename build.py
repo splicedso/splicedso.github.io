@@ -69,6 +69,9 @@ NOTES = [
     {"slug": "spliced-drafter", "file": "2026-10-spliced-drafter.md", "n": 15,
      "summary": "Our first model: a 0.5B draft distilled from a 7B on one laptop. Held-out loss 6% lower, acceptance about 3% "
                 "higher. Real and small, and a higher confidence threshold did not help."},
+    {"slug": "memory-bound", "file": "2026-10-windows-memory-bound.md", "n": 16,
+     "summary": "When a long context caps the batch: a 12 GB card fits only 8 sequences of a 7B at 8k or 16k tokens. An 8-bit "
+                "cache buys at most one batch doubling, and here that never pays for its 1.5 times penalty."},
 ]
 
 FIGURES = {
