@@ -72,6 +72,9 @@ NOTES = [
     {"slug": "memory-bound", "file": "2026-10-windows-memory-bound.md", "n": 16,
      "summary": "When a long context caps the batch: a 12 GB card fits only 8 sequences of a 7B at 8k or 16k tokens. An 8-bit "
                 "cache buys at most one batch doubling, and here that never pays for its 1.5 times penalty."},
+    {"slug": "longest-contexts", "file": "2026-10-windows-longctx.md", "n": 17,
+     "summary": "A prediction that failed: at 65536 tokens an 8-bit cache fits a third sequence where f16 fits two, and still "
+                "costs 1.58 times as much. The context long enough to force the batch down also erases what batching saves."},
 ]
 
 FIGURES = {
