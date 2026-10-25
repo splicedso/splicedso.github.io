@@ -66,6 +66,9 @@ NOTES = [
     {"slug": "batching-and-context", "file": "2026-10-windows-batch-context.md", "n": 14,
      "summary": "Does a long context spend the batching saving? Not while the cache fits: batch 8 keeps 72 to 76% of its "
                 "energy saving at 4096 tokens, against 75 to 79% at 64. Note 8's 60 times needs memory to run out."},
+    {"slug": "spliced-drafter", "file": "2026-10-spliced-drafter.md", "n": 15,
+     "summary": "Our first model: a 0.5B draft distilled from a 7B on one laptop. Held-out loss 6% lower, acceptance about 3% "
+                "higher. Real and small, and a higher confidence threshold did not help."},
 ]
 
 FIGURES = {

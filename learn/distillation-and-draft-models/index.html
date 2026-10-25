@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Distillation: teaching a small model to imitate a big one &middot; Spliced</title>
-<meta name="description" content="Speculative decoding (primer 5) is only as good as its draft model's guesses. A draft that agrees with the big model 70% of the time saves energy; one that agrees 30% of the time wastes it ([note 7](../research/speculative-decoding/)). So the obvious question is: can you make a small model guess better? That is what distillation does, and it is how our first model, the Spliced drafter, is being built.">
+<meta name="description" content="Speculative decoding (primer 5) is only as good as its draft model's guesses. A draft that agrees with the big model 70% of the time saves energy; one that agrees 30% of the time wastes it ([note 7](../research/speculative-decoding/)). So the obvious question is: can you make a small model guess better? That is what distillation does, and it is how we built our first model, the Spliced drafter.">
 <meta property="og:title" content="Distillation: teaching a small model to imitate a big one &middot; Spliced">
-<meta property="og:description" content="Speculative decoding (primer 5) is only as good as its draft model's guesses. A draft that agrees with the big model 70% of the time saves energy; one that agrees 30% of the time wastes it ([note 7](../research/speculative-decoding/)). So the obvious question is: can you make a small model guess better? That is what distillation does, and it is how our first model, the Spliced drafter, is being built.">
+<meta property="og:description" content="Speculative decoding (primer 5) is only as good as its draft model's guesses. A draft that agrees with the big model 70% of the time saves energy; one that agrees 30% of the time wastes it ([note 7](../research/speculative-decoding/)). So the obvious question is: can you make a small model guess better? That is what distillation does, and it is how we built our first model, the Spliced drafter.">
 <meta property="og:image" content="https://splicedso.github.io/assets/og.png">
 <meta property="og:url" content="https://splicedso.github.io/learn/distillation-and-draft-models/">
 <meta property="og:type" content="article">
@@ -20,7 +20,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>try { const t = localStorage.getItem("theme"); if (t) document.documentElement.dataset.theme = t; } catch {}</script>
-<link rel="stylesheet" href="../../assets/style.css?v=202610241611">
+<link rel="stylesheet" href="../../assets/style.css?v=202610241713">
 <link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
 </head>
 <body data-root="../../" data-page="learn">
@@ -60,7 +60,7 @@
     <p class="lede">Primer 7. Builds on primer 5.</p>
   </div>
 </header>
-<main><article class="wrap note-body"><p>Speculative decoding (primer 5) is only as good as its draft model's guesses. A draft that agrees with the big model 70% of the time saves energy; one that agrees 30% of the time wastes it (<a href="../../research/speculative-decoding/">note 7</a>). So the obvious question is: can you make a small model guess better? That is what <strong>distillation</strong> does, and it is how our first model, the Spliced drafter, is being built.</p>
+<main><article class="wrap note-body"><p>Speculative decoding (primer 5) is only as good as its draft model's guesses. A draft that agrees with the big model 70% of the time saves energy; one that agrees 30% of the time wastes it (<a href="../../research/speculative-decoding/">note 7</a>). So the obvious question is: can you make a small model guess better? That is what <strong>distillation</strong> does, and it is how we built our first model, the Spliced drafter.</p>
 <h2 data-via>How a model is trained, in one paragraph</h2>
 <p>A model starts with random weights. Training shows it text and asks it to predict each next token. When it is wrong, a little arithmetic called <strong>gradient descent</strong> nudges every weight in the direction that would have made the right token more likely. Repeat over billions of tokens and the weights come to encode language. <strong>Fine-tuning</strong> is the same process started from an already trained model, on a much smaller, more specific set of text, to change what it does.</p>
 <h2 data-via>The idea of distillation</h2>
@@ -82,7 +82,7 @@
 </ul>
 <h2 data-via>Why a small lab can do this</h2>
 <p>Training a large model from scratch takes thousands of GPUs. Distilling a 0.5 billion parameter drafter takes a few thousand prompts, an hour of the teacher's time and an hour or two of fine-tuning, on one laptop. It is a small model built for one job, and the job comes straight out of our measurements.</p>
-<p>Related: <a href="../../research/speculative-decoding/">note 7</a>, <a href="../../research/speculative-threshold/">note 9</a>, <a href="../../research/speculative-second-tool/">note 11</a>. The drafter's own note will follow when the measurement is done.</p></article></main>
+<p>Related: <a href="../../research/speculative-decoding/">note 7</a>, <a href="../../research/speculative-threshold/">note 9</a>, <a href="../../research/speculative-second-tool/">note 11</a>. The result: <a href="../../research/spliced-drafter/">note 15</a>.</p></article></main>
 </div>
 
 <footer>
@@ -96,7 +96,7 @@
   </div>
 </footer>
 
-<script src="../../assets/site.js?v=202610241611"></script>
+<script src="../../assets/site.js?v=202610241713"></script>
 
 </body>
 </html>
