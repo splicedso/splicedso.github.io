@@ -2,7 +2,7 @@
 
 Primer 7. Builds on primer 5.
 
-Speculative decoding (primer 5) is only as good as its draft model's guesses. A draft that agrees with the big model 70% of the time saves energy; one that agrees 30% of the time wastes it ([note 7](../research/speculative-decoding/)). So the obvious question is: can you make a small model guess better? That is what **distillation** does, and it is how we built our first model, the Spliced drafter.
+Speculative decoding (primer 5) is only as good as its draft model's guesses. A draft that agrees with the big model 70% of the time saves energy; one that agrees 30% of the time wastes it ([note 7](../research/speculative-decoding/)). So the obvious question is: can you make a small model guess better? That is what **distillation** does, and it is how we built our first model family, Trace.
 
 ## How a model is trained, in one paragraph
 
@@ -33,4 +33,4 @@ Both drafters go through exactly the same conversion and quantization, so the on
 
 Training a large model from scratch takes thousands of GPUs. Distilling a 0.5 billion parameter drafter takes a few thousand prompts, an hour of the teacher's time and an hour or two of fine-tuning, on one machine. It is a small model built for one job, and the job comes straight out of our measurements.
 
-Related: [note 7](../research/speculative-decoding/), [note 9](../research/speculative-threshold/), [note 11](../research/speculative-second-tool/). The result: [note 15](../research/spliced-drafter/).
+Related: [note 7](../research/speculative-decoding/), [note 9](../research/speculative-threshold/), [note 11](../research/speculative-second-tool/). Results: [note 15](../research/spliced-drafter/) (Trace v0). Trace v1, trained on the large model's probabilities rather than its text, is in progress: [models](../models/).
