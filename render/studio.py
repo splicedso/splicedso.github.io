@@ -71,20 +71,28 @@ def pcb_mat(name, color=(0.012, 0.03, 0.018), scale=6.0):
     L.new(tc.outputs["Object"], mp.inputs["Vector"])
 
     def stripes(axis, freq):
+        # thin lines across `axis`, each cut into runs of random length along the other axis
         sep = N.new("ShaderNodeSeparateXYZ"); L.new(mp.outputs["Vector"], sep.inputs["Vector"])
         mul = N.new("ShaderNodeMath"); mul.operation = "MULTIPLY"; mul.inputs[1].default_value = freq
         L.new(sep.outputs[axis], mul.inputs[0])
         fr = N.new("ShaderNodeMath"); fr.operation = "FRACT"; L.new(mul.outputs[0], fr.inputs[0])
-        lt = N.new("ShaderNodeMath"); lt.operation = "LESS_THAN"; lt.inputs[1].default_value = 0.22
+        lt = N.new("ShaderNodeMath"); lt.operation = "LESS_THAN"; lt.inputs[1].default_value = 0.14
         L.new(fr.outputs[0], lt.inputs[0])
-        nz = N.new("ShaderNodeTexNoise"); nz.inputs["Scale"].default_value = 2.2; nz.inputs["Detail"].default_value = 0
-        L.new(mp.outputs["Vector"], nz.inputs["Vector"])
-        gt = N.new("ShaderNodeMath"); gt.operation = "GREATER_THAN"; gt.inputs[1].default_value = 0.52
+        # the segment mask is stretched along the line: one noise sample per line (snapped across), slow along it
+        snap = N.new("ShaderNodeMath"); snap.operation = "FLOOR"; L.new(mul.outputs[0], snap.inputs[0])
+        comb = N.new("ShaderNodeCombineXYZ")
+        other = "Y" if axis == "X" else "X"
+        L.new(snap.outputs[0], comb.inputs["X"]); L.new(sep.outputs[other], comb.inputs["Y"])
+        st = N.new("ShaderNodeMapping"); st.inputs["Scale"].default_value = (7.0, 0.9, 1.0)
+        L.new(comb.outputs["Vector"], st.inputs["Vector"])
+        nz = N.new("ShaderNodeTexNoise"); nz.inputs["Scale"].default_value = 1.0; nz.inputs["Detail"].default_value = 1
+        L.new(st.outputs["Vector"], nz.inputs["Vector"])
+        gt = N.new("ShaderNodeMath"); gt.operation = "GREATER_THAN"; gt.inputs[1].default_value = 0.5
         L.new(nz.outputs["Fac"], gt.inputs[0])
         both = N.new("ShaderNodeMath"); both.operation = "MULTIPLY"
         L.new(lt.outputs[0], both.inputs[0]); L.new(gt.outputs[0], both.inputs[1])
         return both
-    a = stripes("X", 9.0); b = stripes("Y", 11.0)
+    a = stripes("X", 14.0); b = stripes("Y", 17.0)
     tr = N.new("ShaderNodeMath"); tr.operation = "MAXIMUM"; L.new(a.outputs[0], tr.inputs[0]); L.new(b.outputs[0], tr.inputs[1])
     vo = N.new("ShaderNodeTexVoronoi"); vo.inputs["Scale"].default_value = 14
     L.new(mp.outputs["Vector"], vo.inputs["Vector"])

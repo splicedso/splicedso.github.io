@@ -1186,3 +1186,4 @@ nav { background: transparent !important; box-shadow: none !important; backdrop-
   .fall-stage .hero-object canvas { width: 150vw; max-width: none; margin-left: -25vw; }
   .top-render { margin-top: 0; }
 }
+@media (max-width: 700px) { nav { margin-bottom: 0 !important; } .top-render { margin-bottom: 0; } }

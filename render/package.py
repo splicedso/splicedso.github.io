@@ -31,7 +31,7 @@ rmp = nt.nodes.new("ShaderNodeMapRange"); rmp.inputs["To Min"].default_value = 0
 nt.links.new(tc.outputs["Object"], mp.inputs["Vector"]); nt.links.new(mp.outputs["Vector"], nz.inputs["Vector"])
 nt.links.new(nz.outputs["Fac"], rmp.inputs["Value"]); nt.links.new(rmp.outputs["Result"], p.inputs["Roughness"])
 
-substrate = S.mat("substrate", (0.012, 0.016, 0.014), rough=0.5, coat=0.35, micro=0.08)
+substrate = S.pcb_mat("substrate", (0.012, 0.016, 0.014), scale=14.0)   # a fine-pitch package substrate: traces and vias
 cap = S.mat("cap", (0.33, 0.3, 0.26), rough=0.45)
 capend = S.mat("capend", (0.82, 0.82, 0.8), metal=1.0, rough=0.2)
 etch = S.mat("etch", (0.03, 0.03, 0.03), metal=0.3, rough=0.5)

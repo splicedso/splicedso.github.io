@@ -22,7 +22,7 @@ S.floor(0.0)
 shroud = S.mat("shroud", (0.035, 0.036, 0.04), metal=0.85, rough=0.48, micro=0.14)
 rib = S.mat("rib", (0.05, 0.05, 0.055), metal=0.85, rough=0.36, micro=0.08)
 fin = S.mat("fin", (0.7, 0.7, 0.68), metal=1.0, rough=0.3, micro=0.06)
-pcb = S.mat("pcb", (0.008, 0.02, 0.012), rough=0.42, coat=0.4)
+pcb = S.pcb_mat("pcb", (0.008, 0.02, 0.012), scale=9.0)   # traces and vias under the mask
 gold = S.mat("gold", (0.95, 0.72, 0.38), metal=1.0, rough=0.2)
 steel = S.mat("steel", (0.6, 0.6, 0.58), metal=1.0, rough=0.34, micro=0.1)
 black = S.mat("black", (0.01, 0.01, 0.01), rough=0.6)

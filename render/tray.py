@@ -99,22 +99,26 @@ v = [((x - 470) * k + 2.6, -2.378, -(y - 530) * k + 0.55) for x, y in A]
 me = bpy.data.meshes.new("mark"); me.from_pydata(v, [], [[0, 1, 2, 3]]); me.update()
 o = bpy.data.objects.new("mark", me); sc.collection.objects.link(o); o.data.materials.append(ink)
 
-# Braided cables: loops out of the bottom face, hanging under gravity, each slightly different.
-for i in range(26):
-    x = -3.5 + i * 0.28 + random.uniform(-0.03, 0.03)
-    drop = 0.85 + random.uniform(-0.08, 0.1)
+# Cabling, as on photographs of cabled inference servers: thick braided cables drop from the
+# chassis underside through a comb bar at the front edge and hang straight down in one dense,
+# even curtain. Same length, same spacing, a slight sway each, nothing loose.
+NC = 40
+pitch = 0.17
+cx0 = -(NC - 1) * pitch / 2
+comb, _ = principled("comb", (0.02, 0.02, 0.022), rough=0.6)
+box((NC * pitch + 0.3, 0.26, 0.12), (0, -2.05, 0.04), comb, 0.02)           # comb bar under the front edge
+for i in range(NC):
+    x = cx0 + i * pitch
+    S.box((0.06, 0.28, 0.14), (x + pitch / 2, -2.05, 0.04), dark) if i < NC - 1 else None   # the slots between cables
+    sway = random.uniform(-0.03, 0.03)
     cu = bpy.data.curves.new("c", "CURVE"); cu.dimensions = "3D"
-    cu.bevel_depth = 0.07; cu.bevel_resolution = 6; cu.use_fill_caps = True
-    sp = cu.splines.new("BEZIER"); sp.bezier_points.add(2)
-    pts = [(x, -1.2, 0.1), (x + random.uniform(-0.02, 0.02), -1.35, 0.1 - drop), (x, -0.7, 0.1)]
+    cu.bevel_depth = 0.062; cu.bevel_resolution = 8; cu.use_fill_caps = True; cu.resolution_u = 24
+    sp = cu.splines.new("BEZIER"); sp.bezier_points.add(3)
+    pts = [(x, -1.2, 0.15), (x, -1.95, 0.02), (x + sway * 0.4, -2.08, -1.4), (x + sway, -2.0 + random.uniform(-0.03, 0.03), -3.6)]
     for bp, co in zip(sp.bezier_points, pts):
         bp.co = co; bp.handle_left_type = bp.handle_right_type = "AUTO"
     ob = bpy.data.objects.new("cable", cu); sc.collection.objects.link(ob)
     cu.materials.append(braid)
-    # a QSFP-style connector where each cable leaves the chassis: steel shell, dark pull tab
-    S.box((0.2, 0.34, 0.14), (x, -1.2, 0.03), steel, 0.015)
-    S.box((0.16, 0.06, 0.1), (x, -1.4, 0.0), dark, 0.01)
-
 
 # Screws on the rack ears, pull handles and two status lights.
 for x in (-4.2, 4.2):
@@ -143,7 +147,7 @@ area((0, -9, -2), 500, 8)
 
 cam_d = bpy.data.cameras.new("cam"); cam_d.lens = 60
 cam = bpy.data.objects.new("cam", cam_d); sc.collection.objects.link(cam); sc.camera = cam
-cam.location = (0.0, -21.5, 3.0)
-cam.rotation_euler = (Vector((0, 0, -0.55)) - cam.location).to_track_quat("-Z", "Y").to_euler()
+cam.location = (0.0, -21.0, -0.6)
+cam.rotation_euler = (Vector((0, 0, -0.9)) - cam.location).to_track_quat("-Z", "Y").to_euler()
 
 S.render(OUT)
