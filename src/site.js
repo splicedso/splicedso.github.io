@@ -1,4 +1,4 @@
-// Shared by every page: theme, the gutter bus, and helpers the other scripts use.
+// Shared by every page: the gutter bus, and helpers the other scripts use.
 
 const ROOT = document.body.dataset.root || "";
 const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -10,28 +10,6 @@ const el = (tag, attrs, parent) => {
   return e;
 };
 const cssVar = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-
-// Theme: follows the system until the reader picks one, then remembers it.
-(function theme() {
-  const btn = document.getElementById("theme");
-  const stored = (() => { try { return localStorage.getItem("theme"); } catch { return null; } })();
-  if (stored) document.documentElement.dataset.theme = stored;
-  const current = () => document.documentElement.dataset.theme ||
-    (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
-  const label = () => {
-    const dark = current() === "dark";
-    btn.setAttribute("aria-pressed", dark);
-    btn.title = dark ? "Switch to light" : "Switch to dark";
-  };
-  btn.addEventListener("click", () => {
-    const next = current() === "dark" ? "light" : "dark";
-    document.documentElement.dataset.theme = next;
-    try { localStorage.setItem("theme", next); } catch {}
-    label();
-    dispatchEvent(new Event("themechange"));
-  });
-  label();
-})();
 
 // The bus: one trace down the left gutter through a via at every marked heading. It fills
 // with current up to the reader's position, and charges drift along the filled part.

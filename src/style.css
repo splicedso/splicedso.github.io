@@ -551,3 +551,7 @@ nav ul a.on { color: var(--blue); background: var(--hl); }
   nav ul a { padding: 6px 8px; font-size: 14px; }
   :root { --radius: 20px; }
 }
+
+/* one theme: white, with the mark in blue */
+:root { color-scheme: light; }
+.brand svg { color: var(--blue); }
