@@ -85,6 +85,9 @@ NOTES = [
     {"slug": "lattice-v0", "file": "2026-10-lattice-v0-calibration.md", "n": 20,
      "summary": "Calibration doubles 2-bit accuracy at the same size, 21% to 42% on GSM8K. "
                 "4-bit is still cheaper per correct answer: a 2-bit token costs more energy."},
+    {"slug": "trace-v1", "file": "2026-10-trace-v1.md", "n": 21,
+     "summary": "Trace v1, trained on a 7B's probabilities: +0.7 points of agreement, no faster than the stock draft. "
+                "On the Strix Halo, speculative decoding itself cuts energy per token by a third."},
 ]
 
 FIGURES = {

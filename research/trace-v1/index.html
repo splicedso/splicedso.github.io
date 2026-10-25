@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trace v1: a draft model trained on the target's probabilities &middot; Spliced</title>
+<meta name="description" content="Trace v1, trained on a 7B's probabilities: +0.7 points of agreement, no faster than the stock draft. On the Strix Halo, speculative decoding itself cuts energy per token by a third.">
+<meta property="og:title" content="Trace v1: a draft model trained on the target's probabilities &middot; Spliced">
+<meta property="og:description" content="Trace v1, trained on a 7B's probabilities: +0.7 points of agreement, no faster than the stock draft. On the Strix Halo, speculative decoding itself cuts energy per token by a third.">
+<meta property="og:image" content="https://splicedso.github.io/assets/og.png">
+<meta property="og:url" content="https://splicedso.github.io/research/trace-v1/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Spliced">
+<link rel="canonical" href="https://splicedso.github.io/research/trace-v1/">
+<meta name="color-scheme" content="light dark">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="../../assets/favicon.svg?v=202610251020" type="image/svg+xml">
+<link rel="icon" href="../../assets/favicon-32.png?v=202610251020" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png?v=202610251020">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>document.documentElement.classList.add("js");</script>
+<link rel="stylesheet" href="../../assets/style.css?v=202610251020">
+<link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
+</head>
+<body data-root="../../" data-page="research">
+<a class="skip" href="#content">Skip to content</a>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="../../" aria-label="Spliced home">
+      <svg viewBox="-13 -13 966 1084" aria-hidden="true"><path fill="currentColor" stroke="currentColor" stroke-width="12.7" stroke-linejoin="round" d="M639.0 0.0 L941.0 0.0 L301.0 1059.0 L0.0 1059.0 Z"/></svg>
+      Spliced
+    </a>
+    <div class="nav-right">
+      <ul>
+        <li><a href="../../research/" data-nav="research">Research</a></li>
+        <li><a href="../../models/" data-nav="models">Models</a></li>
+        <li><a href="../../data/" data-nav="data">Data</a></li>
+        <li><a href="../../tools/phase/" data-nav="tools">Phase</a></li>
+        <li><a href="../../lab/" data-nav="lab">Lab</a></li>
+      </ul>
+      <a class="icon-link" href="https://github.com/splicedso" aria-label="Spliced on GitHub" title="GitHub"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a>
+      <a class="icon-link" href="https://www.linkedin.com/company/splicedso" aria-label="Spliced on LinkedIn" title="LinkedIn"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M0 1.15C0 .52.52 0 1.18 0h13.64C15.48 0 16 .52 16 1.15v13.7c0 .63-.52 1.15-1.18 1.15H1.18C.52 16 0 15.48 0 14.85V1.15zM4.75 13.39V6.17H2.35v7.22h2.4zM3.55 5.18c.84 0 1.36-.55 1.36-1.25-.02-.71-.52-1.25-1.34-1.25-.82 0-1.36.54-1.36 1.25 0 .7.52 1.25 1.33 1.25h.01zm4.91 8.21V9.36c0-.22.02-.43.08-.59.18-.43.57-.88 1.23-.88.87 0 1.22.66 1.22 1.64v3.86h2.4V9.25c0-2.22-1.18-3.25-2.76-3.25-1.27 0-1.84.7-2.16 1.19v.03h-.02l.02-.03V6.17h-2.4c.03.68 0 7.22 0 7.22h2.4z"/></svg></a>
+    </div>
+  </div>
+</nav>
+
+<svg id="bus" aria-hidden="true"></svg>
+
+<div id="content">
+<header class="page-head">
+  <div class="wrap">
+    <span class="label">Note 21 &middot; 25 October 2026</span>
+    <h1>Trace v1: a draft model trained on the target's probabilities</h1>
+    <p class="lede">Trace v1, trained on a 7B's probabilities: +0.7 points of agreement, no faster than the stock draft. On the Strix Halo, speculative decoding itself cuts energy per token by a third.</p>
+    <p class="setup">Spliced research note 21, 25 October 2026. Training on the AMD Ryzen AI Max+ 395 (Strix Halo, Radeon 8060S, 128 GB, Linux, PyTorch 2.10 on ROCm 7.2). Draft Qwen2.5 0.5B Instruct, target Qwen2.5 7B Instruct Q4_0.</p>
+  </div>
+</header>
+<main><figure class="page-object slim"><img src="../../assets/img/wafer.webp" alt="A silicon wafer" loading="lazy"></figure><article class="wrap note-body"><p>Trace is our line of draft models: small models trained to predict one large one, so speculative decoding accepts more of their guesses. Trace v0 (note 15) imitated the 7B's text and gained about 3% acceptance. Trace v1 learns from the 7B's probabilities instead.</p>
+<p><strong>Prediction</strong> (<code>docs/predictions.md</code>, committed before the runs): held-out top-1 agreement plateaus between 0.78 and 0.80, clearing the +3 point bar on the full 35,000 prompts but not on the first 8,000. The partial-data half held (no run on 9,000 prompts cleared the bar); the plateau did not reach 0.78, and the full-data half is untested.</p>
+<h2 data-via>Method</h2>
+<p>The 7B Q4_0 answered each training prompt greedily, and llama-server recorded its top 20 candidates and their log-probabilities at every token (<code>experiments/drafter/teacher.py</code>). The draft trains on those distributions, renormalized, with positions where the stock draft's top guess differs from the 7B's weighted 3 times (<code>train_trace.py</code>, ALPHA=2). AdamW, one epoch, held-out top-1 agreement on 180 validation prompts every 200 steps. The trainer reproduces the stock draft's agreement on both machines (0.7606 M5 Pro, 0.7616 Strix Halo).</p>
+<p>A second method, on-policy distillation (<code>train_onpolicy.py</code>): the draft generates, and the bf16 7B scores the draft's own tokens, with total-variation loss (as in DistillSpec, Zhou et al. 2023).</p>
+<h2 data-via>Results: agreement</h2>
+<table>
+<thead>
+<tr>
+<th>run</th>
+<th style="text-align: right;">prompts</th>
+<th style="text-align: right;">learning rate</th>
+<th style="text-align: right;">best held-out agreement</th>
+<th style="text-align: right;">against stock (0.7616)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>off-policy</td>
+<td style="text-align: right;">8,062</td>
+<td style="text-align: right;">1e-5</td>
+<td style="text-align: right;">0.7616 (never beaten)</td>
+<td style="text-align: right;">+0.0</td>
+</tr>
+<tr>
+<td>off-policy</td>
+<td style="text-align: right;">8,884</td>
+<td style="text-align: right;">3e-6</td>
+<td style="text-align: right;">0.7685</td>
+<td style="text-align: right;">+0.7 points</td>
+</tr>
+<tr>
+<td>on-policy</td>
+<td style="text-align: right;">9,825</td>
+<td style="text-align: right;">3e-6</td>
+<td style="text-align: right;">0.7616 (declined to 0.7574)</td>
+<td style="text-align: right;">+0.0</td>
+</tr>
+</tbody>
+</table>
+<p>At 1e-5 the first checkpoint fell below stock (0.7564 at step 200) and stayed there, as the MLX trainer did on the Mac. At 3e-6 every checkpoint beat stock and the curve was still rising slowly at the end of the epoch. On-policy declined steadily; the likely reason is that it distilled from the bf16 7B while agreement is measured against the Q4_0 7B's answers.</p>
+<h2 data-via>Results: speculative decoding</h2>
+<p>The best v1 (off-policy, LR 3e-6, 0.7685) and the stock draft, both converted to Q4_0 through the same pipeline, against plain decoding on 40 held-out prompts (20 chat, 20 code), 256 tokens, two passes with the second reversed, chip (APU package) energy, idle 16.3 W. Passes agreed within 1.3%, except plain decoding at 6%.</p>
+<table>
+<thead>
+<tr>
+<th>condition</th>
+<th style="text-align: right;">tok/s</th>
+<th style="text-align: right;">mJ per token</th>
+<th style="text-align: right;">accepted</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>plain</td>
+<td style="text-align: right;">50.9</td>
+<td style="text-align: right;">2,287</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>stock draft, 4, p0.5</td>
+<td style="text-align: right;">78.4</td>
+<td style="text-align: right;">1,502</td>
+<td style="text-align: right;">0.716</td>
+</tr>
+<tr>
+<td>Trace v1, 4, p0.5</td>
+<td style="text-align: right;">76.0</td>
+<td style="text-align: right;">1,554</td>
+<td style="text-align: right;">0.734</td>
+</tr>
+<tr>
+<td>stock draft, 8, p0.5</td>
+<td style="text-align: right;">71.7</td>
+<td style="text-align: right;">1,579</td>
+<td style="text-align: right;">0.638</td>
+</tr>
+<tr>
+<td>Trace v1, 8, p0.5</td>
+<td style="text-align: right;">72.5</td>
+<td style="text-align: right;">1,579</td>
+<td style="text-align: right;">0.680</td>
+</tr>
+</tbody>
+</table>
+<h2 data-via>1. Higher agreement, no faster</h2>
+<p>Trace v1's 0.7 points of agreement show up as higher acceptance (0.734 against 0.716 at four tokens, 0.680 against 0.638 at eight), and buy nothing else. At four tokens it is 3% slower and costs 3% more energy per token than the stock draft; at eight it is level. A draft's acceptance has to rise by more than this before fewer target passes pay for its own cost.</p>
+<h2 data-via>2. On this machine, speculation saves energy, not just time</h2>
+<p>With either draft, speculative decoding is 1.5 times faster than plain decoding and costs 34% less chip energy per token (1,502 against 2,287 mJ). On the M5 Pro it saved time but cost 8 to 11% more chip energy on chat (note 15). The Strix Halo package draws about the same power either way, 116 W plain and 118 W speculating (energy per token times tokens per second), because decode here waits on memory; finishing in fewer passes is nearly all saving.</p>
+<h2 data-via>What to take from this</h2>
+<ol>
+<li>Off-policy distillation from the target's probabilities gave +0.7 points of agreement on 9,000 prompts at a low learning rate, and lost agreement at a higher one. It did not make a faster draft. Trace v1 does not ship; scaling to all 35,000 prompts is the next test.</li>
+<li>On-policy distillation as run here moved the draft away from the target, most likely because the teacher was the bf16 7B and the target the Q4_0 7B. A fair test needs the quantized target's own probabilities.</li>
+<li>On the Strix Halo, speculative decoding with any reasonable draft cuts energy per token by a third. Where decode waits on memory, speculation is an energy technique.</li>
+</ol>
+<h2 data-via>Limits</h2>
+<p>One target, one draft size. Agreement is measured on 180 held-out prompts. The 35,000-prompt run is not done yet. On-policy used a bf16 teacher against a Q4_0 target. Strix Halo energy is the whole APU package.</p>
+<h2 data-via>Reproduce</h2>
+<pre><code>python experiments/drafter/teacher.py results/drafter/train-prompts.jsonl data/drafter/teacher.jsonl
+LR=3e-6 ALPHA=2 python experiments/drafter/train_trace.py data/drafter/teacher.jsonl models/trace-0.5b-v1
+sh experiments/drafter/convert.sh models/trace-0.5b-v1 models/quant/drafter-v1
+python experiments/drafter/evaluate.py results/drafter/eval-v1-halo.json plain,stock-4-p0.5,v1-4-p0.5,stock-8-p0.5,v1-8-p0.5
+</code></pre>
+<p>Raw results: <code>results/drafter/eval-v1-halo.json</code>, <code>results/drafter/trace-v1.md</code>.</p>
+<p class="source mono">Source, scripts and raw data: <a href="https://github.com/splicedso/phase/blob/main/notes/2026-10-trace-v1.md">phase/notes/2026-10-trace-v1.md</a></p>
+</article></main>
+</div>
+
+<footer>
+  <div class="wrap foot">
+    <a class="brand" href="../../" aria-label="Spliced home"><svg viewBox="-13 -13 966 1084" aria-hidden="true"><path fill="currentColor" stroke="currentColor" stroke-width="12.7" stroke-linejoin="round" d="M639.0 0.0 L941.0 0.0 L301.0 1059.0 L0.0 1059.0 Z"/></svg>Spliced</a>
+    <nav class="foot-nav" aria-label="Footer">
+      <a href="../../research/">Research</a><a href="../../models/">Models</a><a href="../../learn/">Learn</a><a href="../../data/">Data</a><a href="../../tools/phase/">Phase</a><a href="../../lab/">Lab</a>
+    </nav>
+    <div class="foot-social">
+      <a href="https://github.com/splicedso" aria-label="GitHub"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a>
+      <a href="https://www.linkedin.com/company/splicedso" aria-label="LinkedIn"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M0 1.15C0 .52.52 0 1.18 0h13.64C15.48 0 16 .52 16 1.15v13.7c0 .63-.52 1.15-1.18 1.15H1.18C.52 16 0 15.48 0 14.85V1.15zM4.75 13.39V6.17H2.35v7.22h2.4zM3.55 5.18c.84 0 1.36-.55 1.36-1.25-.02-.71-.52-1.25-1.34-1.25-.82 0-1.36.54-1.36 1.25 0 .7.52 1.25 1.33 1.25h.01zm4.91 8.21V9.36c0-.22.02-.43.08-.59.18-.43.57-.88 1.23-.88.87 0 1.22.66 1.22 1.64v3.86h2.4V9.25c0-2.22-1.18-3.25-2.76-3.25-1.27 0-1.84.7-2.16 1.19v.03h-.02l.02-.03V6.17h-2.4c.03.68 0 7.22 0 7.22h2.4z"/></svg></a>
+    </div>
+    <p class="foot-small">&copy; 2026 Spliced. Research and data are open.</p>
+  </div>
+</footer>
+
+<script src="../../assets/site.js?v=202610251020"></script>
+<script src="../../assets/charts.js?v=202610251020"></script>
+</body>
+</html>
