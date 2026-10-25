@@ -1059,3 +1059,4 @@ main > .page-object:first-child { margin-top: -40px; } .page-object img { max-he
 }
 .stage-img video { display: block; width: 100%; height: auto; -webkit-mask-image: linear-gradient(#000 78%, transparent); mask-image: linear-gradient(#000 78%, transparent); }
 .mgrid video { display: block; width: 100%; height: auto; }
+.page-object video { display: block; width: 100%; height: auto; max-height: 520px; object-fit: contain; }

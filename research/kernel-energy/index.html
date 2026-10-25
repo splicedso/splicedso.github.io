@@ -14,14 +14,14 @@
 <link rel="canonical" href="https://splicedso.github.io/research/kernel-energy/">
 <meta name="color-scheme" content="light dark">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="../../assets/favicon.svg?v=202610251040" type="image/svg+xml">
-<link rel="icon" href="../../assets/favicon-32.png?v=202610251040" type="image/png" sizes="32x32">
-<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png?v=202610251040">
+<link rel="icon" href="../../assets/favicon.svg?v=202610251044" type="image/svg+xml">
+<link rel="icon" href="../../assets/favicon-32.png?v=202610251044" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png?v=202610251044">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>document.documentElement.classList.add("js");</script>
-<link rel="stylesheet" href="../../assets/style.css?v=202610251040">
+<link rel="stylesheet" href="../../assets/style.css?v=202610251044">
 <link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
 </head>
 <body data-root="../../" data-page="research">
@@ -58,7 +58,7 @@
     <p class="setup">Spliced research note 5, 24 October 2026. Apple M5 Pro, 24 GB, llama.cpp build 11669 (620d2225c) built from source with Metal.</p>
   </div>
 </header>
-<main><figure class="page-object slim"><img src="../../assets/img/package-top.webp" alt="A processor package, top view" loading="lazy"></figure><article class="wrap note-body"><p>Note 2's energy model explained most formats by the bytes they move and left a residual it could not explain: Q4_0 cost 29% less than its bytes predicted, Q5_K_M 19% more. Note 4 then found Q5_K_M and Q6_K swap order between Apple and NVIDIA. Both point at the kernel that unpacks each format before multiplying. This note measures that kernel on its own.</p>
+<main><figure class="page-object slim"><img src="../../assets/img/wafer.webp" alt="A silicon wafer" loading="lazy"></figure><article class="wrap note-body"><p>Note 2's energy model explained most formats by the bytes they move and left a residual it could not explain: Q4_0 cost 29% less than its bytes predicted, Q5_K_M 19% more. Note 4 then found Q5_K_M and Q6_K swap order between Apple and NVIDIA. Both point at the kernel that unpacks each format before multiplying. This note measures that kernel on its own.</p>
 <h2 data-via>Method</h2>
 <p>llama.cpp's <code>test-backend-ops</code> in perf mode runs one matrix-vector product: a 4096 x 14336 weight matrix, the size of a 7B model's feed-forward layer, times one vector, which is exactly what decode does. We ran it for each format under the power sampler (<code>experiments/kernels.py</code>).</p>
 <p><strong>A first version failed, and why is worth knowing.</strong> Upstream, each perf run lasts one second. Repeating one-second runs, the two passes disagreed by up to 40%: Q4_0 measured 0.167 nJ per byte in one pass and 0.095 in the other. In a one-second run, process start, teardown and the sensor's own averaging interval are a large share of the window. A one-line patch (<code>experiments/test-backend-ops-perf-min-us.patch</code>) makes the run length an environment variable, and each format now runs as one continuous 15-second loop, with the first quarter and the last half second dropped. The two passes, the second in reverse order, then agreed within 2.3% for every format but F16 (5.4%).</p>
@@ -212,7 +212,7 @@ cd ../.. &amp;&amp; uv run python experiments/kernels.py results/kernels.json
   </div>
 </footer>
 
-<script src="../../assets/site.js?v=202610251040"></script>
-<script src="../../assets/charts.js?v=202610251040"></script>
+<script src="../../assets/site.js?v=202610251044"></script>
+<script src="../../assets/charts.js?v=202610251044"></script>
 </body>
 </html>

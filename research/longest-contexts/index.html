@@ -14,14 +14,14 @@
 <link rel="canonical" href="https://splicedso.github.io/research/longest-contexts/">
 <meta name="color-scheme" content="light dark">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="../../assets/favicon.svg?v=202610251040" type="image/svg+xml">
-<link rel="icon" href="../../assets/favicon-32.png?v=202610251040" type="image/png" sizes="32x32">
-<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png?v=202610251040">
+<link rel="icon" href="../../assets/favicon.svg?v=202610251044" type="image/svg+xml">
+<link rel="icon" href="../../assets/favicon-32.png?v=202610251044" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png?v=202610251044">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>document.documentElement.classList.add("js");</script>
-<link rel="stylesheet" href="../../assets/style.css?v=202610251040">
+<link rel="stylesheet" href="../../assets/style.css?v=202610251044">
 <link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
 </head>
 <body data-root="../../" data-page="research">
@@ -58,7 +58,7 @@
     <p class="setup">Spliced research note 17 (Windows half), 24 October 2026. Windows 11 laptop: Intel Core Ultra 9 285H, NVIDIA GeForce RTX 5070 Ti Laptop GPU (12 GB, Blackwell), 32 GB RAM, on AC. llama.cpp build 11851 (prebuilt CUDA 13.4 x64), CUDA backend, all layers on the GPU. Qwen2.5 7B Q4_0, context 65536.</p>
   </div>
 </header>
-<main><figure class="page-object slim"><img src="../../assets/img/package-top.webp" alt="A processor package, top view" loading="lazy"></figure><article class="wrap note-body"><p>Note 16 found that an 8-bit KV cache did not win in the memory-bound regime it tested, and reasoned that it would win where the f16 cache fits only one or two sequences and the 8-bit cache lets another fit, because at small batch a single doubling saves more than the cache's roughly 1.5 times per-token penalty costs. This note tests that prediction directly. It does not hold on this card, and the reason is that the two conditions it needs do not occur together here.</p>
+<main><figure class="page-object slim"><img src="../../assets/img/hgx.webp" alt="An eight-GPU server baseboard" loading="lazy"></figure><article class="wrap note-body"><p>Note 16 found that an 8-bit KV cache did not win in the memory-bound regime it tested, and reasoned that it would win where the f16 cache fits only one or two sequences and the 8-bit cache lets another fit, because at small batch a single doubling saves more than the cache's roughly 1.5 times per-token penalty costs. This note tests that prediction directly. It does not hold on this card, and the reason is that the two conditions it needs do not occur together here.</p>
 <h2 data-via>Finding the regime</h2>
 <p>At 32768 tokens the f16 cache still fit at least 4 sequences (batches 1 to 4 were measured; batch 6 spilled), so it is not the one-or-two regime. Pushing the context to 65536, twice the model's 32768 native length (llama.cpp extrapolates RoPE beyond the trained length; output quality is not scored here, this is an energy and memory measurement), brings the f16 cache down to 2 sequences. That is the regime the prediction is about.</p>
 <h2 data-via>Method</h2>
@@ -177,7 +177,7 @@
   </div>
 </footer>
 
-<script src="../../assets/site.js?v=202610251040"></script>
-<script src="../../assets/charts.js?v=202610251040"></script>
+<script src="../../assets/site.js?v=202610251044"></script>
+<script src="../../assets/charts.js?v=202610251044"></script>
 </body>
 </html>

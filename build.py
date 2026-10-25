@@ -209,7 +209,7 @@ def chart_data():
             "results": results, "roofline": roofline}
 
 
-RENDERS = [("package.webp", "A processor package"), ("server.webp", "A rack server"),
+RENDERS = [("package.webp", "A processor package"), ("hgx.webp", "An eight-GPU server baseboard"), ("gpu.webp", "A datacenter GPU module"), ("server.webp", "A rack server"),
            ("card.webp", "An accelerator card"), ("wafer.webp", "A silicon wafer"),
            ("dimm.webp", "A server memory module"), ("package-top.webp", "A processor package, top view")]
 

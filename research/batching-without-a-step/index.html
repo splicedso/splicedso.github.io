@@ -14,14 +14,14 @@
 <link rel="canonical" href="https://splicedso.github.io/research/batching-without-a-step/">
 <meta name="color-scheme" content="light dark">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="../../assets/favicon.svg?v=202610251040" type="image/svg+xml">
-<link rel="icon" href="../../assets/favicon-32.png?v=202610251040" type="image/png" sizes="32x32">
-<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png?v=202610251040">
+<link rel="icon" href="../../assets/favicon.svg?v=202610251044" type="image/svg+xml">
+<link rel="icon" href="../../assets/favicon-32.png?v=202610251044" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png?v=202610251044">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>document.documentElement.classList.add("js");</script>
-<link rel="stylesheet" href="../../assets/style.css?v=202610251040">
+<link rel="stylesheet" href="../../assets/style.css?v=202610251044">
 <link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
 </head>
 <body data-root="../../" data-page="research">
@@ -58,7 +58,7 @@
     <p class="setup">Spliced research note 10, 24 October 2026. The Windows laptop of note 4 (Intel Core Ultra 9 285H, NVIDIA GeForce RTX 5070 Ti Laptop GPU, 32 GB), llama.cpp build 11851, CUDA, all layers on the GPU.</p>
   </div>
 </header>
-<main><figure class="page-object slim"><img src="../../assets/img/dimm.webp" alt="A server memory module" loading="lazy"></figure><article class="wrap note-body"><p>Note 4 measured this laptop on battery, because the board reading (battery discharge) only exists when the charger is out. That left two things unmeasured: how the GPU behaves <strong>on AC</strong>, where it is not held to a battery power cap, and <strong>batching</strong>, which note 4 did not run. This note adds both. It also fixes a sampling bug note 4 worked around.</p>
+<main><figure class="page-object slim"><img src="../../assets/img/gpu.webp" alt="A datacenter GPU module" loading="lazy"></figure><article class="wrap note-body"><p>Note 4 measured this laptop on battery, because the board reading (battery discharge) only exists when the charger is out. That left two things unmeasured: how the GPU behaves <strong>on AC</strong>, where it is not held to a battery power cap, and <strong>batching</strong>, which note 4 did not run. This note adds both. It also fixes a sampling bug note 4 worked around.</p>
 <p>The llama.cpp build here is 11851, against 11669 on the Mac, because the prebuilt CUDA package for that build was what was available. Kernel changes between the two builds are possible and are a caveat on every cross-machine comparison below.</p>
 <h2 data-via>A sampler fix</h2>
 <p><code>nvidia-smi -lms</code> on this machine intermittently reports a spurious ~11000 W <code>power.draw</code>, about every third sample, while the GPU idles at ~20 W. On battery (note 4) this fell in the idle window and was one reason that note discarded idle-net figures. <code>power_windows.py</code> now drops any reading above a sane ceiling, so the idle baseline is clean and net figures are usable on AC. It does not change the load windows, whose means (~100 W) never contained a spike.</p>
@@ -321,7 +321,7 @@
   </div>
 </footer>
 
-<script src="../../assets/site.js?v=202610251040"></script>
-<script src="../../assets/charts.js?v=202610251040"></script>
+<script src="../../assets/site.js?v=202610251044"></script>
+<script src="../../assets/charts.js?v=202610251044"></script>
 </body>
 </html>

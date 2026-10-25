@@ -14,14 +14,14 @@
 <link rel="canonical" href="https://splicedso.github.io/research/spliced-drafter/">
 <meta name="color-scheme" content="light dark">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="../../assets/favicon.svg?v=202610251040" type="image/svg+xml">
-<link rel="icon" href="../../assets/favicon-32.png?v=202610251040" type="image/png" sizes="32x32">
-<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png?v=202610251040">
+<link rel="icon" href="../../assets/favicon.svg?v=202610251044" type="image/svg+xml">
+<link rel="icon" href="../../assets/favicon-32.png?v=202610251044" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png?v=202610251044">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>document.documentElement.classList.add("js");</script>
-<link rel="stylesheet" href="../../assets/style.css?v=202610251040">
+<link rel="stylesheet" href="../../assets/style.css?v=202610251044">
 <link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
 </head>
 <body data-root="../../" data-page="research">
@@ -58,7 +58,7 @@
     <p class="setup">Spliced research note 15, 24 October 2026. Apple M5 Pro, 24 GB, macOS 27, on AC. llama.cpp build 11669 (Metal), llama-server. Target Qwen2.5 7B Instruct Q4_0. Drafts: Qwen2.5 0.5B Instruct, stock and distilled, both Q4_0 through the same conversion.</p>
   </div>
 </header>
-<main><figure class="page-object slim"><img src="../../assets/img/wafer.webp" alt="A silicon wafer" loading="lazy"></figure><article class="wrap note-body"><p>Notes 7, 9 and 11 used the stock Qwen2.5 0.5B as a draft model for speculative decoding. A draft is only useful when the big model accepts its guesses, so we built one trained to guess the 7B: the Spliced drafter. Primer 7 explains distillation; this note is the measurement.</p>
+<main><figure class="page-object slim"><img src="../../assets/img/package-top.webp" alt="A processor package, top view" loading="lazy"></figure><article class="wrap note-body"><p>Notes 7, 9 and 11 used the stock Qwen2.5 0.5B as a draft model for speculative decoding. A draft is only useful when the big model accepts its guesses, so we built one trained to guess the 7B: the Spliced drafter. Primer 7 explains distillation; this note is the measurement.</p>
 <h2 data-via>How it was built</h2>
 <ol>
 <li>3,600 prompts, chat and code, from UltraChat (MIT) and CodeAlpaca (CC-BY-4.0); 80 more held out, never trained on.</li>
@@ -223,7 +223,7 @@ uv run python experiments/drafter/evaluate.py results/drafter/eval-thresholds-ma
   </div>
 </footer>
 
-<script src="../../assets/site.js?v=202610251040"></script>
-<script src="../../assets/charts.js?v=202610251040"></script>
+<script src="../../assets/site.js?v=202610251044"></script>
+<script src="../../assets/charts.js?v=202610251044"></script>
 </body>
 </html>
