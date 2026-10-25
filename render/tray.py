@@ -16,7 +16,7 @@ random.seed(11)
 
 sys.path.insert(0, str(__import__("pathlib").Path(__file__).parent))
 import studio as S  # noqa: E402
-sc = S.setup(W, H)
+sc = S.setup(W, H, hdri_strength=0.3)
 
 def principled(name, color, metal=0.0, rough=0.5):
     m = bpy.data.materials.new(name); m.use_nodes = True
@@ -27,7 +27,7 @@ def principled(name, color, metal=0.0, rough=0.5):
 
 
 # Bead-blasted metal: fine noise in roughness and a little in the bump.
-chassis, p = principled("chassis", (0.035, 0.035, 0.037), metal=0.7, rough=0.62)
+chassis, p = principled("chassis", (0.018, 0.018, 0.02), metal=0.6, rough=0.55)
 nt = chassis.node_tree
 nz = nt.nodes.new("ShaderNodeTexNoise"); nz.inputs["Scale"].default_value = 900; nz.inputs["Detail"].default_value = 2
 bump = nt.nodes.new("ShaderNodeBump"); bump.inputs["Strength"].default_value = 0.08
@@ -35,7 +35,7 @@ nt.links.new(nz.outputs["Fac"], bump.inputs["Height"]); nt.links.new(bump.output
 
 # Braided sleeve: a woven pattern from two crossed wave textures along the cable's length.
 braid, p = principled("braid", (0.03, 0.03, 0.032), rough=0.62)
-p.inputs["Sheen Weight"].default_value = 0.6; p.inputs["Sheen Roughness"].default_value = 0.4
+p.inputs["Sheen Weight"].default_value = 0.2; p.inputs["Sheen Roughness"].default_value = 0.5
 nt = braid.node_tree
 tc = nt.nodes.new("ShaderNodeTexCoord")
 # Woven PET sleeve: two sets of fine diagonal strands in object space, crossed, with fibre noise.
@@ -55,7 +55,7 @@ nt.links.new(fib.outputs["Fac"], h.inputs[0]); h.inputs[1].default_value = 0.25
 hs = nt.nodes.new("ShaderNodeMath"); hs.operation = "ADD"
 nt.links.new(mul.outputs[0], hs.inputs[0]); nt.links.new(h.outputs[0], hs.inputs[1])
 col = nt.nodes.new("ShaderNodeMix"); col.data_type = "RGBA"
-col.inputs["A"].default_value = (0.012, 0.012, 0.013, 1); col.inputs["B"].default_value = (0.06, 0.06, 0.062, 1)
+col.inputs["A"].default_value = (0.003, 0.003, 0.0035, 1); col.inputs["B"].default_value = (0.03, 0.03, 0.032, 1)
 nt.links.new(hs.outputs[0], col.inputs["Factor"]); nt.links.new(col.outputs["Result"], p.inputs["Base Color"])
 bump = nt.nodes.new("ShaderNodeBump"); bump.inputs["Strength"].default_value = 0.7; bump.inputs["Distance"].default_value = 0.01
 nt.links.new(hs.outputs[0], bump.inputs["Height"]); nt.links.new(bump.outputs["Normal"], p.inputs["Normal"])
@@ -102,19 +102,24 @@ o = bpy.data.objects.new("mark", me); sc.collection.objects.link(o); o.data.mate
 # Cabling, as on photographs of cabled inference servers: thick braided cables drop from the
 # chassis underside through a comb bar at the front edge and hang straight down in one dense,
 # even curtain. Same length, same spacing, a slight sway each, nothing loose.
-NC = 40
-pitch = 0.17
+NC = 30
+pitch = 0.225
 cx0 = -(NC - 1) * pitch / 2
 comb, _ = principled("comb", (0.02, 0.02, 0.022), rough=0.6)
 box((NC * pitch + 0.3, 0.26, 0.12), (0, -2.05, 0.04), comb, 0.02)           # comb bar under the front edge
 for i in range(NC):
     x = cx0 + i * pitch
-    S.box((0.06, 0.28, 0.14), (x + pitch / 2, -2.05, 0.04), dark) if i < NC - 1 else None   # the slots between cables
+    if i < NC - 1:
+        S.box((0.08, 0.28, 0.14), (x + pitch / 2, -2.05, 0.04), dark)        # the slots between cables
     sway = random.uniform(-0.03, 0.03)
     cu = bpy.data.curves.new("c", "CURVE"); cu.dimensions = "3D"
-    cu.bevel_depth = 0.062; cu.bevel_resolution = 8; cu.use_fill_caps = True; cu.resolution_u = 24
-    sp = cu.splines.new("BEZIER"); sp.bezier_points.add(3)
-    pts = [(x, -1.2, 0.15), (x, -1.95, 0.02), (x + sway * 0.4, -2.08, -1.4), (x + sway, -2.0 + random.uniform(-0.03, 0.03), -3.6)]
+    cu.bevel_depth = 0.085; cu.bevel_resolution = 10; cu.use_fill_caps = True; cu.resolution_u = 32
+    sp = cu.splines.new("BEZIER"); sp.bezier_points.add(5)
+    # down through the comb, then the bottom end hooks forward toward the camera, as cables do
+    # where they turn into the unit below
+    hook = random.uniform(0.45, 0.6)
+    pts = [(x, -1.2, 0.15), (x, -1.95, 0.02), (x + sway * 0.4, -2.08, -1.6),
+           (x + sway, -2.15, -3.0), (x + sway * 1.5, -2.2 - hook, -4.6), (x + sway * 1.5, -2.25 - hook, -6.8)]
     for bp, co in zip(sp.bezier_points, pts):
         bp.co = co; bp.handle_left_type = bp.handle_right_type = "AUTO"
     ob = bpy.data.objects.new("cable", cu); sc.collection.objects.link(ob)
@@ -140,14 +145,16 @@ def area(loc, energy, size):
     ob.rotation_euler = (Vector((0, 0, 0.5)) - Vector(loc)).to_track_quat("-Z", "Y").to_euler()
 
 
-area((-6, -8, 7), 1100, 8)
-area((7, -5, 3), 800, 5)
-area((0, 6, 6), 900, 8)
-area((0, -9, -2), 500, 8)
+area((-7, -9, 7), 1000, 7)        # key: high, front left
+area((8, -4, 1), 350, 4)           # soft fill from the right
+area((5, 6, 4), 1200, 5)           # rim from behind right: edge light on every cable
+area((0, -9, -4), 160, 8)          # faint lift from below
 
-cam_d = bpy.data.cameras.new("cam"); cam_d.lens = 60
+cam_d = bpy.data.cameras.new("cam"); cam_d.lens = 80
 cam = bpy.data.objects.new("cam", cam_d); sc.collection.objects.link(cam); sc.camera = cam
-cam.location = (0.0, -21.0, -0.6)
-cam.rotation_euler = (Vector((0, 0, -0.9)) - cam.location).to_track_quat("-Z", "Y").to_euler()
+cam.location = (-6.0, -24.0, -2.1)                     # low front three-quarter, as the product shot is taken
+target = Vector((0.2, -1.5, -0.7))
+cam.rotation_euler = (target - cam.location).to_track_quat("-Z", "Y").to_euler()
+cam_d.dof.use_dof = True; cam_d.dof.focus_distance = (target - cam.location).length; cam_d.dof.aperture_fstop = 7.0
 
 S.render(OUT)

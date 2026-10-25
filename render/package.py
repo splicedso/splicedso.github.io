@@ -83,7 +83,8 @@ if "--fall" in args:
     sc.frame_end = frames
     pivot = bpy.data.objects.new("pivot", None); sc.collection.objects.link(pivot)
     for o in list(sc.objects):
-        if o.type == "MESH" and o.name != "floor" and o.parent is None and o.location.z > -0.05:
+        # everything on the package falls with it, the lid's laser text (FONT objects) included
+        if o.type in ("MESH", "FONT", "CURVE") and o.name != "floor" and o.parent is None and o.location.z > -0.05:
             o.parent = pivot
     sc.camera.data.lens = 50
     sc.camera.data.dof.use_dof = False

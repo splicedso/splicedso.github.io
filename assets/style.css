@@ -1187,3 +1187,20 @@ nav { background: transparent !important; box-shadow: none !important; backdrop-
   .top-render { margin-top: 0; }
 }
 @media (max-width: 700px) { nav { margin-bottom: 0 !important; } .top-render { margin-bottom: 0; } }
+/* Quieter components, as on etched.com: no white boxes; thin rules divide the pieces instead. */
+.areas, .limits, ol.steps, .table, .closer, .dtable-wrap, .cmp, pre, .chart { background: transparent !important; box-shadow: none !important; border-radius: 0 !important; }
+.areas, .limits { border: 0 !important; border-top: 1px solid #d4d4d4 !important; border-bottom: 1px solid #d4d4d4 !important; }
+.area + .area, .limits div + div { border-left: 1px solid #d4d4d4 !important; }
+ol.steps, .table, .dtable-wrap, .cmp, .chart { border: 0 !important; border-top: 1px solid #d4d4d4 !important; border-bottom: 1px solid #d4d4d4 !important; }
+ol.steps li, .note-body td, .dtable td, .row { border-color: #e0e0e0 !important; }
+pre { border: 0 !important; border-left: 1px solid #d4d4d4 !important; }
+.closer { border-top: 1px solid #d4d4d4; border-bottom: 1px solid #d4d4d4; }
+.dtable th, .dtable td, .note-body table, .note-body th { background: transparent !important; }
+.note-body table { border: 0 !important; border-top: 1px solid #d4d4d4 !important; border-bottom: 1px solid #d4d4d4 !important; border-radius: 0 !important; }
+.area:hover, .areas .area:hover { background: transparent !important; }
+.cta:not(.ghost):not([aria-disabled="true"]) { color: #fff; }   /* a prose link rule was turning the button text black */
+.area, .areas .area, .limits div { background: transparent !important; box-shadow: none !important; border-radius: 0 !important; }
+.area { border: 0 !important; } .area + .area { border-left: 1px solid #d4d4d4 !important; }
+.area .icon, .area .icon-wrap { background: transparent !important; box-shadow: none !important; }
+.closer { border: 0 !important; border-top: 1px solid #d4d4d4 !important; border-bottom: 1px solid #d4d4d4 !important; }
+.top-render.tall img { max-height: 62vh; }
