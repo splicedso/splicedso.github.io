@@ -4,24 +4,24 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Spliced</title>
-<meta name="description" content="Research on efficient inference. We measure what a token costs, at the chip and at the board.">
+<meta name="description" content="Measuring frontier inference. What AI costs to run, and how to cut it.">
 <meta property="og:title" content="Spliced">
-<meta property="og:description" content="Research on efficient inference. We measure what a token costs, at the chip and at the board.">
-<meta property="og:image" content="https://splicedso.github.io/assets/og.png?v=202610251525">
+<meta property="og:description" content="Measuring frontier inference. What AI costs to run, and how to cut it.">
+<meta property="og:image" content="https://splicedso.github.io/assets/og.png?v=202610251546">
 <meta property="og:url" content="https://splicedso.github.io/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Spliced">
 <link rel="canonical" href="https://splicedso.github.io/">
 <meta name="color-scheme" content="light dark">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="assets/favicon.svg?v=202610251525" type="image/svg+xml">
-<link rel="icon" href="assets/favicon-32.png?v=202610251525" type="image/png" sizes="32x32">
-<link rel="apple-touch-icon" href="assets/apple-touch-icon.png?v=202610251525">
+<link rel="icon" href="assets/favicon.svg?v=202610251546" type="image/svg+xml">
+<link rel="icon" href="assets/favicon-32.png?v=202610251546" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png?v=202610251546">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>document.documentElement.classList.add("js");</script>
-<link rel="stylesheet" href="assets/style.css?v=202610251525">
+<link rel="stylesheet" href="assets/style.css?v=202610251546">
 <link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
 </head>
 <body data-root="" data-page="home">
@@ -58,8 +58,8 @@
   <div class="wrap hero-center">
     <div>
       <span class="label">Research</span>
-      <h1>What a token costs.</h1>
-      <p class="lede">We measure the energy AI spends on every token and every correct answer, on hardware people own, and publish what we find.</p>
+      <h1>Measuring frontier inference.</h1>
+      <p class="lede">What AI costs to run, and how to cut it.</p>
     </div>
   </div>
 </header>
@@ -68,14 +68,14 @@
   <section class="etched">
     <div class="etched-grid solo">
       <div class="prose">
-        <h2>Measured, not estimated.</h2>
-        <p>Spliced is a small research group. We run open models on an Apple M5 Pro, an AMD Ryzen AI Max+ 395 and an RTX 5070 Ti Laptop GPU, read each chip's own power sensors while it works, and report the energy of every token and of every correct answer. Every run is repeated, warmed up, and published with its raw data.</p>
-        <h3>22 notes so far</h3>
-        <p>Each note asks one question: what a quantization format costs, when batching pays, whether speculative decoding saves energy or only time. The prediction is written down before the run and stays in the record when it turns out wrong.</p>
-        <h3>Two model families, both early</h3>
-        <p>Trace is a draft model trained to predict a larger one, for speculative decoding. Lattice is a model kept accurate below 4 bits per weight. Each has a first version and a measured result. Neither has cleared its bar yet, though calibrated 2-bit already beats 4-bit per correct answer on a 32B model. The Models page says exactly where they stand.</p>
-        <h3>Two tools</h3>
-        <p>Phase is the open-source power meter behind every number here. Foundry is a desktop app, still in development, that runs a model on your own machine and shows the speed and energy of each answer.</p>
+        <h2>Every token has a price in joules.</h2>
+        <p>Benchmarks report speed. We report what speed costs. We run open models on the hardware people own, an Apple M5 Pro, an AMD Ryzen AI Max+ 395, an RTX 5070 Ti Laptop GPU, read each chip's own power sensors while it works, and publish the energy of every token and of every correct answer, with the raw data beside it.</p>
+        <h3>22 notes. One question each.</h3>
+        <p>What a quantization format costs. When batching pays. Whether speculative decoding saves energy or only time. Every note writes its prediction down before the run and keeps it when it is wrong. So far: eight requests at once cut energy per token by 72%, a read token costs a fortieth of a written one, and calibration doubles the accuracy of a 2-bit model at the same size.</p>
+        <h3>Two model families, held to one bar.</h3>
+        <p>Trace is a draft model trained to predict a larger one, for speculative decoding. Lattice keeps a model accurate below 4 bits per weight. A model ships only when it beats the stock model per correct answer on the same machine. Neither has yet. On a 32B model, calibrated 2-bit already beats 4-bit per correct answer by 16%.</p>
+        <h3>Two tools.</h3>
+        <p>Phase is the open-source power meter behind every number here. Foundry is a desktop app, in development, that runs a model on your own machine and shows the speed and energy of each answer.</p>
       </div>
     </div>
   </section>
@@ -131,7 +131,7 @@
   </div>
 </footer>
 
-<script src="assets/site.js?v=202610251525"></script>
+<script src="assets/site.js?v=202610251546"></script>
 
 </body>
 </html>

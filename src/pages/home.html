@@ -5,8 +5,8 @@
   <div class="wrap hero-center">
     <div>
       <span class="label">Research</span>
-      <h1>What a token costs.</h1>
-      <p class="lede">We measure the energy AI spends on every token and every correct answer, on hardware people own, and publish what we find.</p>
+      <h1>Measuring frontier inference.</h1>
+      <p class="lede">What AI costs to run, and how to cut it.</p>
     </div>
   </div>
 </header>
@@ -15,14 +15,14 @@
   <section class="etched">
     <div class="etched-grid solo">
       <div class="prose">
-        <h2>Measured, not estimated.</h2>
-        <p>Spliced is a small research group. We run open models on an Apple M5 Pro, an AMD Ryzen AI Max+ 395 and an RTX 5070 Ti Laptop GPU, read each chip's own power sensors while it works, and report the energy of every token and of every correct answer. Every run is repeated, warmed up, and published with its raw data.</p>
-        <h3>{{note_count}} notes so far</h3>
-        <p>Each note asks one question: what a quantization format costs, when batching pays, whether speculative decoding saves energy or only time. The prediction is written down before the run and stays in the record when it turns out wrong.</p>
-        <h3>Two model families, both early</h3>
-        <p>Trace is a draft model trained to predict a larger one, for speculative decoding. Lattice is a model kept accurate below 4 bits per weight. Each has a first version and a measured result. Neither has cleared its bar yet, though calibrated 2-bit already beats 4-bit per correct answer on a 32B model. The Models page says exactly where they stand.</p>
-        <h3>Two tools</h3>
-        <p>Phase is the open-source power meter behind every number here. Foundry is a desktop app, still in development, that runs a model on your own machine and shows the speed and energy of each answer.</p>
+        <h2>Every token has a price in joules.</h2>
+        <p>Benchmarks report speed. We report what speed costs. We run open models on the hardware people own, an Apple M5 Pro, an AMD Ryzen AI Max+ 395, an RTX 5070 Ti Laptop GPU, read each chip's own power sensors while it works, and publish the energy of every token and of every correct answer, with the raw data beside it.</p>
+        <h3>{{note_count}} notes. One question each.</h3>
+        <p>What a quantization format costs. When batching pays. Whether speculative decoding saves energy or only time. Every note writes its prediction down before the run and keeps it when it is wrong. So far: eight requests at once cut energy per token by 72%, a read token costs a fortieth of a written one, and calibration doubles the accuracy of a 2-bit model at the same size.</p>
+        <h3>Two model families, held to one bar.</h3>
+        <p>Trace is a draft model trained to predict a larger one, for speculative decoding. Lattice keeps a model accurate below 4 bits per weight. A model ships only when it beats the stock model per correct answer on the same machine. Neither has yet. On a 32B model, calibrated 2-bit already beats 4-bit per correct answer by 16%.</p>
+        <h3>Two tools.</h3>
+        <p>Phase is the open-source power meter behind every number here. Foundry is a desktop app, in development, that runs a model on your own machine and shows the speed and energy of each answer.</p>
       </div>
     </div>
   </section>

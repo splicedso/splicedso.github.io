@@ -355,7 +355,7 @@ def main():
     charts = '<script src="{{root}}assets/charts.js?v=' + VERSION + '"></script>'
 
     page("index.html", (SRC / "pages/home.html").read_text().replace("{{latest}}", notes_list("", 3)).replace("{{note_count}}", str(len(NOTES))),
-         title="Spliced", description="Research on efficient inference. We measure what a token costs, at the chip and at the board.",
+         title="Spliced", description="Measuring frontier inference. What AI costs to run, and how to cut it.",
          page="home", sheet="Spliced &middot; Efficient inference", sheetno=f"1 of {total}",
          scripts='')
     page("research/index.html", (SRC / "pages/research.html").read_text().replace("{{notes}}", notes_list("../")),
