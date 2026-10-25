@@ -420,7 +420,8 @@ h1, h2, h3 { overflow-wrap: break-word; }
   .page-head { padding: 52px 0 24px; }
   .page-head .lede, .hero p.lede { font-size: 17px; min-height: 0; }
   .area, .note-card, .fact { padding: 22px 18px; }
-  .row { grid-template-columns: 1fr 52px 104px; gap: 10px; padding: 12px 10px; }
+  .row { grid-template-columns: 1fr 44px auto; gap: 8px; padding: 12px 10px; }
+  .row .v { font-size: 11px; }
   .cmp-pick select { font-size: 16px; }
   ol.steps li { grid-template-columns: 40px 1fr; }
   .titleblock { grid-template-columns: 1fr; }
