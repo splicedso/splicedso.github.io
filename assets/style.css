@@ -1083,3 +1083,4 @@ body:has(.page-head + main > .page-object:first-child) .page-head { position: re
   mask-image: radial-gradient(ellipse 72% 70% at 50% 46%, #000 62%, transparent 100%); mix-blend-mode: normal; }
 body::before { display: none; }
 .page-head + main > .page-object:first-child { margin-top: clamp(-110px, -7vw, -40px); }
+.hero-object { max-width: min(1500px, 100vw); width: 100vw; margin: 8px 0 0 calc(50% - 50vw); position: relative; z-index: 0; } .hero .actions { position: relative; z-index: 2; } .hero-object canvas { transform: none !important; animation: none !important; mix-blend-mode: normal; -webkit-mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, #000 65%, transparent 100%); mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, #000 65%, transparent 100%); }
