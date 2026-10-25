@@ -78,4 +78,7 @@ S.area((-7, -9, 9), 900, 9)
 S.area((8, -4, 4), 600, 5)
 S.area((0, 8, 6), 400, 8)
 S.camera((16.5, -30.0, 10.0), (0.2, 0, cz - 0.2), lens=85, fstop=4.5)
-S.render(OUT)
+if "--turntable" in args:
+    S.turntable(OUT, int(args[args.index("--turntable") + 1]), sway=16)
+else:
+    S.render(OUT)

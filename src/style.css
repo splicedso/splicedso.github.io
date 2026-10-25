@@ -1058,3 +1058,4 @@ main > .page-object:first-child { margin-top: -40px; } .page-object img { max-he
   .hero-center h1 .tok, .hero h1 .tok:nth-child(n+3) { color: #0d0d0d; }
 }
 .stage-img video { display: block; width: 100%; height: auto; -webkit-mask-image: linear-gradient(#000 78%, transparent); mask-image: linear-gradient(#000 78%, transparent); }
+.mgrid video { display: block; width: 100%; height: auto; }

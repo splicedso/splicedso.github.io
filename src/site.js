@@ -121,3 +121,14 @@ const cssVar = name => getComputedStyle(document.documentElement).getPropertyVal
   addEventListener("scroll", () => requestAnimationFrame(tick), { passive: true });
   tick();
 })();
+
+// Looping videos play while on screen and pause off it (some browsers hold off-screen autoplay).
+(function videos() {
+  const vids = document.querySelectorAll("video[autoplay]");
+  if (!vids.length || !("IntersectionObserver" in window)) return;
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (reduced) { e.target.pause(); return; }
+    e.isIntersecting ? e.target.play().catch(() => {}) : e.target.pause();
+  }), { threshold: .15 });
+  vids.forEach(v => io.observe(v));
+})();
