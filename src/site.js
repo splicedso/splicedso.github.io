@@ -137,7 +137,7 @@ const cssVar = name => getComputedStyle(document.documentElement).getPropertyVal
 (function fall() {
   const c = document.getElementById("fall");
   if (!c) return;
-  const n = 72, ctx = c.getContext("2d"), frames = [];
+  const n = 36, ctx = c.getContext("2d"), frames = [];
   let cur = 0, goal = 0, running = false;
   const target = () => {
     const r = c.getBoundingClientRect();
