@@ -102,7 +102,7 @@ NOTES = [
                 "at two, then 12 to 50% more energy per token from four on. A draft and a batch fill the same idle arithmetic."},
     {"slug": "trace-35k", "file": "2026-10-trace-35k.md", "n": 26,
      "summary": "Trace v1 on 35,000 prompts: agreement with the 7B 0.7754, short of the 0.79 bar. Its guesses are accepted more "
-                "often, but it guesses less at the same threshold, so it is no faster than the stock draft."},
+                "often, but it guesses less at the same threshold. At its best threshold every draft serves within 1%, so Trace pauses."},
 ]
 
 FIGURES = {
