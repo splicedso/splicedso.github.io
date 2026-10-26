@@ -7,21 +7,21 @@
 <meta name="description" content="How to run a model well on one machine, decided by what we measured: format, batch, draft, prefix cache, clock.">
 <meta property="og:title" content="Systems &middot; Spliced">
 <meta property="og:description" content="How to run a model well on one machine, decided by what we measured: format, batch, draft, prefix cache, clock.">
-<meta property="og:image" content="https://splicedso.github.io/assets/og.png?v=202610251655">
+<meta property="og:image" content="https://splicedso.github.io/assets/og.png?v=202610251713">
 <meta property="og:url" content="https://splicedso.github.io/systems/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Spliced">
 <link rel="canonical" href="https://splicedso.github.io/systems/">
 <meta name="color-scheme" content="light dark">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="../assets/favicon.svg?v=202610251655" type="image/svg+xml">
-<link rel="icon" href="../assets/favicon-32.png?v=202610251655" type="image/png" sizes="32x32">
-<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png?v=202610251655">
+<link rel="icon" href="../assets/favicon.svg?v=202610251713" type="image/svg+xml">
+<link rel="icon" href="../assets/favicon-32.png?v=202610251713" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png?v=202610251713">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>document.documentElement.classList.add("js");</script>
-<link rel="stylesheet" href="../assets/style.css?v=202610251655">
+<link rel="stylesheet" href="../assets/style.css?v=202610251713">
 <link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
 </head>
 <body data-root="../" data-page="systems">
@@ -157,6 +157,14 @@ runs slowly does not save energy per token. Finish fast, then idle.</p>
 </table>
 <p>Foundry today ships the first row without the clock cap and with the draft off by default
 (Fast mode turns it on). The gaps between Foundry and this table are the next things to build.</p>
+<h2 data-via>From one machine to a cell</h2>
+<p>The same recipe scaled: six capped decode modules and one prefill module in a cell, a hundred cells in
+a row. The spec sheet (docs/concepts/cell-spec.md) carries every number with its basis. The modules are
+measured, about 1,150 tokens per second and 140 joules per correct answer on a 7B at full load including
+a placeholder overhead; the overhead is the prototype's first measurement. Fabric's roofline
+(spliced/fabric, <code>python -m fabric.roofline</code>) reproduces the batch floor note 8 found by hand for the
+published B200 server (64 against 58) and puts the chip-energy ceiling at 40 to 70% of measured wall
+energy, so the gap a cell has to close is named: host, supplies, fans and idle.</p>
 <h2 data-via>Not yet measured</h2>
 <ul>
 <li>Joules per correct answer with the draft on, at 8 slots. Notes 9 and 11 are per token at batch 1;
@@ -183,7 +191,7 @@ runs slowly does not save energy per token. Finish fast, then idle.</p>
   </div>
 </footer>
 
-<script src="../assets/site.js?v=202610251655"></script>
+<script src="../assets/site.js?v=202610251713"></script>
 
 </body>
 </html>
