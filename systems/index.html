@@ -7,21 +7,21 @@
 <meta name="description" content="How to run a model well on one machine, decided by what we measured: format, batch, draft, prefix cache, clock.">
 <meta property="og:title" content="Systems &middot; Spliced">
 <meta property="og:description" content="How to run a model well on one machine, decided by what we measured: format, batch, draft, prefix cache, clock.">
-<meta property="og:image" content="https://splicedso.github.io/assets/og.png?v=202610260154">
+<meta property="og:image" content="https://splicedso.github.io/assets/og.png?v=202610260219">
 <meta property="og:url" content="https://splicedso.github.io/systems/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Spliced">
 <link rel="canonical" href="https://splicedso.github.io/systems/">
 <meta name="color-scheme" content="light dark">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="../assets/favicon.svg?v=202610260154" type="image/svg+xml">
-<link rel="icon" href="../assets/favicon-32.png?v=202610260154" type="image/png" sizes="32x32">
-<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png?v=202610260154">
+<link rel="icon" href="../assets/favicon.svg?v=202610260219" type="image/svg+xml">
+<link rel="icon" href="../assets/favicon-32.png?v=202610260219" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png?v=202610260219">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>document.documentElement.classList.add("js");</script>
-<link rel="stylesheet" href="../assets/style.css?v=202610260154">
+<link rel="stylesheet" href="../assets/style.css?v=202610260219">
 <link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
 </head>
 <body data-root="../" data-page="systems">
@@ -100,8 +100,8 @@ agreement by 0.7 points and bought nothing; the stock 0.5B draft is the one to s
 Trace clears the 3-point bar. Drafts of up to 4 tokens are enough: at the 0.5 threshold they match
 drafts of 8 on prose and edits and beat them on code (1.72 against 1.51 times plain's speed, 2026-10-26
 re-run of note 11's set). In llama-server the draft also needs <code>--spec-type draft-simple</code>; with <code>-md</code>
-alone it loads and never drafts. And only at one or two requests at once: from four on, on the M5 Pro,
-the draft costs more energy per token than it saves (measured 26 October, being written up).</p>
+alone it loads and never drafts. And only at one or two requests at once: at two it cuts energy per
+token 29%, and from four on, on the M5 Pro, it costs 12 to 50% more than it saves (note 25).</p>
 <p><strong>Clock: cap the shader clock where the platform allows it.</strong> On the Strix Halo, an 1,800 MHz cap
 through the OD table cuts 7B decode energy per token 37% at 4% less speed, and 42% at 8% less
 at 1,200 MHz (results/halo-clockcap.md). Per correct answer, under the same cap, a 7B Q4_0 at
@@ -172,8 +172,6 @@ published B200 server (64 against 58) and puts the chip-energy ceiling at 40 to 
 energy, so the gap a cell has to close is named: host, supplies, fans and idle.</p>
 <h2 data-via>Not yet measured</h2>
 <ul>
-<li>Joules per correct answer with the draft on, at 8 slots. Notes 9 and 11 are per token at batch 1;
-  batching may make the draft useless (the draft steals the bandwidth the batch would use).</li>
 <li>The clock cap on Apple silicon and on the RTX laptop. No control is known for the first; the second
   has one and has not been tried.</li>
 <li>Whether an 8-slot 7B beats a 1-slot 32B per correct answer on the Strix Halo. Both are measured
@@ -196,7 +194,7 @@ energy, so the gap a cell has to close is named: host, supplies, fans and idle.<
   </div>
 </footer>
 
-<script src="../assets/site.js?v=202610260154"></script>
+<script src="../assets/site.js?v=202610260219"></script>
 
 </body>
 </html>

@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A draft and a batch fill the same gap &middot; Spliced</title>
+<meta name="description" content="A draft model against 1 to 16 requests at once on an M5 Pro. 1.26x the speed at one request and 29% less energy at two, then 12 to 50% more energy per token from four on. A draft and a batch fill the same idle arithmetic.">
+<meta property="og:title" content="A draft and a batch fill the same gap &middot; Spliced">
+<meta property="og:description" content="A draft model against 1 to 16 requests at once on an M5 Pro. 1.26x the speed at one request and 29% less energy at two, then 12 to 50% more energy per token from four on. A draft and a batch fill the same idle arithmetic.">
+<meta property="og:image" content="https://splicedso.github.io/assets/og.png?v=202610260219">
+<meta property="og:url" content="https://splicedso.github.io/research/draft-and-batch/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Spliced">
+<link rel="canonical" href="https://splicedso.github.io/research/draft-and-batch/">
+<meta name="color-scheme" content="light dark">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="../../assets/favicon.svg?v=202610260219" type="image/svg+xml">
+<link rel="icon" href="../../assets/favicon-32.png?v=202610260219" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png?v=202610260219">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>document.documentElement.classList.add("js");</script>
+<link rel="stylesheet" href="../../assets/style.css?v=202610260219">
+<link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
+</head>
+<body data-root="../../" data-page="research">
+<a class="skip" href="#content">Skip to content</a>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="../../" aria-label="Spliced home">
+      <svg viewBox="-13 -13 966 1084" aria-hidden="true"><path fill="currentColor" stroke="currentColor" stroke-width="12.7" stroke-linejoin="round" d="M639.0 0.0 L941.0 0.0 L301.0 1059.0 L0.0 1059.0 Z"/></svg>
+      Spliced
+    </a>
+    <div class="nav-right">
+      <ul>
+        <li><a href="../../research/" data-nav="research">Research</a></li>
+        <li><a href="../../models/" data-nav="models">Models</a></li>
+        <li><a href="../../systems/" data-nav="systems">Systems</a></li>
+        <li><a href="../../foundry/" data-nav="foundry">Foundry</a></li>
+        <li class="about"><a href="../../about/" data-nav="about">About</a></li>
+      </ul>
+      <a class="icon-link" href="https://github.com/splicedso" aria-label="Spliced on GitHub" title="GitHub"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a>
+      <a class="icon-link" href="https://www.linkedin.com/company/splicedso" aria-label="Spliced on LinkedIn" title="LinkedIn"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M0 1.15C0 .52.52 0 1.18 0h13.64C15.48 0 16 .52 16 1.15v13.7c0 .63-.52 1.15-1.18 1.15H1.18C.52 16 0 15.48 0 14.85V1.15zM4.75 13.39V6.17H2.35v7.22h2.4zM3.55 5.18c.84 0 1.36-.55 1.36-1.25-.02-.71-.52-1.25-1.34-1.25-.82 0-1.36.54-1.36 1.25 0 .7.52 1.25 1.33 1.25h.01zm4.91 8.21V9.36c0-.22.02-.43.08-.59.18-.43.57-.88 1.23-.88.87 0 1.22.66 1.22 1.64v3.86h2.4V9.25c0-2.22-1.18-3.25-2.76-3.25-1.27 0-1.84.7-2.16 1.19v.03h-.02l.02-.03V6.17h-2.4c.03.68 0 7.22 0 7.22h2.4z"/></svg></a>
+    </div>
+  </div>
+</nav>
+
+<svg id="bus" aria-hidden="true"></svg>
+
+<div id="content">
+<header class="page-head">
+  <div class="wrap">
+    <span class="label">Note 25 &middot; 26 October 2026</span>
+    <h1>A draft and a batch fill the same gap</h1>
+    <p class="lede">A draft model against 1 to 16 requests at once on an M5 Pro. 1.26x the speed at one request and 29% less energy at two, then 12 to 50% more energy per token from four on. A draft and a batch fill the same idle arithmetic.</p>
+    <p class="setup"><strong>Prediction verdict:</strong> held on the shape. A draft model pays at one or two requests at once and costs energy from four on. Missed narrowly at the edges: at one request the draft cost 3% more energy, not up to 20% less, and at four it cost 12% more, not within 10%. Two earlier predictions in the same series missed outright, and the reason they missed is part of this note (section 3).</p>
+  </div>
+</header>
+<main><article class="wrap note-body"><p>Spliced research note 25, 26 October 2026. Apple M5 Pro, 24 GB, macOS 27.0.1 on AC, Metal. llama.cpp build 11669 (Homebrew), llama-server. Target Qwen2.5 7B Instruct Q4_0, draft Qwen2.5 0.5B Instruct Q4_0, drafts of up to 4 tokens with a 0.5 confidence threshold.</p>
+<p>Notes 9 and 11 found that a draft model with a confidence threshold makes one request faster at no energy cost. Note 24 found that serving many requests at once cuts energy per token by up to 79%. Both work the same way: decoding one token reads every weight from memory, and the chip's arithmetic waits on that read. A draft fills the waiting arithmetic by checking several guessed tokens in one pass. A batch fills it with other people's requests. This note measures what happens when both compete for the same gap.</p>
+<p><strong>Prediction</strong> (<code>docs/predictions.md</code>, 26 October 02:06, committed before the run): at one request 1.25 to 1.45 times plain's speed at 0.8 to 1.0 times its energy; at two, 10 to 30% less energy; at four, within 10% of plain; at eight and sixteen, 15 to 60% more energy and less throughput.</p>
+<h2 data-via>Method</h2>
+<p><code>experiments/decode_batch_energy.py</code>, the script of note 24, with the draft passed to llama-server. For each batch of 1, 2, 4, 8 and 16, a fresh server, a short warm-up, then that many identical requests at once, each a 512-token answer to note 11's power-supply prompt at temperature 0. Chip power by macmon at 5 Hz over the whole window, two passes with the second reversed. Plain decoding ran before and after the draft run, and the two plain runs agree within 1% at every batch. Pass spreads are 0 to 8%, with 30 to 102 power samples per window.</p>
+<h2 data-via>Results</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">requests</th>
+<th style="text-align: right;">plain tok/s</th>
+<th style="text-align: right;">draft tok/s</th>
+<th style="text-align: right;">speed</th>
+<th style="text-align: right;">plain mJ/token</th>
+<th style="text-align: right;">draft mJ/token</th>
+<th style="text-align: right;">energy</th>
+<th style="text-align: right;">plain W</th>
+<th style="text-align: right;">draft W</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">61.9</td>
+<td style="text-align: right;">78.3</td>
+<td style="text-align: right;">1.26x</td>
+<td style="text-align: right;">370</td>
+<td style="text-align: right;">381</td>
+<td style="text-align: right;">1.03x</td>
+<td style="text-align: right;">22.9</td>
+<td style="text-align: right;">29.8</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">100.2</td>
+<td style="text-align: right;">125.5</td>
+<td style="text-align: right;">1.25x</td>
+<td style="text-align: right;">391</td>
+<td style="text-align: right;">279</td>
+<td style="text-align: right;">0.71x</td>
+<td style="text-align: right;">39.1</td>
+<td style="text-align: right;">35.0</td>
+</tr>
+<tr>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">192.3</td>
+<td style="text-align: right;">163.4</td>
+<td style="text-align: right;">0.85x</td>
+<td style="text-align: right;">203</td>
+<td style="text-align: right;">227</td>
+<td style="text-align: right;">1.12x</td>
+<td style="text-align: right;">39.0</td>
+<td style="text-align: right;">37.1</td>
+</tr>
+<tr>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">339.2</td>
+<td style="text-align: right;">229.8</td>
+<td style="text-align: right;">0.68x</td>
+<td style="text-align: right;">109</td>
+<td style="text-align: right;">163</td>
+<td style="text-align: right;">1.50x</td>
+<td style="text-align: right;">36.9</td>
+<td style="text-align: right;">37.6</td>
+</tr>
+<tr>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">377.0</td>
+<td style="text-align: right;">329.1</td>
+<td style="text-align: right;">0.87x</td>
+<td style="text-align: right;">95</td>
+<td style="text-align: right;">114</td>
+<td style="text-align: right;">1.20x</td>
+<td style="text-align: right;">35.9</td>
+<td style="text-align: right;">37.5</td>
+</tr>
+</tbody>
+</table>
+<p>Between 67% and 74% of drafted tokens were accepted at every batch.</p>
+<h2 data-via>1. One request: faster, not cheaper</h2>
+<p>At one request the draft gives 1.26 times the speed for 3% more energy per token, close to note 11's 1.25 times and 4%. Chip power rises from 23 to 30 W: checking a 4-token draft is a small batch, and the chip draws batch power to do it. The time saved almost exactly pays for the extra power.</p>
+<h2 data-via>2. Two requests: the draft's best case</h2>
+<p>At two requests the draft cuts energy per token by 29% and keeps its speed-up. Plain decoding pays a power step at the second request: 23 W at one, 39 W at two, the step note 1 described. With the draft the chip is already working at batch power, so the second request adds tokens without adding watts (35 W). Two is where the gap is widest and only the draft fills it.</p>
+<h2 data-via>3. Four and more: the batch has already filled the gap</h2>
+<p>From four requests the batch alone keeps the arithmetic busy, so checking guesses competes with real work. At eight requests the draft costs 50% more energy per token and serves 32% fewer tokens per second. Every rejected guess is now paid for in arithmetic the batch would have used.</p>
+<p>The first runs of this series used a weather paragraph as the prompt. The draft's guesses on that text were accepted about 60% of the time, which is break-even for a 4-token draft. They showed no speed-up even at one request, contradicting note 11. A one-change-at-a-time diagnostic (<code>experiments/spec_diag.py</code>, <code>results/spec-diag-mac.json</code>) traced it to the prompt alone: on the power-supply prompt acceptance rose to 80% and the speed-up to 1.41 times. Answer length, slot count and context size did not explain it. The weather runs are kept and say the same thing about batching, at worse odds: on that text the draft costs energy at every batch except two. A draft's value depends on the text before it depends on anything else.</p>
+<h2 data-via>4. Two settings that decide whether there is a draft at all</h2>
+<ul>
+<li><strong>Draft length.</strong> At the 0.5 threshold, drafts of up to 4 matched drafts of up to 8 on prose (1.27 against 1.24 times plain's speed) and edits (2.25 against 2.24), and beat them on code (1.72 against 1.51; note 11's set, re-run 26 October, <code>results/speculative-server-mac-foundry-length.json</code>).</li>
+<li><strong>The speculative type.</strong> In this llama.cpp build, <code>llama-server -md draft.gguf</code> loads the draft and never uses it unless <code>--spec-type draft-simple</code> is also given. Nothing warns. Our own app, Foundry, shipped Fast mode with that defect; it is fixed, and the app now says so if a Fast-mode answer drafted nothing. Any draft result whose timings show no drafted tokens is void. One run of this series was, and it is kept apart in <code>results/void/</code>.</li>
+</ul>
+<h2 data-via>What this changes</h2>
+<ul>
+<li>A draft model belongs on a machine serving one or two requests at once, which describes a person's own laptop. A server with four or more requests in flight should turn it off. The rule depends on the load, not on the model, so a scheduler can apply it per moment.</li>
+<li>Trace, our draft-model family, is for the first case. Its bar stays at one request, and its value is largest on text the stock draft guesses badly.</li>
+</ul>
+<h2 data-via>Limits</h2>
+<ul>
+<li>One machine, one model pair, one prompt for the main table. Every request in a batch is the same prompt, so every slot drafts the same tokens; a real batch mixes easy and hard text, and its acceptance would sit between this note's two prompts.</li>
+<li>Chip energy only, not the board or the wall. Idle and board power are a fixed cost per second, so at the wall the draft's speed-up at one request is worth more than this table shows.</li>
+<li>The power step at two requests belongs to this chip; on a GPU already at its power ceiling at one request (note 10) the batch-2 result will differ.</li>
+</ul>
+<h2 data-via>Reproduce</h2>
+<pre><code class="language-bash">export PROMPT=power BATCHES=1,2,4,8,16 ANSWER=512
+uv run python experiments/decode_batch_energy.py models/quant/7b-Q4_0.gguf results/spec-batch-power-a512-plain1.json
+SERVER_ARGS=&quot;-md models/quant/0.5b-Q4_0.gguf --spec-type draft-simple --spec-draft-n-max 4 --spec-draft-p-min 0.5 -ngld 99&quot; \
+  uv run python experiments/decode_batch_energy.py models/quant/7b-Q4_0.gguf results/spec-batch-power-a512-draft.json
+uv run python experiments/decode_batch_energy.py models/quant/7b-Q4_0.gguf results/spec-batch-power-a512-plain2.json
+uv run python experiments/spec_diag.py results/spec-diag-mac.json
+</code></pre>
+<p>Nothing else running. Raw results: <code>results/spec-batch-power-a512-*.json</code> (the table), <code>results/spec-batch-power-{plain1,draft,plain2}.json</code> (128-token windows, speed only, too noisy for energy), <code>results/spec-batch-mac-7b-*.json</code> and <code>results/spec-batch-mac-7b-q4_0-*.json</code> (the weather prompt), <code>results/spec-diag-mac.json</code>, <code>results/speculative-server-mac-rerun-2026-10-26.json</code>.</p>
+<p class="source mono">Source, scripts and raw data: <a href="https://github.com/splicedso/phase/blob/main/notes/2026-10-draft-and-batch.md">phase/notes/2026-10-draft-and-batch.md</a></p>
+</article></main>
+</div>
+
+<footer>
+  <div class="wrap foot">
+    <a class="brand" href="../../" aria-label="Spliced home"><svg viewBox="-13 -13 966 1084" aria-hidden="true"><path fill="currentColor" stroke="currentColor" stroke-width="12.7" stroke-linejoin="round" d="M639.0 0.0 L941.0 0.0 L301.0 1059.0 L0.0 1059.0 Z"/></svg>Spliced</a>
+    <nav class="foot-nav" aria-label="Footer">
+      <a href="../../research/">Research</a><a href="../../models/">Models</a><a href="../../systems/">Systems</a><a href="../../designs/">Designs</a><a href="../../foundry/">Foundry</a><a href="../../learn/">Learn</a><a href="../../data/">Data</a><a href="../../tools/phase/">Phase</a><a href="../../about/">About</a>
+    </nav>
+    <div class="foot-social">
+      <a href="https://github.com/splicedso" aria-label="GitHub"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a>
+      <a href="https://www.linkedin.com/company/splicedso" aria-label="LinkedIn"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M0 1.15C0 .52.52 0 1.18 0h13.64C15.48 0 16 .52 16 1.15v13.7c0 .63-.52 1.15-1.18 1.15H1.18C.52 16 0 15.48 0 14.85V1.15zM4.75 13.39V6.17H2.35v7.22h2.4zM3.55 5.18c.84 0 1.36-.55 1.36-1.25-.02-.71-.52-1.25-1.34-1.25-.82 0-1.36.54-1.36 1.25 0 .7.52 1.25 1.33 1.25h.01zm4.91 8.21V9.36c0-.22.02-.43.08-.59.18-.43.57-.88 1.23-.88.87 0 1.22.66 1.22 1.64v3.86h2.4V9.25c0-2.22-1.18-3.25-2.76-3.25-1.27 0-1.84.7-2.16 1.19v.03h-.02l.02-.03V6.17h-2.4c.03.68 0 7.22 0 7.22h2.4z"/></svg></a>
+    </div>
+    <p class="foot-small">&copy; 2026 Spliced. Research and data are open.</p>
+  </div>
+</footer>
+
+<script src="../../assets/site.js?v=202610260219"></script>
+<script src="../../assets/charts.js?v=202610260219"></script>
+</body>
+</html>
