@@ -7,21 +7,21 @@
 <meta name="description" content="Concepts drawn from our measurements: a decode-first inference module and a sled that splits prefill from decode. Designs, not products.">
 <meta property="og:title" content="Designs &middot; Spliced">
 <meta property="og:description" content="Concepts drawn from our measurements: a decode-first inference module and a sled that splits prefill from decode. Designs, not products.">
-<meta property="og:image" content="https://splicedso.github.io/assets/og.png?v=202610261130">
+<meta property="og:image" content="https://splicedso.github.io/assets/og.png?v=202610261216">
 <meta property="og:url" content="https://splicedso.github.io/designs/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Spliced">
 <link rel="canonical" href="https://splicedso.github.io/designs/">
 <meta name="color-scheme" content="light dark">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="../assets/favicon.svg?v=202610261130" type="image/svg+xml">
-<link rel="icon" href="../assets/favicon-32.png?v=202610261130" type="image/png" sizes="32x32">
-<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png?v=202610261130">
+<link rel="icon" href="../assets/favicon.svg?v=202610261216" type="image/svg+xml">
+<link rel="icon" href="../assets/favicon-32.png?v=202610261216" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png?v=202610261216">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>document.documentElement.classList.add("js");</script>
-<link rel="stylesheet" href="../assets/style.css?v=202610261130">
+<link rel="stylesheet" href="../assets/style.css?v=202610261216">
 <link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
 </head>
 <body data-root="../" data-page="designs">
@@ -50,7 +50,7 @@
 <svg id="bus" aria-hidden="true"></svg>
 
 <div id="content">
-<figure class="top-render lineup"><img src="../assets/img/lineup.webp?v=202610261130" width="1768" height="1200" alt="The Spliced family at relative scale: the package, the node, the tray of six, the pod of eighty-four"></figure>
+<figure class="top-render lineup"><img src="../assets/img/lineup.webp?v=202610261216" width="1768" height="1200" alt="The Spliced family at relative scale: the package, the node, the tray of six, the pod of eighty-four"></figure>
 <header class="page-head">
   <div class="wrap">
     <span class="label">Research thread</span>
@@ -62,7 +62,7 @@
 <main>
   <section class="etched">
     <div class="etched-grid">
-      <figure><img src="../assets/img/decode.webp?v=202610261130" width="2532" height="1432" alt="A concept inference module: a small compute die ringed by eight memory stacks on one interposer" loading="lazy"></figure>
+      <figure><img src="../assets/img/decode.webp?v=202610261216" width="2532" height="1432" alt="A concept inference module: a small compute die ringed by eight memory stacks on one interposer" loading="lazy"></figure>
       <div class="prose">
         <h2>The module.</h2>
         <p>Decode reads every weight and every cached token once per step and does little arithmetic on them. The part that serves it well is memory first: a small compute die in the middle of a ring of eight memory stacks, on one interposer, sized to its bandwidth and run at a capped clock by design. On the AMD Ryzen AI Max+ 395, capping the shader clock at 1,800 MHz cut joules per correct answer 19 to 28% at accuracy within a point. Eight requests at once cut energy per token by 72%; the module is meant to run eight or more sequences per step, always.</p>
@@ -72,7 +72,7 @@
 
   <section class="etched">
     <div class="etched-grid">
-      <figure><img src="../assets/img/desk-open.webp?v=202610261130" width="1928" height="1547" alt="The desk unit open: one decode carrier on its rails above a host board, a fan wall behind" loading="lazy"></figure>
+      <figure><img src="../assets/img/desk-open.webp?v=202610261216" width="1928" height="1547" alt="The desk unit open: one decode carrier on its rails above a host board, a fan wall behind" loading="lazy"></figure>
       <div class="prose">
         <h2>The carrier, and the desk unit.</h2>
         <p>The module lives in a carrier: a tray with the board, a vapour chamber the length of the tray, a fin stack that runs front to back inside its own duct, and a handle. It is the one part every size shares. One carrier in a small air-cooled enclosure is the desk unit, 0.32 by 0.28 by 0.62 metres: a filtered intake at the front, the carrier's own duct, two fans at the back, a host board underneath, power and two network ports at the rear. It runs the same scheduler and the same operating system as a cell, for someone hosting a model at home or in an office.</p>
@@ -84,7 +84,7 @@
 
   <section class="etched">
     <div class="etched-grid">
-      <figure><img src="../assets/img/cell-open.webp?v=202610261130" width="2261" height="1679" alt="The cell open: a fan wall at the front, twelve carriers in two tiers in the airflow, the prefill module and host shelf at the rear" loading="lazy"></figure>
+      <figure><img src="../assets/img/cell-open.webp?v=202610261216" width="2261" height="1679" alt="The cell open: a fan wall at the front, twelve carriers in two tiers in the airflow, the prefill module and host shelf at the rear" loading="lazy"></figure>
       <div class="prose">
         <h2>The cell, air cooled.</h2>
         <p>A low, narrow, deep block, 0.6 by 1.2 by 3.0 metres, the proportions of an accelerator card lying flat. Air enters through the whole front door, a filtered grille, passes a wall of eight fans, runs front to back through ducted lanes over twelve carriers in two tiers of six, then over the prefill module's tall fin stack, and leaves through the rear door. The host board and the switch sit on a shelf in the exhaust plenum. Every carrier pulls out from the front. Each long side is a blind-mate dock with two coolant couplers for a liquid option, a fibre plate and a busbar cover.</p>
@@ -98,7 +98,7 @@
 
   <section class="etched">
     <div class="etched-grid solo">
-      <figure class="wide"><img src="../assets/img/cell-row.webp?v=202610261130" width="2405" height="1308" alt="Eight concept cells docked side by side into one row" loading="lazy"></figure>
+      <figure class="wide"><img src="../assets/img/cell-row.webp?v=202610261216" width="2405" height="1308" alt="Eight concept cells docked side by side into one row" loading="lazy"></figure>
     </div>
   </section>
 
@@ -135,7 +135,7 @@
 
   <section class="etched">
     <div class="etched-grid">
-      <figure><img src="../assets/img/node-open.webp?v=202610261130" width="1902" height="1400" alt="The node with its side off: the board on edge, the package under a finned heatsink with the fins running front to back, two fans at the rear" loading="lazy"></figure>
+      <figure><img src="../assets/img/node-open.webp?v=202610261216" width="1902" height="1400" alt="The node with its side off: the board on edge, the package under a finned heatsink with the fins running front to back, two fans at the rear" loading="lazy"></figure>
       <div class="prose">
         <h2>The node.</h2>
         <p>It runs a 7B at eight requests at once under a capped clock at about 190 tokens per second and 111 joules per correct answer, the measured figure for its package, and a 32B fits in its memory. What is not measured yet is the whole box at the wall, its blowers and supply included, under the cap; that is a plug-in meter and an afternoon, and it is first on the list.</p>
@@ -145,7 +145,7 @@
 
   <section class="etched">
     <div class="etched-grid">
-      <figure><img src="../assets/img/node-grid.webp?v=202610261130" width="1528" height="1400" alt="Four nodes docked into a two by two grid, side by side and stacked" loading="lazy"></figure>
+      <figure><img src="../assets/img/node-grid.webp?v=202610261216" width="1528" height="1400" alt="Four nodes docked into a two by two grid, side by side and stacked" loading="lazy"></figure>
       <div class="prose">
         <h2>Why this shape, and the grid.</h2>
         <p>The most efficient box for air is the one where air goes in one face, along the fins, and out the opposite face with no turn: the least fan power per watt removed, every fin in the stream, and a box that packs edge to edge on its closed faces. The board standing on edge sets the depth, the heatsink sets the height, and the width is the board plus the fins plus the fan. So the node is narrow, deep and tall.</p>
@@ -156,7 +156,7 @@
 
   <section class="etched">
     <div class="etched-grid">
-      <figure><img src="../assets/img/node-tray.webp?v=202610261130" width="2400" height="1390" alt="A 3U tray holding six nodes standing side by side with a fan plate behind" loading="lazy"></figure>
+      <figure><img src="../assets/img/node-tray.webp?v=202610261216" width="2400" height="1390" alt="A 3U tray holding six nodes standing side by side with a fan plate behind" loading="lazy"></figure>
       <div class="prose">
         <h2>The tray: six across.</h2>
         <p>The bought box breathes through its top and sides and cannot be packed; the Spliced shell breathes front to back and can. A 3U tray at standard rack width holds six nodes standing side by side, 12 millimetres apart, one row deep, each pulling its own air through the tray, with a fan plate at the rear that empties the plenum. No host board: every node is its own host. The tray carries power distribution and a badge; each node's 10 gigabit port cables to the pod's switch.</p>
@@ -166,7 +166,7 @@
 
   <section class="etched">
     <div class="etched-grid">
-      <figure><img src="../assets/img/node-rack.webp?v=202610261130" width="1154" height="1950" alt="A 42U rack of fourteen trays, eighty-four nodes, with a power shelf at the bottom and switches at the top" loading="lazy"></figure>
+      <figure><img src="../assets/img/node-rack.webp?v=202610261216" width="1154" height="1950" alt="A 42U rack of fourteen trays, eighty-four nodes, with a power shelf at the bottom and switches at the top" loading="lazy"></figure>
       <div class="prose">
         <h2>The pod, and what the budget says.</h2>
         <p>Fourteen trays, eighty-four nodes, a power shelf, two switches: about 7.6 kilowatts busy on the measured per-node package figure plus a placeholder for each node's fans and supply and the tray fans, and about 16,000 tokens per second on a 7B. The budget in our scheduler passes its airflow, feed and idle checks on paper. It also says the design's first fight is everything around the node: fans, the switch, conversion losses and idle are nearly as much power as the nodes themselves at low load. The row of pods below sits in hot-aisle containment like any row.</p>
@@ -178,7 +178,7 @@
 
   <section class="etched">
     <div class="etched-grid solo">
-      <figure class="wide"><img src="../assets/img/node-row.webp?v=202610261130" width="1791" height="1098" alt="Six pods of nodes side by side in a hot-aisle row" loading="lazy"></figure>
+      <figure class="wide"><img src="../assets/img/node-row.webp?v=202610261216" width="1791" height="1098" alt="Six pods of nodes side by side in a hot-aisle row" loading="lazy"></figure>
     </div>
   </section>
 </main>
@@ -199,7 +199,7 @@
   </div>
 </footer>
 
-<script src="../assets/site.js?v=202610261130"></script>
+<script src="../assets/site.js?v=202610261216"></script>
 
 </body>
 </html>
