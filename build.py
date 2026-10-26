@@ -109,6 +109,9 @@ NOTES = [
     {"slug": "second-family", "file": "2026-10-second-family.md", "n": 28,
      "summary": "Note 6's format sweep on a second family, IBM's Granite 3.3 2B. Every format costs within 7% per weight of Qwen2.5 at "
                 "the same width, in the same order, and Q4_0 is cheapest; per correct answer it leads by only 2 to 3%."},
+    {"slug": "thinking-cost", "file": "2026-10-thinking-cost.md", "n": 29,
+     "summary": "Thinking on a 4B: about seven times the energy per correct answer, and lower scores on maths and knowledge. Almost "
+                "every lost answer ran out of room mid-thought. A 2,048-token budget with a fallback kept the gain on code at a third of the tokens."},
 ]
 
 FIGURES = {
