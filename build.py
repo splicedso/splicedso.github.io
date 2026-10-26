@@ -94,6 +94,9 @@ NOTES = [
     {"slug": "capped-quality", "file": "2026-10-capped-quality.md", "n": 23,
      "summary": "Capping the Strix Halo's shader clock at 1,800 MHz cuts joules per correct answer 19 to 28% on a 7B and a 32B at eight "
                 "requests at once, with accuracy within a point, for 11 to 24% less speed. Two-bit's lead over 4-bit shrinks under the cap."},
+    {"slug": "decode-batch", "file": "2026-10-decode-batch.md", "n": 24,
+     "summary": "Decode energy per token at batch 1 to 32 on an M5 Pro, 7B. Batch 8 costs 74% less than batch 1 and 16 costs 79% "
+                "less, then 32 costs 15% more than 16: the knee is an optimum, not a plateau, and a chat user is at 21 tok/s there."},
 ]
 
 FIGURES = {
