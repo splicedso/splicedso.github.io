@@ -106,6 +106,9 @@ NOTES = [
     {"slug": "lattice-v1", "file": "2026-10-lattice-v1.md", "n": 27,
      "summary": "Lattice v1: two-bit training took the 1.5B from 66% to 24%. Two controls split it: the training data cost 17 points, "
                 "the 2-bit grid 21. On a model this small, 2-bit costs more per correct answer than 4-bit at any accuracy."},
+    {"slug": "second-family", "file": "2026-10-second-family.md", "n": 28,
+     "summary": "Note 6's format sweep on a second family, IBM's Granite 3.3 2B. Every format costs within 7% per weight of Qwen2.5 at "
+                "the same width, in the same order, and Q4_0 is cheapest; per correct answer it leads by only 2 to 3%."},
 ]
 
 FIGURES = {

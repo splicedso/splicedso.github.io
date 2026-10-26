@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A second model family: the format findings hold &middot; Spliced</title>
+<meta name="description" content="Note 6's format sweep on a second family, IBM's Granite 3.3 2B. Every format costs within 7% per weight of Qwen2.5 at the same width, in the same order, and Q4_0 is cheapest; per correct answer it leads by only 2 to 3%.">
+<meta property="og:title" content="A second model family: the format findings hold &middot; Spliced">
+<meta property="og:description" content="Note 6's format sweep on a second family, IBM's Granite 3.3 2B. Every format costs within 7% per weight of Qwen2.5 at the same width, in the same order, and Q4_0 is cheapest; per correct answer it leads by only 2 to 3%.">
+<meta property="og:image" content="https://splicedso.github.io/assets/og.png?v=202610261130">
+<meta property="og:url" content="https://splicedso.github.io/research/second-family/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Spliced">
+<link rel="canonical" href="https://splicedso.github.io/research/second-family/">
+<meta name="color-scheme" content="light dark">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="../../assets/favicon.svg?v=202610261130" type="image/svg+xml">
+<link rel="icon" href="../../assets/favicon-32.png?v=202610261130" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png?v=202610261130">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>document.documentElement.classList.add("js");</script>
+<link rel="stylesheet" href="../../assets/style.css?v=202610261130">
+<link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
+</head>
+<body data-root="../../" data-page="research">
+<a class="skip" href="#content">Skip to content</a>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="../../" aria-label="Spliced home">
+      <svg viewBox="-13 -13 966 1084" aria-hidden="true"><path fill="currentColor" stroke="currentColor" stroke-width="12.7" stroke-linejoin="round" d="M639.0 0.0 L941.0 0.0 L301.0 1059.0 L0.0 1059.0 Z"/></svg>
+      Spliced
+    </a>
+    <div class="nav-right">
+      <ul>
+        <li><a href="../../research/" data-nav="research">Research</a></li>
+        <li><a href="../../models/" data-nav="models">Models</a></li>
+        <li><a href="../../systems/" data-nav="systems">Systems</a></li>
+        <li><a href="../../foundry/" data-nav="foundry">Foundry</a></li>
+        <li class="about"><a href="../../about/" data-nav="about">About</a></li>
+      </ul>
+      <a class="icon-link" href="https://github.com/splicedso" aria-label="Spliced on GitHub" title="GitHub"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a>
+      <a class="icon-link" href="https://www.linkedin.com/company/splicedso" aria-label="Spliced on LinkedIn" title="LinkedIn"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M0 1.15C0 .52.52 0 1.18 0h13.64C15.48 0 16 .52 16 1.15v13.7c0 .63-.52 1.15-1.18 1.15H1.18C.52 16 0 15.48 0 14.85V1.15zM4.75 13.39V6.17H2.35v7.22h2.4zM3.55 5.18c.84 0 1.36-.55 1.36-1.25-.02-.71-.52-1.25-1.34-1.25-.82 0-1.36.54-1.36 1.25 0 .7.52 1.25 1.33 1.25h.01zm4.91 8.21V9.36c0-.22.02-.43.08-.59.18-.43.57-.88 1.23-.88.87 0 1.22.66 1.22 1.64v3.86h2.4V9.25c0-2.22-1.18-3.25-2.76-3.25-1.27 0-1.84.7-2.16 1.19v.03h-.02l.02-.03V6.17h-2.4c.03.68 0 7.22 0 7.22h2.4z"/></svg></a>
+    </div>
+  </div>
+</nav>
+
+<svg id="bus" aria-hidden="true"></svg>
+
+<div id="content">
+<header class="page-head">
+  <div class="wrap">
+    <span class="label">Note 28 &middot; 26 October 2026</span>
+    <h1>A second model family: the format findings hold</h1>
+    <p class="lede">Note 6's format sweep on a second family, IBM's Granite 3.3 2B. Every format costs within 7% per weight of Qwen2.5 at the same width, in the same order, and Q4_0 is cheapest; per correct answer it leads by only 2 to 3%.</p>
+    <p class="setup"><strong>Prediction verdict:</strong> held on energy, missed narrowly on accuracy. On IBM's Granite 3.3 2B, Q4_0 is the cheapest format per weight and per correct answer, and every format's cost per weight lands within 7% of the Qwen2.5 model of the same width. Q4_0 scores 3.6 points below Q8_0, against a predicted 3.</p>
+  </div>
+</header>
+<main><article class="wrap note-body"><p>Spliced research note 28, 26 October 2026. Apple M5 Pro, 24 GB, macOS 27.0.1 on AC, Metal. llama.cpp build 11669 (Homebrew). IBM Granite 3.3 2B Instruct (Apache-2.0) and Qwen2.5 3B Instruct.</p>
+<p>Every format result in notes 1 to 27 was measured on one model family, Qwen2.5. A finding that holds on one family might belong to that family's shapes rather than to the formats. This note repeats note 6's format sweep on a second family. Granite 3.3 2B has the same hidden width as Qwen2.5 3B, 2,048, which note 6 measured, so the two can be compared weight for weight.</p>
+<h2 data-via>Method</h2>
+<p>IBM's own F16 GGUF, its SHA-256 checked against the published hash, quantized here into Q4_0, Q4_K_M, Q5_K_M, Q6_K and Q8_0 with the Homebrew <code>llama-quantize</code>, as note 6 did for Qwen2.5. Each file decoded with <code>phase --seconds 12</code>, two passes, the second in reverse order, with Qwen2.5 3B's five files run in the same session as a reference. Energy per token is divided by the weights read per token, every tensor except the token embedding table, giving energy per weight. Then GSM8K, 250 problems, 8 requests at once, for Granite's Q4_0, Q4_K_M and Q8_0, two passes in mirrored order.</p>
+<p><strong>A first attempt is void.</strong> The first sweep came back 23 to 77% above note 6 on the same Qwen files at the same speed. The machine was not idle: another project's software container was holding the chip at 10 to 17 W at rest, against 0.6 W on a quiet machine. The <code>phase</code> tool now refuses to measure on macOS above 3 W at rest, and this run started only after two quiet readings in a row (0.46 and 0.50 W). The void files are kept in <code>results/void/</code>.</p>
+<h2 data-via>Results</h2>
+<p>Board energy per weight, picojoules, mean of two passes:</p>
+<table>
+<thead>
+<tr>
+<th>format</th>
+<th style="text-align: right;">Granite 3.3 2B</th>
+<th style="text-align: right;">Qwen2.5 3B, this session</th>
+<th style="text-align: right;">Qwen2.5 3B, note 6</th>
+<th style="text-align: right;">Granite against Qwen</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Q4_0</td>
+<td style="text-align: right;">155.1</td>
+<td style="text-align: right;">153.2</td>
+<td style="text-align: right;">152.9</td>
+<td style="text-align: right;">+1.3%</td>
+</tr>
+<tr>
+<td>Q4_K_M</td>
+<td style="text-align: right;">190.8</td>
+<td style="text-align: right;">183.0</td>
+<td style="text-align: right;">182.7</td>
+<td style="text-align: right;">+4.3%</td>
+</tr>
+<tr>
+<td>Q5_K_M</td>
+<td style="text-align: right;">246.9</td>
+<td style="text-align: right;">232.4</td>
+<td style="text-align: right;">231.4</td>
+<td style="text-align: right;">+6.3%</td>
+</tr>
+<tr>
+<td>Q6_K</td>
+<td style="text-align: right;">243.9</td>
+<td style="text-align: right;">229.2</td>
+<td style="text-align: right;">229.5</td>
+<td style="text-align: right;">+6.4%</td>
+</tr>
+<tr>
+<td>Q8_0</td>
+<td style="text-align: right;">265.3</td>
+<td style="text-align: right;">247.8</td>
+<td style="text-align: right;">250.1</td>
+<td style="text-align: right;">+7.1%</td>
+</tr>
+</tbody>
+</table>
+<p>GSM8K, 8 requests at once:</p>
+<table>
+<thead>
+<tr>
+<th>Granite format</th>
+<th style="text-align: right;">accuracy</th>
+<th style="text-align: right;">chip J per correct answer</th>
+<th style="text-align: right;">tokens per answer</th>
+<th style="text-align: right;">chip mJ per token</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Q4_0</td>
+<td style="text-align: right;">75.2%</td>
+<td style="text-align: right;">20.0</td>
+<td style="text-align: right;">260</td>
+<td style="text-align: right;">57.8</td>
+</tr>
+<tr>
+<td>Q4_K_M</td>
+<td style="text-align: right;">74.4%</td>
+<td style="text-align: right;">20.4</td>
+<td style="text-align: right;">219</td>
+<td style="text-align: right;">69.3</td>
+</tr>
+<tr>
+<td>Q8_0</td>
+<td style="text-align: right;">78.8%</td>
+<td style="text-align: right;">20.6</td>
+<td style="text-align: right;">255</td>
+<td style="text-align: right;">63.5</td>
+</tr>
+</tbody>
+</table>
+<h2 data-via>1. The cost of a weight belongs to the format and the width</h2>
+<p>At the same width, a Granite weight costs within 1.3 to 7.1% of a Qwen weight in every format. The order of the formats is the same: Q4_0 cheapest, then Q4_K_M, then Q5_K_M and Q6_K together, then Q8_0. Granite is always slightly the dearer. It has 40 layers to Qwen 3B's 36, with narrower feed-forward blocks (8,192 against 11,008), so each token passes through more, smaller matrices. The Qwen reference in this session matched note 6, two days earlier, within 0.9% in every format, so the comparison rests on a machine that measured the same thing twice.</p>
+<h2 data-via>2. Per correct answer the formats nearly tie</h2>
+<p>Per correct answer, Q4_0 is cheapest, but by 2 to 3%. Q8_0 answers 3.6 points more often, which nearly pays for its larger weights. At 8 requests at once Q8_0 also costs less per token than Q4_K_M, 63.5 against 69.3 millijoules: in a batch, the work of unpacking a K-quant shows, as note 5 found for a single matrix. Q4_K_M gives shorter answers, 219 tokens against 260, which is why it nearly matches Q4_0 per answer despite costing more per token.</p>
+<h2 data-via>What this changes</h2>
+<ul>
+<li>The format recipe on the Systems page, Q4_0 below 32B, holds on a second family. On Granite the margin per correct answer is small, so a model that loses more accuracy at Q4_0 than Granite does could reverse it; check accuracy per model.</li>
+<li>Batching and speculative decoding have still been measured only on Qwen2.5.</li>
+</ul>
+<h2 data-via>Limits</h2>
+<ul>
+<li>One machine, one Granite size, one task. Two families now, not all families.</li>
+<li>Board energy for the format sweep, chip energy for GSM8K, as in notes 6 and 19.</li>
+<li>The token embedding table is left out of the weight count, as in note 6, though both models reuse it as the output layer.</li>
+</ul>
+<h2 data-via>Reproduce</h2>
+<pre><code class="language-bash">curl -L -o models/quant/granite2b-F16.gguf https://huggingface.co/ibm-granite/granite-3.3-2b-instruct-GGUF/resolve/main/granite-3.3-2b-instruct-f16.gguf
+for f in Q4_0 Q4_K_M Q5_K_M Q6_K Q8_0; do llama-quantize models/quant/granite2b-F16.gguf models/quant/granite2b-$f.gguf $f; done
+sh experiments/when_quiet.sh experiments/width_granite.sh   # waits for a quiet Mac, then the sweep and GSM8K
+</code></pre>
+<p>Raw: <code>results/width-granite-run1.json</code>, <code>results/width-granite-run2.json</code>, <code>results/summary-width-granite.json</code>, <code>results/quality-mac-granite2b-*-pass{1,2}.json</code>.</p>
+<p class="source mono">Source, scripts and raw data: <a href="https://github.com/splicedso/phase/blob/main/notes/2026-10-second-family.md">phase/notes/2026-10-second-family.md</a></p>
+</article></main>
+</div>
+
+<footer>
+  <div class="wrap foot">
+    <a class="brand" href="../../" aria-label="Spliced home"><svg viewBox="-13 -13 966 1084" aria-hidden="true"><path fill="currentColor" stroke="currentColor" stroke-width="12.7" stroke-linejoin="round" d="M639.0 0.0 L941.0 0.0 L301.0 1059.0 L0.0 1059.0 Z"/></svg>Spliced</a>
+    <nav class="foot-nav" aria-label="Footer">
+      <a href="../../research/">Research</a><a href="../../models/">Models</a><a href="../../systems/">Systems</a><a href="../../designs/">Designs</a><a href="../../foundry/">Foundry</a><a href="../../learn/">Learn</a><a href="../../data/">Data</a><a href="../../tools/phase/">Phase</a><a href="../../about/">About</a>
+    </nav>
+    <div class="foot-social">
+      <a href="https://github.com/splicedso" aria-label="GitHub"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a>
+      <a href="https://www.linkedin.com/company/splicedso" aria-label="LinkedIn"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M0 1.15C0 .52.52 0 1.18 0h13.64C15.48 0 16 .52 16 1.15v13.7c0 .63-.52 1.15-1.18 1.15H1.18C.52 16 0 15.48 0 14.85V1.15zM4.75 13.39V6.17H2.35v7.22h2.4zM3.55 5.18c.84 0 1.36-.55 1.36-1.25-.02-.71-.52-1.25-1.34-1.25-.82 0-1.36.54-1.36 1.25 0 .7.52 1.25 1.33 1.25h.01zm4.91 8.21V9.36c0-.22.02-.43.08-.59.18-.43.57-.88 1.23-.88.87 0 1.22.66 1.22 1.64v3.86h2.4V9.25c0-2.22-1.18-3.25-2.76-3.25-1.27 0-1.84.7-2.16 1.19v.03h-.02l.02-.03V6.17h-2.4c.03.68 0 7.22 0 7.22h2.4z"/></svg></a>
+    </div>
+    <p class="foot-small">&copy; 2026 Spliced. Research and data are open.</p>
+  </div>
+</footer>
+
+<script src="../../assets/site.js?v=202610261130"></script>
+<script src="../../assets/charts.js?v=202610261130"></script>
+</body>
+</html>
