@@ -7,21 +7,21 @@
 <meta name="description" content="How to run a model well on one machine, decided by what we measured: format, batch, draft, prefix cache, clock.">
 <meta property="og:title" content="Systems &middot; Spliced">
 <meta property="og:description" content="How to run a model well on one machine, decided by what we measured: format, batch, draft, prefix cache, clock.">
-<meta property="og:image" content="https://splicedso.github.io/assets/og.png?v=202610261008">
+<meta property="og:image" content="https://splicedso.github.io/assets/og.png?v=202610261103">
 <meta property="og:url" content="https://splicedso.github.io/systems/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Spliced">
 <link rel="canonical" href="https://splicedso.github.io/systems/">
 <meta name="color-scheme" content="light dark">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="../assets/favicon.svg?v=202610261008" type="image/svg+xml">
-<link rel="icon" href="../assets/favicon-32.png?v=202610261008" type="image/png" sizes="32x32">
-<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png?v=202610261008">
+<link rel="icon" href="../assets/favicon.svg?v=202610261103" type="image/svg+xml">
+<link rel="icon" href="../assets/favicon-32.png?v=202610261103" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png?v=202610261103">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>document.documentElement.classList.add("js");</script>
-<link rel="stylesheet" href="../assets/style.css?v=202610261008">
+<link rel="stylesheet" href="../assets/style.css?v=202610261103">
 <link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
 </head>
 <body data-root="../" data-page="systems">
@@ -82,7 +82,7 @@ already at its ceiling at batch 1 (note 10). Decode is bound by reading the weig
 step; every extra sequence in the step rides that read for free until memory or compute runs
 out. Where it runs out depends on the machine: on the M5 Pro a 7B is cheapest per token at 16
 requests (79% less than one) and costs 15% more again at 32; on the Strix Halo energy per token
-keeps falling to 32, 90% below one, with no knee yet (note 24). The right number of slots is a
+keeps falling to 64, and speed per request falls in steps, so 8, 32 or 64 at once (note 24). The right number of slots is a
 measured optimum per machine, not "as many as fit". For a single user this means
 batching their own tool calls and sub-requests, not waiting for another user.</p>
 <p><strong>Prompt handling: cache the prefix.</strong> A prompt token costs about a fortieth of a generated one
@@ -195,7 +195,7 @@ energy, so the gap a cell has to close is named: host, supplies, fans and idle.<
   </div>
 </footer>
 
-<script src="../assets/site.js?v=202610261008"></script>
+<script src="../assets/site.js?v=202610261103"></script>
 
 </body>
 </html>

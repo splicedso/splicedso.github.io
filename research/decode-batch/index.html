@@ -4,24 +4,24 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Where batching stops paying &middot; Spliced</title>
-<meta name="description" content="Decode energy per token at batch 1 to 32. On an M5 Pro the cheapest batch is 16 and 32 costs 15% more: an optimum, not a plateau. On a Strix Halo there is no knee to 32, where a token costs 90% less than at batch 1.">
+<meta name="description" content="Decode energy per token at batch 1 to 32. On an M5 Pro the cheapest batch is 16 and 32 costs 15% more: an optimum, not a plateau. On a Strix Halo energy per token keeps falling to 64 requests, and speed per request falls in steps.">
 <meta property="og:title" content="Where batching stops paying &middot; Spliced">
-<meta property="og:description" content="Decode energy per token at batch 1 to 32. On an M5 Pro the cheapest batch is 16 and 32 costs 15% more: an optimum, not a plateau. On a Strix Halo there is no knee to 32, where a token costs 90% less than at batch 1.">
-<meta property="og:image" content="https://splicedso.github.io/assets/og.png?v=202610261008">
+<meta property="og:description" content="Decode energy per token at batch 1 to 32. On an M5 Pro the cheapest batch is 16 and 32 costs 15% more: an optimum, not a plateau. On a Strix Halo energy per token keeps falling to 64 requests, and speed per request falls in steps.">
+<meta property="og:image" content="https://splicedso.github.io/assets/og.png?v=202610261103">
 <meta property="og:url" content="https://splicedso.github.io/research/decode-batch/">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Spliced">
 <link rel="canonical" href="https://splicedso.github.io/research/decode-batch/">
 <meta name="color-scheme" content="light dark">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="../../assets/favicon.svg?v=202610261008" type="image/svg+xml">
-<link rel="icon" href="../../assets/favicon-32.png?v=202610261008" type="image/png" sizes="32x32">
-<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png?v=202610261008">
+<link rel="icon" href="../../assets/favicon.svg?v=202610261103" type="image/svg+xml">
+<link rel="icon" href="../../assets/favicon-32.png?v=202610261103" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png?v=202610261103">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>document.documentElement.classList.add("js");</script>
-<link rel="stylesheet" href="../../assets/style.css?v=202610261008">
+<link rel="stylesheet" href="../../assets/style.css?v=202610261103">
 <link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
 </head>
 <body data-root="../../" data-page="research">
@@ -54,7 +54,7 @@
   <div class="wrap">
     <span class="label">Note 24 &middot; 25 October 2026</span>
     <h1>Where batching stops paying</h1>
-    <p class="lede">Decode energy per token at batch 1 to 32. On an M5 Pro the cheapest batch is 16 and 32 costs 15% more: an optimum, not a plateau. On a Strix Halo there is no knee to 32, where a token costs 90% less than at batch 1.</p>
+    <p class="lede">Decode energy per token at batch 1 to 32. On an M5 Pro the cheapest batch is 16 and 32 costs 15% more: an optimum, not a plateau. On a Strix Halo energy per token keeps falling to 64 requests, and speed per request falls in steps.</p>
     <p class="setup"><strong>Prediction verdict, 7B:</strong> held on the fall (74% less energy per token from batch 1 to 8, a further 19% to 16, speed per request at 38% of batch 1 by 16); missed on the top end, where energy per token rose 15% from batch 16 to 32 instead of flattening, and on pass agreement, which was 5.2 and 5.7% at two batches against a predicted 5%. <strong>1.5B (second prediction, same evening):</strong> held on the knee (lowest at 16, batch 8 saves 69%, speed per request 38% at 16, passes within 4.8%); missed on the ceiling (1,171 tok/s, not about 1,800) and narrowly on batch 32, which costs 12% more than 16 against a predicted 10%. <strong>7B at Q4_0, the format first named (26 October):</strong> held on the fall (70% by batch 8) and on speed per request; missed on the top end in the same way (batch 32 costs 24% more than 16) and narrowly on the step from 8 to 16 (13%, not 15 to 30).</p>
   </div>
 </header>
@@ -359,8 +359,51 @@
 </tr>
 </tbody>
 </table>
-<p>Energy per token keeps falling all the way to 32, where it is 90% below batch 1, and total throughput nearly doubles from 16 to 32. The M5 Pro was cheapest at 16 and worse at 32. The Strix Halo's GPU has far more arithmetic for the same memory, so the batch fills it later. Its knee, if it has one, lies beyond 32.</p>
-<p>Batch 16 is a slow spot in both of its runs: only 11% more throughput than batch 8 while power falls from 126 to 96 W, then nearly double at 32. That looks like a llama.cpp Vulkan code path at 16 rows, not a property of the chip; it is not diagnosed. The short windows at batches 1 to 4 spread up to 21% between passes; a rerun with 512-token answers narrowed them to 0.3 to 8% and gave the same shape (<code>results/decode-batch-halo-7b-a512.json</code>), though some of its answers stop early and lower the concurrency late in the window. Prediction verdict for this half: held on the fall to 8 (73%) and on speed per request (39% of batch 1 at 16); missed on the knee at 8 to 16, and on pass agreement.</p>
+<p>Energy per token keeps falling all the way to 32, where it is 90% below batch 1, and total throughput nearly doubles from 16 to 32. The M5 Pro was cheapest at 16 and worse at 32. The Strix Halo's GPU has far more arithmetic for the same memory, so the batch fills it later. The follow-up below found it still falling at 64.</p>
+<p>Batch 16 looked like a slow spot in both of these runs: only 11% more throughput than batch 8 while power fell from 126 to 96 W. It did not reproduce. A follow-up session later the same day, each part pre-registered, measured batches 12, 16 and 20, then 32, 48 and 64:</p>
+<table>
+<thead>
+<tr>
+<th>batch</th>
+<th style="text-align: right;">12</th>
+<th style="text-align: right;">16</th>
+<th style="text-align: right;">20</th>
+<th style="text-align: right;">32</th>
+<th style="text-align: right;">48</th>
+<th style="text-align: right;">64</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tok/s</td>
+<td style="text-align: right;">252.9</td>
+<td style="text-align: right;">327.4</td>
+<td style="text-align: right;">392.1</td>
+<td style="text-align: right;">601.7</td>
+<td style="text-align: right;">547.8</td>
+<td style="text-align: right;">719.9</td>
+</tr>
+<tr>
+<td>tok/s per request</td>
+<td style="text-align: right;">21.1</td>
+<td style="text-align: right;">20.5</td>
+<td style="text-align: right;">19.6</td>
+<td style="text-align: right;">18.8</td>
+<td style="text-align: right;">11.4</td>
+<td style="text-align: right;">11.2</td>
+</tr>
+<tr>
+<td>mJ per token</td>
+<td style="text-align: right;">424</td>
+<td style="text-align: right;">337</td>
+<td style="text-align: right;">283</td>
+<td style="text-align: right;">205</td>
+<td style="text-align: right;">216</td>
+<td style="text-align: right;">171</td>
+</tr>
+</tbody>
+</table>
+<p>There batch 16 ran at 327 tok/s and 110 W, in line with its neighbours. Speed per request falls in steps rather than smoothly: about 20 tok/s from 12 to 32 requests, then about 11 at 48 and 64. The cheapest point measured is 64, 17% below 32; 48 costs 5% more than 32. So on this machine the sensible sizes are 8, 32 or 64 requests. The same batch read 9 to 13% differently across the two sessions, so differences smaller than that between sessions mean nothing. The short windows at batches 1 to 4 spread up to 21% between passes; a rerun with 512-token answers narrowed them to 0.3 to 8% and gave the same shape (<code>results/decode-batch-halo-7b-a512.json</code>), though some of its answers stop early and lower the concurrency late in the window. Prediction verdict for this half: held on the fall to 8 (73%) and on speed per request (39% of batch 1 at 16); missed on the knee at 8 to 16, and on pass agreement.</p>
 <h2 data-via>What this changes</h2>
 <ul>
 <li>Fabric's cost table carried note 1's 1.5B curve to batch 8 as its batch curve, labelled as transferred. It now carries the 7B curve to 32, still transferred to the Strix Halo until the same script runs there, with the knee at 16.</li>
@@ -387,7 +430,7 @@ uv run python experiments/decode_batch_energy.py models/quant/7b-Q4_0.gguf resul
 uv run python experiments/decode_batch_energy.py models/quant/7b-Q4_0.gguf results/decode-batch-halo-7b.json
 ANSWER=512 uv run python experiments/decode_batch_energy.py models/quant/7b-Q4_0.gguf results/decode-batch-halo-7b-a512.json
 </code></pre>
-<p>Nothing else running: no browser, no Blender. Raw results: <code>results/decode-batch-mac-7b-q4km.json</code>, <code>results/decode-batch-mac-1.5b-q4_0.json</code>, <code>results/decode-batch-mac-1.5b-q4_0-a512.json</code>, <code>results/decode-batch-mac-7b-q4_0.json</code>; Strix Halo <code>results/decode-batch-halo-7b.json</code>, <code>results/decode-batch-halo-7b-a512.json</code>, <code>results/decode-batch-halo.md</code>.</p>
+<p>Nothing else running: no browser, no Blender. Raw results: <code>results/decode-batch-mac-7b-q4km.json</code>, <code>results/decode-batch-mac-1.5b-q4_0.json</code>, <code>results/decode-batch-mac-1.5b-q4_0-a512.json</code>, <code>results/decode-batch-mac-7b-q4_0.json</code>; Strix Halo <code>results/decode-batch-halo-7b.json</code>, <code>results/decode-batch-halo-7b-a512.json</code>, <code>results/decode-batch-halo-7b-b12-20.json</code>, <code>results/decode-batch-halo-7b-b32-64.json</code>, <code>results/decode-batch-halo.md</code>.</p>
 <p class="source mono">Source, scripts and raw data: <a href="https://github.com/splicedso/phase/blob/main/notes/2026-10-decode-batch.md">phase/notes/2026-10-decode-batch.md</a></p>
 </article></main>
 </div>
@@ -406,7 +449,7 @@ ANSWER=512 uv run python experiments/decode_batch_energy.py models/quant/7b-Q4_0
   </div>
 </footer>
 
-<script src="../../assets/site.js?v=202610261008"></script>
-<script src="../../assets/charts.js?v=202610261008"></script>
+<script src="../../assets/site.js?v=202610261103"></script>
+<script src="../../assets/charts.js?v=202610261103"></script>
 </body>
 </html>

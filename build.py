@@ -96,13 +96,16 @@ NOTES = [
                 "requests at once, with accuracy within a point, for 11 to 24% less speed. Two-bit's lead over 4-bit shrinks under the cap."},
     {"slug": "decode-batch", "file": "2026-10-decode-batch.md", "n": 24,
      "summary": "Decode energy per token at batch 1 to 32. On an M5 Pro the cheapest batch is 16 and 32 costs 15% more: an optimum, "
-                "not a plateau. On a Strix Halo there is no knee to 32, where a token costs 90% less than at batch 1."},
+                "not a plateau. On a Strix Halo energy per token keeps falling to 64 requests, and speed per request falls in steps."},
     {"slug": "draft-and-batch", "file": "2026-10-draft-and-batch.md", "n": 25,
      "summary": "A draft model against 1 to 16 requests at once on an M5 Pro. 1.26x the speed at one request and 29% less energy "
                 "at two, then 12 to 50% more energy per token from four on. A draft and a batch fill the same idle arithmetic."},
     {"slug": "trace-35k", "file": "2026-10-trace-35k.md", "n": 26,
      "summary": "Trace v1 on 35,000 prompts: agreement with the 7B 0.7754, short of the 0.79 bar. Its guesses are accepted more "
                 "often, but it guesses less at the same threshold. At its best threshold every draft serves within 1%, so Trace pauses."},
+    {"slug": "lattice-v1", "file": "2026-10-lattice-v1.md", "n": 27,
+     "summary": "Lattice v1: two-bit training took the 1.5B from 66% to 24%. Two controls split it: the training data cost 17 points, "
+                "the 2-bit grid 21. On a model this small, 2-bit costs more per correct answer than 4-bit at any accuracy."},
 ]
 
 FIGURES = {

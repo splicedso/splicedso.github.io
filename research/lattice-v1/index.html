@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Two-bit training took a model from 66% to 24%, and two controls say why &middot; Spliced</title>
+<meta name="description" content="Lattice v1: two-bit training took the 1.5B from 66% to 24%. Two controls split it: the training data cost 17 points, the 2-bit grid 21. On a model this small, 2-bit costs more per correct answer than 4-bit at any accuracy.">
+<meta property="og:title" content="Two-bit training took a model from 66% to 24%, and two controls say why &middot; Spliced">
+<meta property="og:description" content="Lattice v1: two-bit training took the 1.5B from 66% to 24%. Two controls split it: the training data cost 17 points, the 2-bit grid 21. On a model this small, 2-bit costs more per correct answer than 4-bit at any accuracy.">
+<meta property="og:image" content="https://splicedso.github.io/assets/og.png?v=202610261103">
+<meta property="og:url" content="https://splicedso.github.io/research/lattice-v1/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Spliced">
+<link rel="canonical" href="https://splicedso.github.io/research/lattice-v1/">
+<meta name="color-scheme" content="light dark">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="../../assets/favicon.svg?v=202610261103" type="image/svg+xml">
+<link rel="icon" href="../../assets/favicon-32.png?v=202610261103" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png?v=202610261103">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>document.documentElement.classList.add("js");</script>
+<link rel="stylesheet" href="../../assets/style.css?v=202610261103">
+<link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
+</head>
+<body data-root="../../" data-page="research">
+<a class="skip" href="#content">Skip to content</a>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="../../" aria-label="Spliced home">
+      <svg viewBox="-13 -13 966 1084" aria-hidden="true"><path fill="currentColor" stroke="currentColor" stroke-width="12.7" stroke-linejoin="round" d="M639.0 0.0 L941.0 0.0 L301.0 1059.0 L0.0 1059.0 Z"/></svg>
+      Spliced
+    </a>
+    <div class="nav-right">
+      <ul>
+        <li><a href="../../research/" data-nav="research">Research</a></li>
+        <li><a href="../../models/" data-nav="models">Models</a></li>
+        <li><a href="../../systems/" data-nav="systems">Systems</a></li>
+        <li><a href="../../foundry/" data-nav="foundry">Foundry</a></li>
+        <li class="about"><a href="../../about/" data-nav="about">About</a></li>
+      </ul>
+      <a class="icon-link" href="https://github.com/splicedso" aria-label="Spliced on GitHub" title="GitHub"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a>
+      <a class="icon-link" href="https://www.linkedin.com/company/splicedso" aria-label="Spliced on LinkedIn" title="LinkedIn"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M0 1.15C0 .52.52 0 1.18 0h13.64C15.48 0 16 .52 16 1.15v13.7c0 .63-.52 1.15-1.18 1.15H1.18C.52 16 0 15.48 0 14.85V1.15zM4.75 13.39V6.17H2.35v7.22h2.4zM3.55 5.18c.84 0 1.36-.55 1.36-1.25-.02-.71-.52-1.25-1.34-1.25-.82 0-1.36.54-1.36 1.25 0 .7.52 1.25 1.33 1.25h.01zm4.91 8.21V9.36c0-.22.02-.43.08-.59.18-.43.57-.88 1.23-.88.87 0 1.22.66 1.22 1.64v3.86h2.4V9.25c0-2.22-1.18-3.25-2.76-3.25-1.27 0-1.84.7-2.16 1.19v.03h-.02l.02-.03V6.17h-2.4c.03.68 0 7.22 0 7.22h2.4z"/></svg></a>
+    </div>
+  </div>
+</nav>
+
+<svg id="bus" aria-hidden="true"></svg>
+
+<div id="content">
+<header class="page-head">
+  <div class="wrap">
+    <span class="label">Note 27 &middot; 26 October 2026</span>
+    <h1>Two-bit training took a model from 66% to 24%, and two controls say why</h1>
+    <p class="lede">Lattice v1: two-bit training took the 1.5B from 66% to 24%. Two controls split it: the training data cost 17 points, the 2-bit grid 21. On a model this small, 2-bit costs more per correct answer than 4-bit at any accuracy.</p>
+    <p class="setup"><strong>Prediction verdict:</strong> missed. Lattice v1 was predicted to reach 52% on the maths test at 2-bit size; it reached 23.8%, against a bar of 60%. Two controls, each committed before it ran, split the loss between the training data and the 2-bit grid.</p>
+  </div>
+</header>
+<main><article class="wrap note-body"><p>Spliced research note 27, 26 October 2026. AMD Ryzen AI Max+ 395 (Strix Halo, Radeon 8060S, 128 GB, shared GPU memory 90%), Linux, llama.cpp 620d2225c, Vulkan; training in PyTorch 2.10 on ROCm 7.2. Qwen2.5 1.5B Instruct.</p>
+<p>Note 20 found that calibrating a 2-bit model on maths problems doubles its accuracy, from 21% to 42%, while Q4_0 scores 66%. Lattice v1 asked whether training the model to live on a 2-bit grid closes the rest of the gap. The method is quantization-aware fine-tuning. Every linear layer in the model's blocks is rounded to 4 levels per group of 16 weights in each forward pass, and the model learns around the rounding. The training was one epoch of GSM8K's training problems with their worked answers, plus 30% general text.</p>
+<h2 data-via>Results</h2>
+<p>GSM8K, 250 test problems, 8 requests at once, two passes:</p>
+<table>
+<thead>
+<tr>
+<th>model</th>
+<th style="text-align: right;">accuracy</th>
+<th style="text-align: right;">tokens per answer</th>
+<th>what the step shows</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>stock, Q4_0</td>
+<td style="text-align: right;">65.6%</td>
+<td style="text-align: right;">248</td>
+<td></td>
+</tr>
+<tr>
+<td>fine-tuned, no grid, full precision</td>
+<td style="text-align: right;">48.8%</td>
+<td style="text-align: right;">95</td>
+<td>the training data: 17 points</td>
+</tr>
+<tr>
+<td>the same, Q4_0</td>
+<td style="text-align: right;">46.0%</td>
+<td style="text-align: right;">95</td>
+<td>4-bit rounding: 3 points</td>
+</tr>
+<tr>
+<td>fine-tuned on the 2-bit grid, stored at Q4_0</td>
+<td style="text-align: right;">25.4%</td>
+<td style="text-align: right;">86</td>
+<td>the grid during training: 21 points</td>
+</tr>
+<tr>
+<td>the same, stored as Q2_K</td>
+<td style="text-align: right;">23.8%</td>
+<td style="text-align: right;">85</td>
+<td>the export: 2 points</td>
+</tr>
+</tbody>
+</table>
+<h2 data-via>1. The data cost 17 points before any bits were removed</h2>
+<p>The plain control is the same run with the grid switched off: same data, steps, learning rate, schedule and seed. It lost 17 points at full precision. GSM8K's worked answers are a third the length of the model's own reasoning, 95 tokens against 248, and a 1.5B model taught to reason in fewer words reasons worse. A first control, the 2-bit weights stored at 4 bits, could not show this. It separated the export from the training, not the grid from the data.</p>
+<h2 data-via>2. The grid cost 21 more</h2>
+<p>The grid squeezed every linear layer to 2 bits. llama.cpp's Q2_K, the file the model ships as, keeps some tensors at 3 to 6 bits. And one epoch of 7,273 problems is far less text than 2-bit training usually needs. Either may explain the 21 points; neither was tested.</p>
+<h2 data-via>3. On a 1.5B, fewer bits do not pay even at equal accuracy</h2>
+<p>The two files trained on the grid write answers of the same length. At 8 requests at once, the 4-bit one costs 13.5% less per correct answer than the 2-bit one: 71.2 against 82.4 joules. A 2-bit token costs more chip energy than a 4-bit one on this machine, 231 against 211 millijoules, because unpacking it takes more work than the bytes it saves. Notes 20 and 22 found the same at this size on both machines. Two-bit paid only at 32B (note 22), where reading the weights dominates the cost of a token.</p>
+<p>So Lattice's energy bar, cheaper per correct answer than Q4_0, cannot be met by a 1.5B model on these machines at any accuracy.</p>
+<h2 data-via>4. Shorter answers are a bigger lever than bits</h2>
+<p>The plain fine-tuned model at Q4_0 costs 35% less per correct answer than the stock one, 43.5 against 66.9 joules, because its answers are 2.6 times shorter. It is also 20 points less accurate, so it is not a better model. But no format change measured so far has moved joules per correct answer by a third.</p>
+<h2 data-via>What this changes</h2>
+<ul>
+<li>Lattice moves to where fewer bits pay: models of 32B and up, where note 22 found a calibrated 2-bit file 16% cheaper per correct answer than Q4_0 at equal accuracy. The next step needs no training. It compares 2-bit and 3-bit recipes at 32B.</li>
+<li>Training a small model on short reference answers is a trap. A future fine-tune should train on the model's own answers, keeping the ones that are right.</li>
+</ul>
+<h2 data-via>Limits</h2>
+<ul>
+<li>One model, one task, one epoch, one learning rate. The 21 points the grid cost are an upper bound for this recipe, not for 2-bit training in general.</li>
+<li>The two controls ran in separate windows three hours apart; stock Q4_0 was re-run only in the first.</li>
+<li>Chip (package) energy, not the wall.</li>
+</ul>
+<h2 data-via>Reproduce</h2>
+<p>On the Strix Halo, with the environment in <code>docs/handoff-linux.md</code>:</p>
+<pre><code class="language-bash">sh experiments/lattice_qat.sh     # train on the grid, export Q2_K and Q4_0, quality runs
+sh experiments/lattice_plain.sh   # the same with QUANT=0, export F16 and Q4_0, quality runs
+</code></pre>
+<p>Raw: <code>results/lattice-halo-1.5b-*-s{1,8}-pass{1,2}.json</code>, <code>results/lattice/train-log-1.5b-{qat,plain}.json</code>, <code>results/lattice-qat-smoke-quantcheck.json</code>, and the full write-up with every pass, <code>results/lattice-v1.md</code>.</p>
+<p class="source mono">Source, scripts and raw data: <a href="https://github.com/splicedso/phase/blob/main/notes/2026-10-lattice-v1.md">phase/notes/2026-10-lattice-v1.md</a></p>
+</article></main>
+</div>
+
+<footer>
+  <div class="wrap foot">
+    <a class="brand" href="../../" aria-label="Spliced home"><svg viewBox="-13 -13 966 1084" aria-hidden="true"><path fill="currentColor" stroke="currentColor" stroke-width="12.7" stroke-linejoin="round" d="M639.0 0.0 L941.0 0.0 L301.0 1059.0 L0.0 1059.0 Z"/></svg>Spliced</a>
+    <nav class="foot-nav" aria-label="Footer">
+      <a href="../../research/">Research</a><a href="../../models/">Models</a><a href="../../systems/">Systems</a><a href="../../designs/">Designs</a><a href="../../foundry/">Foundry</a><a href="../../learn/">Learn</a><a href="../../data/">Data</a><a href="../../tools/phase/">Phase</a><a href="../../about/">About</a>
+    </nav>
+    <div class="foot-social">
+      <a href="https://github.com/splicedso" aria-label="GitHub"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a>
+      <a href="https://www.linkedin.com/company/splicedso" aria-label="LinkedIn"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M0 1.15C0 .52.52 0 1.18 0h13.64C15.48 0 16 .52 16 1.15v13.7c0 .63-.52 1.15-1.18 1.15H1.18C.52 16 0 15.48 0 14.85V1.15zM4.75 13.39V6.17H2.35v7.22h2.4zM3.55 5.18c.84 0 1.36-.55 1.36-1.25-.02-.71-.52-1.25-1.34-1.25-.82 0-1.36.54-1.36 1.25 0 .7.52 1.25 1.33 1.25h.01zm4.91 8.21V9.36c0-.22.02-.43.08-.59.18-.43.57-.88 1.23-.88.87 0 1.22.66 1.22 1.64v3.86h2.4V9.25c0-2.22-1.18-3.25-2.76-3.25-1.27 0-1.84.7-2.16 1.19v.03h-.02l.02-.03V6.17h-2.4c.03.68 0 7.22 0 7.22h2.4z"/></svg></a>
+    </div>
+    <p class="foot-small">&copy; 2026 Spliced. Research and data are open.</p>
+  </div>
+</footer>
+
+<script src="../../assets/site.js?v=202610261103"></script>
+<script src="../../assets/charts.js?v=202610261103"></script>
+</body>
+</html>
