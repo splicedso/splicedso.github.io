@@ -60,10 +60,44 @@ def render_band(path, bg, focus, contrast, bright, zoom=1.0):
     return im.crop((left, top, left + cw, top + ch)).resize((W, H), Image.LANCZOS).convert("RGB")
 
 
-# Both banners: our own eight-GPU baseboard render (render/hgx.png), no photograph, no third-party credit.
+def lede(img, fg, x, y, text):
+    d = ImageDraw.Draw(img)
+    d.text((x, y), text, font=ImageFont.truetype(FONT, 34, index=0), fill=fg)
+    return img
+
+
+def object_band(path, bg, height=480, right=1900, grade=(1.0, 1.0)):
+    """One of our own renders (transparent PNG), cropped to the object plus a margin for its floor shadow, placed left
+    of the lockup. Only the faint shadow is faded toward the crop's edges; the object itself is never faded."""
+    from PIL import ImageChops
+    src = Image.open(path).convert("RGBA")
+    a = src.getchannel("A")
+    solid = a.point(lambda v: 255 if v > 200 else 0).getbbox()        # the object
+    mw, mh = int((solid[2] - solid[0]) * 0.12), int((solid[3] - solid[1]) * 0.25)
+    box = (max(0, solid[0] - mw), max(0, solid[1] - mh), min(src.width, solid[2] + mw), min(src.height, solid[3] + mh))
+    obj = src.crop(box); a = obj.getchannel("A"); w, h = a.size
+    ramp = int(min(mw, mh) * 0.9) or 1
+    fade = Image.new("L", (w, h), 0); d = ImageDraw.Draw(fade)
+    for k in range(ramp):
+        d.rectangle([k, k, w - 1 - k, h - 1 - k], outline=int(255 * (k / ramp) ** 1.5))
+    d.rectangle([ramp, ramp, w - 1 - ramp, h - 1 - ramp], fill=255)
+    keep = a.point(lambda v: 255 if v > 200 else 0)                    # solid pixels keep full alpha
+    obj.putalpha(ImageChops.lighter(ImageChops.multiply(a, fade), ImageChops.multiply(a, keep)))
+    k = height / (solid[3] - solid[1])
+    obj = obj.resize((int(w * k), int(h * k)), Image.LANCZOS)
+    canvas = Image.new("RGBA", (W, H), (*bg, 255))
+    canvas.alpha_composite(obj, (right - obj.width, (H - obj.height) // 2 + 10))
+    rgb = canvas.convert("RGB")
+    return ImageEnhance.Brightness(ImageEnhance.Contrast(rgb).enhance(grade[0])).enhance(grade[1])
+
+
+# Both banners (2026-10-26): our own package render with the Spliced mark, the home page's object, on the left;
+# the lockup on the right: the mark, the name and the tagline, nothing else (Martin, 26 Oct). Says only what Spliced is today: research on what AI
+# costs to run, and models. The eight-GPU baseboard banner (2026-10-25) is retired with the datacenter hardware.
 SUB = "Efficient inference systems"
-dark = render_band(HERE.parent / "render" / "hgx.png", (0, 0, 0), 0.52, 1.25, 0.8, zoom=1.15)
-lockup(shade(dark, (0, 0, 0), right=True), (255, 255, 255), x=1960, y=280, sub=SUB).save(HERE / "linkedin-banner-black.png")
-light = render_band(HERE.parent / "render" / "hgx.png", (238, 238, 238), 0.52, 1.1, 1.05, zoom=1.15)
-lockup(shade(light, (255, 255, 255), right=True), (0, 0, 0), x=1960, y=280, sub=SUB).save(HERE / "linkedin-banner-white.png")
+PKG = HERE.parent / "render" / "package-hero.png"
+light = object_band(PKG, (238, 238, 238))
+lockup(light, (0, 0, 0), x=1960, y=280, sub=SUB).save(HERE / "linkedin-banner-white.png")
+dark = object_band(PKG, (12, 12, 12), grade=(1.05, 1.15))
+lockup(dark, (255, 255, 255), x=1960, y=280, sub=SUB).save(HERE / "linkedin-banner-black.png")
 print("ok")
