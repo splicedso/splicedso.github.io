@@ -29,9 +29,9 @@
           <dl class="specs">
             <div><dt>v0</dt><dd>Calibrated Q2_K. GSM8K 21% &rarr; 42% at the same size.</dd></div>
             <div><dt>32B</dt><dd>Calibrated Q2_K beats Q4_0 per correct answer by 16% at equal accuracy. At 7B it still loses by 21%.</dd></div>
-            <div><dt>v1</dt><dd>Quantization-aware training, next.</dd></div>
-            <div><dt>Bar</dt><dd>At least 60% at Q2_K size, cheaper per answer than Q4_0.</dd></div>
-            <div><dt>Now</dt><dd>Quantization-aware fine-tuning of the 1.5B is being written; prediction first, then the run.</dd></div>
+            <div><dt>v1</dt><dd>Quantization-aware fine-tuning of the 1.5B onto a 2-bit grid. Predicted 52%, short of the bar.</dd></div>
+            <div><dt>Bar</dt><dd>At least 60% at Q2_K size, cheaper per answer than Q4_0 on an M5 Pro.</dd></div>
+            <div><dt>Now</dt><dd>Training has started and shares the GPU with Trace; it resumes when the harvest ends. Then it is measured on both machines, against a control that separates shorter answers from fewer bits.</dd></div>
           </dl>
           <a class="more" href="../research/lattice-large/">Note 22 <span aria-hidden="true">&rarr;</span></a>
         </div>

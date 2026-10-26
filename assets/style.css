@@ -221,10 +221,11 @@ footer { padding: 40px 0 64px; }
 
 /* multi-page additions */
 body[data-page="research"] [data-nav="research"],
-body[data-page="tools"] [data-nav="tools"],
-body[data-page="data"] [data-nav="data"],
-body[data-page="learn"] [data-nav="learn"],
-body[data-page="lab"] [data-nav="lab"] { color: var(--ink); text-decoration: underline; text-underline-offset: 6px; text-decoration-thickness: 1px; }
+body[data-page="designs"] [data-nav="research"],
+body[data-page="models"] [data-nav="models"],
+body[data-page="systems"] [data-nav="systems"],
+body[data-page="foundry"] [data-nav="foundry"],
+body[data-page="about"] [data-nav="about"] { color: var(--ink); text-decoration: underline; text-underline-offset: 6px; text-decoration-thickness: 1px; }
 
 .page-head { padding: 88px 0 40px; }
 .page-head h1 { font-weight: 500; font-size: clamp(38px, 5.6vw, 72px); line-height: 1; letter-spacing: -.04em; margin-top: 24px; max-width: 18ch; }
@@ -1140,10 +1141,6 @@ body { background: transparent; } html { background: #eee; }
 .etched-grid > figure { border-right: 0; } .etched-grid .prose { border-left: 1px solid #d9d9d9; }
 .etched-grid > figure img { -webkit-mask-image: radial-gradient(ellipse 60% 62% at 50% 50%, #000 70%, transparent 100%); mask-image: radial-gradient(ellipse 60% 62% at 50% 50%, #000 70%, transparent 100%); }
 /* Announcement bar, Etched style: black, monospace, one line. */
-.announce { background: #0b0b0b; text-align: center; padding: 9px 16px; position: relative; z-index: 60; }
-.announce a { color: #eee; font: 400 12.5px/1.4 ui-monospace, "JetBrains Mono", Menlo, monospace; letter-spacing: .02em; text-decoration: none; }
-.announce a span { color: #8a8a8a; margin-left: 6px; }
-.announce a:hover span { color: #eee; }
 .tok { transition: opacity .45s var(--ease), filter .45s var(--ease); background: none !important; box-shadow: none !important; border: 0 !important; outline: 0 !important; } .tok.fresh { opacity: 0; filter: blur(4px); }
 .tok::before { display: none; }
 @media (max-width: 900px) { .etched-grid .prose { border-left: 0; } }
@@ -1165,11 +1162,6 @@ body { background: transparent; } html { background: #eee; }
 /* Renders fade on their own now; no CSS masks. */
 .page-object img, .mgrid figure img, .etched-grid > figure img, .top-render img, .stage-img img { -webkit-mask-image: none !important; mask-image: none !important; }
 /* Announcement lives inside the navbar row, centred, transparent, as on etched.com. */
-.announce { position: absolute; top: 0; left: 0; right: 0; height: 72px; padding: 0; background: transparent; display: flex; align-items: center; justify-content: center; pointer-events: none; z-index: 70; }
-.announce a { pointer-events: auto; color: #555; font-size: 12px; }
-.announce a:hover, .announce a:hover span { color: #111; }
-@media (max-width: 1240px) { .announce { display: none; } }
-.announce { top: 62px; height: 26px; } @media (max-width: 1240px) { .announce { display: flex; } } @media (max-width: 700px) { .announce { display: none; } }
 /* Top renders run up under a transparent navbar and fill the first screen. */
 nav { background: transparent !important; box-shadow: none !important; backdrop-filter: none !important; position: relative; z-index: 50; }
 .top-render { margin-top: -88px; padding: 0; position: relative; z-index: 0; }

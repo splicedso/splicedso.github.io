@@ -7,21 +7,21 @@
 <meta name="description" content="Spliced research notes on inference energy, with method, code and raw data.">
 <meta property="og:title" content="Research &middot; Spliced">
 <meta property="og:description" content="Spliced research notes on inference energy, with method, code and raw data.">
-<meta property="og:image" content="https://splicedso.github.io/assets/og.png?v=202610252243">
+<meta property="og:image" content="https://splicedso.github.io/assets/og.png?v=202610252350">
 <meta property="og:url" content="https://splicedso.github.io/research/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Spliced">
 <link rel="canonical" href="https://splicedso.github.io/research/">
 <meta name="color-scheme" content="light dark">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="../assets/favicon.svg?v=202610252243" type="image/svg+xml">
-<link rel="icon" href="../assets/favicon-32.png?v=202610252243" type="image/png" sizes="32x32">
-<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png?v=202610252243">
+<link rel="icon" href="../assets/favicon.svg?v=202610252350" type="image/svg+xml">
+<link rel="icon" href="../assets/favicon-32.png?v=202610252350" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png?v=202610252350">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>document.documentElement.classList.add("js");</script>
-<link rel="stylesheet" href="../assets/style.css?v=202610252243">
+<link rel="stylesheet" href="../assets/style.css?v=202610252350">
 <link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
 </head>
 <body data-root="../" data-page="research">
@@ -38,7 +38,6 @@
         <li><a href="../research/" data-nav="research">Research</a></li>
         <li><a href="../models/" data-nav="models">Models</a></li>
         <li><a href="../systems/" data-nav="systems">Systems</a></li>
-        <li><a href="../designs/" data-nav="designs">Designs</a></li>
         <li><a href="../foundry/" data-nav="foundry">Foundry</a></li>
         <li class="about"><a href="../about/" data-nav="about">About</a></li>
       </ul>
@@ -51,7 +50,7 @@
 <svg id="bus" aria-hidden="true"></svg>
 
 <div id="content">
-<figure class="top-render tall"><img src="../assets/img/wafer-face.webp?v=202610252243" width="2476" height="2400" alt="A silicon wafer"></figure>
+<figure class="top-render tall"><img src="../assets/img/wafer-face.webp?v=202610252350" width="2476" height="2400" alt="A silicon wafer"></figure>
 <header class="page-head">
   <div class="wrap">
     <span class="label">Research</span>
@@ -87,9 +86,22 @@
       <div class="label">Open questions</div>
       <h2>What we want to know next.</h2>
       <div class="limits">
-        <div><h3>Width or depth?</h3><p>Small models pay more per weight. Kinetic's four shapes, trained on the same tokens, will say which part of the shape costs it.</p></div>
+        <div><h3>Width or depth?</h3><p>Small models pay more per weight. A shape study, four small models trained on the same tokens, will say which part of the shape costs it.</p></div>
         <div><h3>Capped clocks, elsewhere</h3><p>A capped shader clock cuts joules per correct answer 19 to 28% on the Strix Halo. Whether Apple silicon or the RTX laptop has a control that does the same is the next question.</p></div>
         <div><h3>Draft models that pay</h3><p>Trace v1 raised agreement by 0.7 points and saved nothing. The 35,000-prompt retrain is the next test.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="tight">
+    <div class="wrap">
+      <div class="closer">
+        <div class="label">Research thread</div>
+        <h2>Past one machine.</h2>
+        <p>What the same measurements say about serving models across many small machines. Designs on paper, argued from the notes. Nothing here is built.</p>
+        <div class="actions">
+          <a class="cta ghost" href="../designs/">Cluster designs</a>
+        </div>
       </div>
     </div>
   </section>
@@ -111,7 +123,7 @@
   </div>
 </footer>
 
-<script src="../assets/site.js?v=202610252243"></script>
+<script src="../assets/site.js?v=202610252350"></script>
 
 </body>
 </html>
