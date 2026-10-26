@@ -1,36 +1,57 @@
   <section class="etched">
     <div class="etched-grid solo">
       <div class="prose">
-        <h2>V1: the one someone could build.</h2>
-        <p>The sealed cell above is a concept. V1 drops it for what every air-cooled datacenter already does: a cold aisle in front, a hot aisle behind, air through each unit front to back, and nothing custom except our part. The unit is a 2U sled at standard rack width with two carriers side by side, a cage of four 80 mm fans behind them, a host board and the power stage at the rear. Sixteen sleds, one prefill sled, a switch and a power shelf fill a 42U rack; racks side by side in hot-aisle containment make a row. On a desk, one sled breathes the same way.</p>
+        <h2>V1: tiny computers, by the rack.</h2>
+        <p>The cell above is a concept. V1 is built around the board already on our bench, the AMD Ryzen AI Max+ 395 with 128 GB of memory, in a shell of our own: narrow, deep and tall, 60 by 240 by 120 millimetres, the board standing on edge, the heatsink's fins running front to back, a grille the full front, two fans at the rear beside the ports. That is the node. It breathes front to back on its own, so one stands on a desk as the local-hosting product and six stand side by side in a tray. Fourteen trays, eighty-four nodes, make a pod. Pods in a row, with a cold aisle in front and a hot aisle behind, are the cluster. The shell and its heatsink are the only custom parts.</p>
       </div>
     </div>
   </section>
 
   <section class="etched">
     <div class="etched-grid">
-      <figure><img src="../assets/img/v1-sled-open.webp" alt="The V1 sled with its lid off: two carriers side by side, a fan cage behind them, host board and power stage at the rear" loading="lazy"></figure>
+      <figure><img src="../assets/img/node-open.webp" alt="The node with its side off: the board on edge, the package under a finned heatsink with the fins running front to back, two fans at the rear" loading="lazy"></figure>
       <div class="prose">
-        <h2>The sled.</h2>
-        <p>Two decode modules at their measured 81 to 87 W each under the cap, four fans at 40 to 60 W, a host and power stage we have not measured: about 280 W busy, about 105 W idle, roughly 380 tokens per second on a 7B at eight requests each. The fans move about 68 cubic feet a minute after the fins and the filter against 25 needed at a 20 degree rise. Every number is labelled by its basis in the design document; the only ones measured are the modules'.</p>
+        <h2>The node.</h2>
+        <p>It runs a 7B at eight requests at once under a capped clock at about 190 tokens per second and 111 joules per correct answer, the measured figure for its package, and a 32B fits in its memory. What is not measured yet is the whole box at the wall, its blowers and supply included, under the cap; that is a plug-in meter and an afternoon, and it is first on the list.</p>
       </div>
     </div>
   </section>
 
   <section class="etched">
     <div class="etched-grid">
-      <figure><img src="../assets/img/v1-pod.webp" alt="The V1 pod: a 42U rack with sixteen sleds, a prefill sled, a switch and a power shelf" loading="lazy"></figure>
+      <figure><img src="../assets/img/node-grid.webp" alt="Four nodes docked into a two by two grid, side by side and stacked" loading="lazy"></figure>
+      <div class="prose">
+        <h2>Why this shape, and the grid.</h2>
+        <p>The most efficient box for air is the one where air goes in one face, along the fins, and out the opposite face with no turn: the least fan power per watt removed, every fin in the stream, and a box that packs edge to edge on its closed faces. The board standing on edge sets the depth, the heatsink sets the height, and the width is the board plus the fins plus the fan. So the node is narrow, deep and tall.</p>
+        <p>Each side and the top and bottom carry a recessed blind-mate dock with two alignment pins: power passes through and the link is a 10 gigabit pair. Nothing is on the front or the rear, so the air path never changes. Push two nodes together and they are one machine; four make a 2 by 2 grid on a desk, 32B class with headroom, on one power lead and one network cable.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="etched">
+    <div class="etched-grid">
+      <figure><img src="../assets/img/node-tray.webp" alt="A 3U tray holding six nodes standing side by side with a fan plate behind" loading="lazy"></figure>
+      <div class="prose">
+        <h2>The tray: six across.</h2>
+        <p>The bought box breathes through its top and sides and cannot be packed; the Spliced shell breathes front to back and can. A 3U tray at standard rack width holds six nodes standing side by side, 12 millimetres apart, one row deep, each pulling its own air through the tray, with a fan plate at the rear that empties the plenum. No host board: every node is its own host. The tray carries power distribution and a badge; each node's 10 gigabit port cables to the pod's switch.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="etched">
+    <div class="etched-grid">
+      <figure><img src="../assets/img/node-rack.webp" alt="A 42U rack of fourteen trays, eighty-four nodes, with a power shelf at the bottom and switches at the top" loading="lazy"></figure>
       <div class="prose">
         <h2>The pod, and what the budget says.</h2>
-        <p>Sixteen sleds draw about 5.3 kilowatts busy against an 8 kilowatt feed and about 2 kilowatts idle, and serve about 6,100 tokens per second on a 7B. Our scheduler's budget passes its airflow, feed and idle checks on paper. It also says the thing that matters: at full load the pod costs about 216 joules per correct answer against 111 for the modules alone, because fans, hosts, the prefill GPU and the switch are nearly as much power as thirty-two capped modules. The design's first fight is everything around the module.</p>
+        <p>Fourteen trays, eighty-four nodes, a power shelf, two switches: about 7.6 kilowatts busy on the measured per-node package figure plus a placeholder for each node's fans and supply and the tray fans, and about 16,000 tokens per second on a 7B. The budget in our scheduler passes its airflow, feed and idle checks on paper. It also says the design's first fight is everything around the node: fans, the switch, conversion losses and idle are nearly as much power as the nodes themselves at low load. The row of pods below sits in hot-aisle containment like any row.</p>
         <h3>What would have to be true, in order of cost</h3>
-        <p>Two carriers under a four-fan cage hold 1,800 MHz at a 35 degree inlet: one sled, one afternoon, a thermocouple and the power log. The sled idles at or below 105 watts at the wall: same afternoon. Sixteen sleds stay within a 20 degree rise at the hot-aisle face. A full pod's joules per correct answer at the wall under the scheduler. The first two cost one sled's worth of parts, and nothing is measured yet: every capped run so far held its clock at 59 to 88 watts, but no die temperature was recorded for any of them.</p>
+        <p>The node's wall power under the cap, idle and busy: a plug-in meter. One board in the Spliced shell holds 1,800 MHz at a 35 degree inlet on its own two fans: one shell, one afternoon, a thermocouple and the power log. Six in a tray hold it with the tray's fans running. Eighty-four stay within a 20 degree rise at the hot-aisle face. A full pod's joules per correct answer at the wall. Nothing is measured yet, and every capped run so far held its clock without a temperature on record.</p>
       </div>
     </div>
   </section>
 
   <section class="etched">
     <div class="etched-grid solo">
-      <figure class="wide"><img src="../assets/img/v1-row.webp" alt="Six V1 pods side by side in a hot-aisle containment row" loading="lazy"></figure>
+      <figure class="wide"><img src="../assets/img/node-row.webp" alt="Six pods of nodes side by side in a hot-aisle row" loading="lazy"></figure>
     </div>
   </section>

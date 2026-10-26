@@ -135,7 +135,7 @@ def pod(ox, oy):
 
 if MODE == "sled":
     sled(0, 0, 0, lid=True, ears=False)
-    S.camera((-28, -46, 16), (0, -2, 1.6), lens=60, fstop=9)
+    S.camera((-34, -54, 22), (0, 0, 1.4), lens=55, fstop=9)
     S.area((-24, -34, 36), 26000, 16, (0, 0, 2)); S.area((30, -16, 22), 11000, 12, (0, 0, 2)); S.area((0, 30, 26), 8000, 16, (0, 0, 2))
 elif MODE == "sled-open":
     sled(0, 0, 0, lid=False, ears=False, open_top=True)
