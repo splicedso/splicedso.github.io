@@ -7,21 +7,21 @@
 <meta name="description" content="Decode energy per token at batch 1 to 32 on an M5 Pro, 7B and 1.5B. Batch 8 costs 74% less than batch 1 and 16 costs 79% less, then 32 costs 15% more: the knee is an optimum, not a plateau, and both sizes put it at 16.">
 <meta property="og:title" content="Where batching stops paying &middot; Spliced">
 <meta property="og:description" content="Decode energy per token at batch 1 to 32 on an M5 Pro, 7B and 1.5B. Batch 8 costs 74% less than batch 1 and 16 costs 79% less, then 32 costs 15% more: the knee is an optimum, not a plateau, and both sizes put it at 16.">
-<meta property="og:image" content="https://splicedso.github.io/assets/og.png?v=202610252350">
+<meta property="og:image" content="https://splicedso.github.io/assets/og.png?v=202610260149">
 <meta property="og:url" content="https://splicedso.github.io/research/decode-batch/">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Spliced">
 <link rel="canonical" href="https://splicedso.github.io/research/decode-batch/">
 <meta name="color-scheme" content="light dark">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="../../assets/favicon.svg?v=202610252350" type="image/svg+xml">
-<link rel="icon" href="../../assets/favicon-32.png?v=202610252350" type="image/png" sizes="32x32">
-<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png?v=202610252350">
+<link rel="icon" href="../../assets/favicon.svg?v=202610260149" type="image/svg+xml">
+<link rel="icon" href="../../assets/favicon-32.png?v=202610260149" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png?v=202610260149">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>document.documentElement.classList.add("js");</script>
-<link rel="stylesheet" href="../../assets/style.css?v=202610252350">
+<link rel="stylesheet" href="../../assets/style.css?v=202610260149">
 <link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
 </head>
 <body data-root="../../" data-page="research">
@@ -55,10 +55,11 @@
     <span class="label">Note 24 &middot; 25 October 2026</span>
     <h1>Where batching stops paying</h1>
     <p class="lede">Decode energy per token at batch 1 to 32 on an M5 Pro, 7B and 1.5B. Batch 8 costs 74% less than batch 1 and 16 costs 79% less, then 32 costs 15% more: the knee is an optimum, not a plateau, and both sizes put it at 16.</p>
-    <p class="setup"><strong>Prediction verdict, 7B:</strong> held on the fall (74% less energy per token from batch 1 to 8, a further 19% to 16, speed per request at 38% of batch 1 by 16); missed on the top end, where energy per token rose 15% from batch 16 to 32 instead of flattening, and on pass agreement, which was 5.2 and 5.7% at two batches against a predicted 5%. <strong>1.5B (second prediction, same evening):</strong> held on the knee (lowest at 16, batch 8 saves 69%, speed per request 38% at 16, passes within 4.8%); missed on the ceiling (1,171 tok/s, not about 1,800) and narrowly on batch 32, which costs 12% more than 16 against a predicted 10%.</p>
+    <p class="setup"><strong>Prediction verdict, 7B:</strong> held on the fall (74% less energy per token from batch 1 to 8, a further 19% to 16, speed per request at 38% of batch 1 by 16); missed on the top end, where energy per token rose 15% from batch 16 to 32 instead of flattening, and on pass agreement, which was 5.2 and 5.7% at two batches against a predicted 5%. <strong>1.5B (second prediction, same evening):</strong> held on the knee (lowest at 16, batch 8 saves 69%, speed per request 38% at 16, passes within 4.8%); missed on the ceiling (1,171 tok/s, not about 1,800) and narrowly on batch 32, which costs 12% more than 16 against a predicted 10%. <strong>7B at Q4_0, the format first named (26 October):</strong> held on the fall (70% by batch 8) and on speed per request; missed on the top end in the same way (batch 32 costs 24% more than 16) and narrowly on the step from 8 to 16 (13%, not 15 to 30).</p>
   </div>
 </header>
-<main><article class="wrap note-body"><p>Spliced research note 24, 25 October 2026. Apple M5 Pro, 24 GB, macOS 27.0.1 on AC, Metal. llama.cpp build 11669 (Homebrew), llama-server. Qwen2.5 7B Instruct Q4_K_M (the Q4_0 the prediction names is not on this machine; Q4_K_M is the format every earlier Mac 7B figure used), then Qwen2.5 1.5B Instruct Q4_0 under a second prediction.</p>
+<main><article class="wrap note-body"><p>Spliced research note 24, 25 October 2026. Apple M5 Pro, 24 GB, macOS 27.0.1 on AC, Metal. llama.cpp build 11669 (Homebrew), llama-server. Qwen2.5 7B Instruct Q4_K_M, then Qwen2.5 1.5B Instruct Q4_0 under a second prediction, then the 7B at Q4_0, the format the first prediction named.</p>
+<p><strong>Correction, 26 October:</strong> the first version of this note said the Q4_0 7B was not on this machine. It was, in <code>models/quant/</code>; the search had looked only in <code>models/</code>. The Q4_0 run is now in section 5. Its result agrees with the Q4_K_M one.</p>
 <p>Note 1 measured that serving eight requests at once cuts chip energy per token 72% on a 1.5B model, and stopped at eight. Note 8's roofline says a server has to batch tens of sequences per weight pass before the memory traffic is paid for. The cluster reading note ranks one question first: on the machines we own, where does energy per token stop falling as the batch grows? This note answers it on the Mac at a 7B.</p>
 <p><strong>Prediction</strong> (<code>docs/predictions.md</code>, committed before the run): steep fall from 1 to 8, a further 15 to 30% to 16, then flat from 16 to 32 with under 10% more saving because the 7B is compute bound there; speed per request under half of batch 1 by 16; passes within 5%.</p>
 <h2 data-via>Method</h2>
@@ -215,6 +216,78 @@
 <p>The same shape at a fifth of the size: lowest at 16, 12% more at 32, total throughput down from 1,171 to 963 tok/s. The prediction said the minimum would sit at 16 or 32 and that 32 would be within 10% of it; it is 12% off, so the top end missed narrowly in the same direction as the 7B. The predicted ceiling of about 1,800 tok/s was wrong too: the chip tops out at 1,171 on this model, which is 3.0 TFLOPS of useful work against 5.2 on the 7B, so the small model gets less of the chip, as note 6 found per weight.</p>
 <p>Batch 1 to 8 reproduces note 1, which measured the same model and format with a different tool (llama-batched-bench, 512-token answers): 104.7, 103.3, 54.3 and 29.3 mJ per token there against 97, 100, 53 and 30 here, within 8% at every batch, including the finding that batch 2 saves nothing because chip power nearly doubles.</p>
 <p><strong>Checked with longer windows.</strong> The 1.5B's small-batch rows above rest on 2 to 4 power samples each. A third prediction, committed before the rerun, repeated them with 512-token answers, four times every window, 11 to 75 samples each (<code>ANSWER=512</code>, <code>results/decode-batch-mac-1.5b-q4_0-a512.json</code>). Batch 1 to 8 came back at 105, 103, 54 and 30 mJ per token, within 8% of the short run, the knee stayed at 16 and batch 32 stayed above it. The passes did not agree within 5%: they spread 4 to 10%, and the second pass was higher at every batch. The second pass runs in reverse, straight after the two longest windows, so it meets a warmer chip. That is a run-order effect the short run was too brief to show, and it is the reason the tables above are means of both orders.</p>
+<h2 data-via>5. The format the prediction named</h2>
+<p>The 7B at Q4_0 (<code>results/decode-batch-mac-7b-q4_0.json</code>, run 26 October at 01:42):</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">batch</th>
+<th style="text-align: right;">tok/s</th>
+<th style="text-align: right;">tok/s per request</th>
+<th style="text-align: right;">W</th>
+<th style="text-align: right;">mJ per token</th>
+<th style="text-align: right;">vs batch 1</th>
+<th style="text-align: right;">pass spread</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">59.5</td>
+<td style="text-align: right;">59.5</td>
+<td style="text-align: right;">21.8</td>
+<td style="text-align: right;">366</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">3.1%</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">98.0</td>
+<td style="text-align: right;">49.0</td>
+<td style="text-align: right;">38.4</td>
+<td style="text-align: right;">392</td>
+<td style="text-align: right;">7% more</td>
+<td style="text-align: right;">2.8%</td>
+</tr>
+<tr>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">185.6</td>
+<td style="text-align: right;">46.4</td>
+<td style="text-align: right;">38.2</td>
+<td style="text-align: right;">206</td>
+<td style="text-align: right;">44% less</td>
+<td style="text-align: right;">5.9%</td>
+</tr>
+<tr>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">329.5</td>
+<td style="text-align: right;">41.2</td>
+<td style="text-align: right;">36.3</td>
+<td style="text-align: right;">110</td>
+<td style="text-align: right;">70% less</td>
+<td style="text-align: right;">0.2%</td>
+</tr>
+<tr>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">369.6</td>
+<td style="text-align: right;">23.1</td>
+<td style="text-align: right;">35.4</td>
+<td style="text-align: right;">96</td>
+<td style="text-align: right;">74% less</td>
+<td style="text-align: right;">1.2%</td>
+</tr>
+<tr>
+<td style="text-align: right;">32</td>
+<td style="text-align: right;">341.5</td>
+<td style="text-align: right;">10.7</td>
+<td style="text-align: right;">40.5</td>
+<td style="text-align: right;">119</td>
+<td style="text-align: right;">68% less</td>
+<td style="text-align: right;">0.5%</td>
+</tr>
+</tbody>
+</table>
+<p>Same shape: the knee at 16, batch 32 costs 24% more than 16 with less total throughput. Q4_0 is cheaper than Q4_K_M at every batch, 30% at batch 1 and 10% at 16, as note 5's unpacking cost predicts. Batch 2 costs more per token than batch 1 here: the chip's power steps from 22 to 38 W when the second request arrives, and Q4_0's lower batch-1 power makes the step larger in proportion.</p>
 <h2 data-via>What this changes</h2>
 <ul>
 <li>Fabric's cost table carried note 1's 1.5B curve to batch 8 as its batch curve, labelled as transferred. It now carries the 7B curve to 32, still transferred to the Strix Halo until the same script runs there, with the knee at 16.</li>
@@ -226,7 +299,7 @@
 <li>Chip energy only, not wall. Idle and board power are a fixed cost per second, so at the wall batching pays more than this table shows and the knee moves later, not earlier.</li>
 <li>Short windows. 7B: 2.3 seconds and 10 power samples at batch 1, 12.7 seconds at 32; two batches spread over 5% between passes. 1.5B: 0.7 seconds and 2 samples at batch 1, 3 to 4 samples through batch 8, 7 at 16 and 19 at 32, so its small-batch rows were thin on power; a 512-token rerun with 11 to 75 samples per window reproduced them within 8% (section 4). Longer windows show a run-order effect: the reversed pass, after the batch-32 runs, reads 4 to 10% higher.</li>
 <li>One prompt and one answer length. Longer contexts make the KV-cache read a larger share of each step and move the knee down (note 14 measured batching at 4,096-token contexts on the Windows laptop; this run did not vary context).</li>
-<li>The 7B is Q4_K_M, not the Q4_0 the prediction names. Note 5 found the two read the same bytes with Q4_K costing more to unpack; the shape of the curve should carry, the mJ figures are Q4_K_M's.</li>
+<li>Sections 1 to 3 are Q4_K_M; section 5 repeats the 7B at the Q4_0 the prediction named, with the same shape.</li>
 <li>Why batch 32 is slower in total than 16 was not isolated; the server was started fresh per batch and the context per slot was constant, so it is the batch, not memory pressure from a larger context.</li>
 </ul>
 <h2 data-via>Reproduce</h2>
@@ -236,8 +309,9 @@ uv run python experiments/decode_batch_summary.py results/decode-batch-mac-7b-q4
 uv run python experiments/decode_batch_energy.py models/qwen2.5-1.5b-instruct-q4_0.gguf results/decode-batch-mac-1.5b-q4_0.json
 uv run python experiments/decode_batch_summary.py results/decode-batch-mac-1.5b-q4_0.json
 ANSWER=512 uv run python experiments/decode_batch_energy.py models/qwen2.5-1.5b-instruct-q4_0.gguf results/decode-batch-mac-1.5b-q4_0-a512.json
+uv run python experiments/decode_batch_energy.py models/quant/7b-Q4_0.gguf results/decode-batch-mac-7b-q4_0.json
 </code></pre>
-<p>Nothing else running: no browser, no Blender. Raw results: <code>results/decode-batch-mac-7b-q4km.json</code>, <code>results/decode-batch-mac-1.5b-q4_0.json</code>, <code>results/decode-batch-mac-1.5b-q4_0-a512.json</code>.</p>
+<p>Nothing else running: no browser, no Blender. Raw results: <code>results/decode-batch-mac-7b-q4km.json</code>, <code>results/decode-batch-mac-1.5b-q4_0.json</code>, <code>results/decode-batch-mac-1.5b-q4_0-a512.json</code>, <code>results/decode-batch-mac-7b-q4_0.json</code>.</p>
 <p class="source mono">Source, scripts and raw data: <a href="https://github.com/splicedso/phase/blob/main/notes/2026-10-decode-batch.md">phase/notes/2026-10-decode-batch.md</a></p>
 </article></main>
 </div>
@@ -256,7 +330,7 @@ ANSWER=512 uv run python experiments/decode_batch_energy.py models/qwen2.5-1.5b-
   </div>
 </footer>
 
-<script src="../../assets/site.js?v=202610252350"></script>
-<script src="../../assets/charts.js?v=202610252350"></script>
+<script src="../../assets/site.js?v=202610260149"></script>
+<script src="../../assets/charts.js?v=202610260149"></script>
 </body>
 </html>
