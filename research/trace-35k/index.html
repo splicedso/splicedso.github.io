@@ -7,21 +7,21 @@
 <meta name="description" content="Trace v1 on 35,000 prompts: agreement with the 7B 0.7754, short of the 0.79 bar. Its guesses are accepted more often, but it guesses less at the same threshold. At its best threshold every draft serves within 1%, so Trace pauses.">
 <meta property="og:title" content="More data made the draft right more often, and no faster &middot; Spliced">
 <meta property="og:description" content="Trace v1 on 35,000 prompts: agreement with the 7B 0.7754, short of the 0.79 bar. Its guesses are accepted more often, but it guesses less at the same threshold. At its best threshold every draft serves within 1%, so Trace pauses.">
-<meta property="og:image" content="https://splicedso.github.io/assets/og.png?v=202610261007">
+<meta property="og:image" content="https://splicedso.github.io/assets/og.png?v=202610261008">
 <meta property="og:url" content="https://splicedso.github.io/research/trace-35k/">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Spliced">
 <link rel="canonical" href="https://splicedso.github.io/research/trace-35k/">
 <meta name="color-scheme" content="light dark">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="../../assets/favicon.svg?v=202610261007" type="image/svg+xml">
-<link rel="icon" href="../../assets/favicon-32.png?v=202610261007" type="image/png" sizes="32x32">
-<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png?v=202610261007">
+<link rel="icon" href="../../assets/favicon.svg?v=202610261008" type="image/svg+xml">
+<link rel="icon" href="../../assets/favicon-32.png?v=202610261008" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png?v=202610261008">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>document.documentElement.classList.add("js");</script>
-<link rel="stylesheet" href="../../assets/style.css?v=202610261007">
+<link rel="stylesheet" href="../../assets/style.css?v=202610261008">
 <link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
 </head>
 <body data-root="../../" data-page="research">
@@ -191,7 +191,7 @@
 </tr>
 </tbody>
 </table>
-<p>At its own best threshold, every draft serves within 1.1% of every other. The trained drafts reach the stock draft's speed only by lowering the threshold, which is what section 2's counts implied: training changes how confident the draft is, and a threshold changes that for free. On-policy training lowered acceptance at 0.5 by eight points and agreement did not rise (0.7627 from stock, 0.7692 from 35k, against 0.7758 for the 35k draft). By the rule agreed before the pilot, at least one point of acceptance over the best off-policy draft, Trace pauses.</p>
+<p>At its own best threshold, every draft serves within 1.1% of every other. Energy tells the same story with one caveat: the 35k draft at 0.4 uses 1,350 mJ per token against the stock draft's 1,423 at 0.5, 5.1% less, but that stock cell's two passes differ by 5.6%; at 0.4, where both are clean, they are within 0.5% (1,350 against 1,357). The trained drafts reach the stock draft's speed only by lowering the threshold, which is what section 2's counts implied: training changes how confident the draft is, and a threshold changes that for free. On-policy training lowered acceptance at 0.5 by eight points and agreement did not rise (0.7627 from stock, 0.7692 from 35k, against 0.7758 for the 35k draft). By the rule agreed before the pilot, at least one point of acceptance over the best off-policy draft, Trace pauses.</p>
 <h2 data-via>What this changes</h2>
 <ul>
 <li>Off-policy distillation has run out at this size. More data and more epochs move agreement by tenths of a point and serving speed not at all.</li>
@@ -230,7 +230,7 @@ sh experiments/trace_35k_eval.sh  # convert, then evaluate.py at k=4 and 8, p 0.
   </div>
 </footer>
 
-<script src="../../assets/site.js?v=202610261007"></script>
-<script src="../../assets/charts.js?v=202610261007"></script>
+<script src="../../assets/site.js?v=202610261008"></script>
+<script src="../../assets/charts.js?v=202610261008"></script>
 </body>
 </html>
