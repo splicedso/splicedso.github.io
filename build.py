@@ -382,9 +382,14 @@ def main():
     page("models/index.html", (SRC / "pages/models.html").read_text(),
          title="Models &middot; Spliced", description="Spliced models: Trace draft models and Lattice low-bit models, with where each stands.",
          page="models", sheet="Models", sheetno="M")
-    page("lab/index.html", (SRC / "pages/lab.html").read_text(),
-         title="Lab &middot; Spliced", description="Spliced builds efficient inference systems: small models, measured on the hardware people own.",
-         page="lab", sheet="Lab", sheetno=f"4 of {total}")
+    page("about/index.html", (SRC / "pages/about.html").read_text(),
+         title="About &middot; Spliced", description="Spliced builds efficient inference systems: small models, measured on the hardware people own.",
+         page="about", sheet="About", sheetno=f"4 of {total}")
+    lab = HERE / "lab/index.html"
+    lab.parent.mkdir(parents=True, exist_ok=True)
+    lab.write_text('<!doctype html><meta charset="utf-8"><title>About</title>'
+                   '<link rel="canonical" href="' + SITE + '/about/">'
+                   '<meta http-equiv="refresh" content="0; url=../about/"><a href="../about/">About</a>\n')
     for i, n in enumerate(NOTES):
         title, date = note_meta(n)
         lede, body = note_body(n)

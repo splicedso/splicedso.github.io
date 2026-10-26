@@ -388,7 +388,7 @@ section.tight { padding: 88px 0; }
   .page-head { padding: 72px 0 32px; }
   nav ul { gap: 16px; }}
 @media (max-width: 520px) {
-  nav .icon-link { display: none; }
+  nav .icon-link, nav li.about { display: none; }
   .nav-right { margin-left: 14px; }
   nav ul { gap: 13px; }
   nav ul a { font-size: 10.5px; letter-spacing: .07em; }
@@ -1230,3 +1230,10 @@ pre { border: 0 !important; border-left: 1px solid #d4d4d4 !important; }
 .etched-grid.solo > figure.wide img[src$=".svg"] { width: 100%; height: auto; background: #eee; }
 .top-render.lineup { margin-top: 0; padding-top: 24px; }
 .top-render.lineup img { max-height: 56vh; width: min(1500px, 94%); }
+
+/* phone nav: six items on one row under the brand (the pill rule above is for wide screens) */
+@media (max-width: 520px) {
+  nav ul { gap: 0; }
+  nav ul a { font-size: 12.5px; padding: 6px 7px; letter-spacing: 0; }
+  nav li:first-child a { padding-left: 0; }
+}
