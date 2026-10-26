@@ -1,0 +1,54 @@
+/Users/martinmuskov/Docs/GitHub/spliced/site/render/cell.py:40: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  led = bpy.data.materials.new("led"); led.use_nodes = True
+Blender 5.2.2 LTS (hash d13f752e3b9c built 2026-09-15 01:49:19)
+Timer 'STL Export' took 54.40 ms
+Timer 'STL Export' took 52.03 ms
+Timer 'STL Export' took 51.09 ms
+Timer 'STL Export' took 52.38 ms
+Timer 'STL Export' took 49.05 ms
+Timer 'STL Export' took 48.44 ms
+Timer 'STL Export' took 49.13 ms
+Timer 'STL Export' took 50.00 ms
+Timer 'STL Export' took 49.33 ms
+Timer 'STL Export' took 52.06 ms
+Timer 'STL Export' took 50.34 ms
+Timer 'STL Export' took 56.12 ms
+Timer 'STL Export' took 50.09 ms
+Timer 'STL Export' took 50.28 ms
+Timer 'STL Export' took 49.16 ms
+Timer 'STL Export' took 50.06 ms
+Timer 'STL Export' took 49.71 ms
+Timer 'STL Export' took 56.17 ms
+Timer 'STL Export' took 49.98 ms
+Timer 'STL Export' took 50.62 ms
+Timer 'STL Export' took 50.85 ms
+Timer 'STL Export' took 51.25 ms
+Timer 'STL Export' took 50.18 ms
+Timer 'STL Export' took 52.47 ms
+Timer 'STL Export' took 52.14 ms
+Info: File exported successfully
+Info: File exported successfully
+Info: File exported successfully
+Info: File exported successfully
+Info: File exported successfully
+Info: File exported successfully
+Info: File exported successfully
+Info: File exported successfully
+Info: File exported successfully
+Info: File exported successfully
+Info: File exported successfully
+Info: File exported successfully
+Info: File exported successfully
+Info: File exported successfully
+Info: File exported successfully
+Info: File exported successfully
+Info: File exported successfully
+Info: File exported successfully
+Info: File exported successfully
+Info: File exported successfully
+Info: File exported successfully
+Info: File exported successfully
+Info: File exported successfully
+Info: File exported successfully
+Info: File exported successfully
+exported 25 parts to /Users/martinmuskov/Docs/GitHub/spliced/site/render/parts/cell

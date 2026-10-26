@@ -1,0 +1,36 @@
+  <section class="etched">
+    <div class="etched-grid solo">
+      <div class="prose">
+        <h2>V1: the one someone could build.</h2>
+        <p>The sealed cell above is a concept. V1 drops it for what every air-cooled datacenter already does: a cold aisle in front, a hot aisle behind, air through each unit front to back, and nothing custom except our part. The unit is a 2U sled at standard rack width with two carriers side by side, a cage of four 80 mm fans behind them, a host board and the power stage at the rear. Sixteen sleds, one prefill sled, a switch and a power shelf fill a 42U rack; racks side by side in hot-aisle containment make a row. On a desk, one sled breathes the same way.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="etched">
+    <div class="etched-grid">
+      <figure><img src="../assets/img/v1-sled-open.webp" alt="The V1 sled with its lid off: two carriers side by side, a fan cage behind them, host board and power stage at the rear" loading="lazy"></figure>
+      <div class="prose">
+        <h2>The sled.</h2>
+        <p>Two decode modules at their measured 81 to 87 W each under the cap, four fans at 40 to 60 W, a host and power stage we have not measured: about 280 W busy, about 105 W idle, roughly 380 tokens per second on a 7B at eight requests each. The fans move about 68 cubic feet a minute after the fins and the filter against 25 needed at a 20 degree rise. Every number is labelled by its basis in the design document; the only ones measured are the modules'.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="etched">
+    <div class="etched-grid">
+      <figure><img src="../assets/img/v1-pod.webp" alt="The V1 pod: a 42U rack with sixteen sleds, a prefill sled, a switch and a power shelf" loading="lazy"></figure>
+      <div class="prose">
+        <h2>The pod, and what the budget says.</h2>
+        <p>Sixteen sleds draw about 5.3 kilowatts busy against an 8 kilowatt feed and about 2 kilowatts idle, and serve about 6,100 tokens per second on a 7B. Our scheduler's budget passes its airflow, feed and idle checks on paper. It also says the thing that matters: at full load the pod costs about 216 joules per correct answer against 111 for the modules alone, because fans, hosts, the prefill GPU and the switch are nearly as much power as thirty-two capped modules. The design's first fight is everything around the module.</p>
+        <h3>What would have to be true, in order of cost</h3>
+        <p>Two carriers under a four-fan cage hold 1,800 MHz at a 35 degree inlet: one sled, one afternoon, a thermocouple and the power log. The sled idles at or below 105 watts at the wall: same afternoon. Sixteen sleds stay within a 20 degree rise at the hot-aisle face. A full pod's joules per correct answer at the wall under the scheduler. The first two cost one sled's worth of parts, and nothing is measured yet: every capped run so far held its clock at 59 to 88 watts, but no die temperature was recorded for any of them.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="etched">
+    <div class="etched-grid solo">
+      <figure class="wide"><img src="../assets/img/v1-row.webp" alt="Six V1 pods side by side in a hot-aisle containment row" loading="lazy"></figure>
+    </div>
+  </section>

@@ -1,8 +1,9 @@
+<figure class="top-render lineup"><img src="../assets/img/lineup.webp" alt="The Spliced family at relative scale: the package, the decode carrier, the desk unit, the cell"></figure>
 <header class="page-head">
   <div class="wrap">
     <span class="label">Designs</span>
-    <h1>What the measurements would build.</h1>
-    <p class="lede">Concepts drawn from our numbers. Designs, not products: nothing here exists in hardware, and every claim says what would have to be measured for it to hold.</p>
+    <h1>One part, four sizes.</h1>
+    <p class="lede">A decode module in a carrier. One carrier is a desk unit for local hosting. Twelve fill a cell. A hundred cells make a row. Designs, not products: nothing here exists in hardware, and every claim says what would have to be measured for it to hold.</p>
   </div>
 </header>
 
@@ -11,71 +12,63 @@
     <div class="etched-grid">
       <figure><img src="../assets/img/decode.webp" alt="A concept inference module: a small compute die ringed by eight memory stacks on one interposer" loading="lazy"></figure>
       <div class="prose">
-        <h2>A decode-first module.</h2>
-        <p>Decode reads every weight and every cached token once per step and does little arithmetic on them. The part that serves it well is memory first: a small compute die in the middle of a ring of eight memory stacks, on one interposer. The ring sets the footprint, not the die.</p>
-        <h3>Sized to its bandwidth</h3>
-        <p>The die is only as large as the memory can feed, and it runs at a capped clock by design. On the AMD Ryzen AI Max+ 395, capping the shader clock at 1,800 MHz cut 7B decode energy per token 37% at 4% less speed. A decode part lives there permanently, so its power stage row is short and its cooling is a flat vapour-chamber plate rather than a fin stack.</p>
-        <h3>Paid for by the batch</h3>
-        <p>Eight requests at once cut energy per token by 72% on one chip. The module is meant to run eight or more sequences per step, always, and the sled's scheduler keeps it there.</p>
+        <h2>The module.</h2>
+        <p>Decode reads every weight and every cached token once per step and does little arithmetic on them. The part that serves it well is memory first: a small compute die in the middle of a ring of eight memory stacks, on one interposer, sized to its bandwidth and run at a capped clock by design. On the AMD Ryzen AI Max+ 395, capping the shader clock at 1,800 MHz cut joules per correct answer 19 to 28% at accuracy within a point. Eight requests at once cut energy per token by 72%; the module is meant to run eight or more sequences per step, always.</p>
       </div>
     </div>
   </section>
 
   <section class="etched">
     <div class="etched-grid">
-      <figure><img src="../assets/img/sled.webp" alt="A concept 1U sled: six decode modules behind one prefill module and a switch" loading="lazy"></figure>
+      <figure><img src="../assets/img/desk-open.webp" alt="The desk unit open: one decode carrier on its rails above a host board, a fan wall behind" loading="lazy"></figure>
       <div class="prose">
-        <h2>A sled that splits prefill from decode.</h2>
-        <p>Prefill is compute bound; a prompt token costs about a fortieth of a generated one. Putting both on one die buys compute that idles during decode and bandwidth that idles during prefill. The sled puts six decode modules behind one compute-dense prefill module with a tall heat sink, and a switch between them, so the cache handoff stays on one board.</p>
-        <h3>One prefill, one life</h3>
-        <p>A request is prefilled once on the front module and its cache handed to a decode module, where it lives for the rest of the request. A prefix cache hit skips the front module entirely.</p>
-        <h3>What would have to be true</h3>
-        <p>Joules per correct answer at eight slots under a cap, below the single-chip figure by the idle and prefill share it no longer carries. The cache transfer hidden under decode time up to the prompt length where the board link saturates. Six capped modules idling for less than one chip at 17 to 26 W. None of these are measured yet; the <a href="../systems/">Systems</a> page is where the measured recipe lives, and the plan for measuring these is in the research repository.</p>
+        <h2>The carrier, and the desk unit.</h2>
+        <p>The module lives in a carrier: a tray with the board, a vapour chamber the length of the tray, a fin stack that runs front to back inside its own duct, and a handle. It is the one part every size shares. One carrier in a small air-cooled enclosure is the desk unit, 0.32 by 0.28 by 0.62 metres: a filtered intake at the front, the carrier's own duct, two fans at the back, a host board underneath, power and two network ports at the rear. It runs the same scheduler and the same operating system as a cell, for someone hosting a model at home or in an office.</p>
+        <h3>What it would do</h3>
+        <p>A 7B at eight requests at once, under the cap, at about 190 tokens per second and 111 joules per correct answer, modules only, which is the measured figure for the part it is built around. A 32B fits in its 128 GB. The enclosure, the fans and the host add an overhead we have not measured.</p>
       </div>
     </div>
   </section>
+
   <section class="etched">
     <div class="etched-grid">
-      <figure><img src="../assets/img/rack.webp" alt="A concept liquid-cooled rack: twenty-four decode sleds, a coolant distribution unit, a top-of-rack switch" loading="lazy"></figure>
+      <figure><img src="../assets/img/cell-open.webp" alt="The cell open: a fan wall at the front, twelve carriers in two tiers in the airflow, the prefill module and host shelf at the rear" loading="lazy"></figure>
       <div class="prose">
-        <h2>A rack built around the sled.</h2>
-        <p>Twenty-four sleds, a coolant distribution unit in the bottom four units, a switch at the top, and a vertical busbar at the rear so no sled carries its own power supply. Every sled face has two quick-disconnect couplers on the left, because the cold plates on the decode modules are liquid cooled from the start; there is no air path through the module and no fan in the sled.</p>
-        <h3>Why liquid, why a busbar</h3>
-        <p>A capped decode module draws a fraction of a conventional accelerator's power, so the rack's heat is modest for its density; what liquid buys is a flat cold plate and a 1U sled, which is what keeps twenty-four of them in one cabinet. The busbar removes twenty-four power supplies and their conversion losses from the rack, the overhead that sits between chip energy and wall energy in every measurement we have made.</p>
-        <h3>What would have to be true</h3>
-        <p>The idle floor of a full rack at low load, measured at the wall, has to stay below the sum of its parts idling; the coolant unit's pumps have to cost less than the fans they replace; and the switch has to carry cache handoffs between sleds within the time decode hides them. The two-box microbenchmark in our cluster groundwork is the first of those to run.</p>
-      </div>
-    </div>
-  </section>
-  <section class="etched">
-    <div class="etched-grid">
-      <figure><img src="../assets/img/cell.webp" alt="A concept portable datacenter cell: a sealed pallet-sized enclosure with heat rejection on top and a dock on each side" loading="lazy"></figure>
-      <div class="prose">
-        <h2>A cell that is a datacenter on its own.</h2>
-        <p>A low, narrow, deep block, 0.6 by 1.2 by 3.0 metres, the proportions of an accelerator card lying flat and stretched back. Decode sleds load from the narrow front in one column and run the depth of the cell; heat leaves through a louvred band along the whole top, fed by the sleds' liquid loop. Alone, it needs only power and a network drop. Each long side is a blind-mate dock with two coolant couplers, a fibre plate and a busbar cover, so a second cell pushed against the first connects without anyone opening either.</p>
+        <h2>The cell, air cooled.</h2>
+        <p>A low, narrow, deep block, 0.6 by 1.2 by 3.0 metres, the proportions of an accelerator card lying flat. Air enters through the whole front door, a filtered grille, passes a wall of eight fans, runs front to back through ducted lanes over twelve carriers in two tiers of six, then over the prefill module's tall fin stack, and leaves through the rear door. The host board and the switch sit on a shelf in the exhaust plenum. Every carrier pulls out from the front. Each long side is a blind-mate dock with two coolant couplers for a liquid option, a fibre plate and a busbar cover.</p>
         <h3>Alone, or a hundred in a row</h3>
-        <p>Docked side by side, the coolant trunk, the busbar and the fibre pass through every cell: a row takes power at one end, rejects heat along its whole top, and its switches form one fabric. A row of a hundred is one unit to the scheduler and a hundred units to the forklift. Pull one out and its neighbours' docks close.</p>
-        <h3>Why one is cheap, and the hundredth cheaper</h3>
-        <p>The sleds spend their silicon on commodity stacked memory rather than a large die and run capped, which leaves out the expensive part of an accelerator. No power supply per cell, no raised floor, no chilled-water plant, no building: the cell is its own room. One enclosure, one door, one dock, built in volume. We have not costed it and will not print a price until a bill of materials exists.</p>
+        <p>Docked side by side, the busbar and the fibre pass through every cell: a row takes power at one end and its switches form one fabric. A row of a hundred is one unit to the scheduler and a hundred units to the forklift. Pull one out and its neighbours' docks close.</p>
         <h3>What would have to be true</h3>
-        <p>The top band rejects a full cell's heat at the design ambient without a chiller, at a fan power that keeps wall energy per correct answer below the single-chip figure. The couplers hold pressure through a hundred dockings. The busbar carries a row's current and a cell can be pulled live. None of these are measured.</p>
+        <p>Eight fans move enough air through twelve ducted lanes to hold a capped module at its measured 81 to 87 W each, at a fan power that keeps wall energy per correct answer below the single-chip figure. The idle floor of a cell at low load stays below the sum of its parts idling. None of these are measured.</p>
       </div>
     </div>
   </section>
+
   <section class="etched">
     <div class="etched-grid solo">
       <figure class="wide"><img src="../assets/img/cell-row.webp" alt="Eight concept cells docked side by side into one row" loading="lazy"></figure>
     </div>
   </section>
+
+  <section class="etched">
+    <div class="etched-grid solo">
+      <figure class="wide"><img src="../assets/img/cell-drawings.svg" alt="Schematic drawings of the cell: plan, side elevation, front, and the parts list with dimensions in millimetres"></figure>
+      <div class="prose">
+        <h2>On paper, and in parts.</h2>
+        <p>The drawings above are generated from the same numbers the renders are built from: plan, side elevation and front, dimensions in millimetres, the air path marked, the parts listed. The cell's twenty-five parts export as STL at 1:10, so a scale model can be printed and the layout checked by hand before anything is cut from sheet. A design, not a product; the parts list is a shape, not a bill of materials, and no price goes here until one exists.</p>
+      </div>
+    </div>
+  </section>
+
   <section class="etched">
     <div class="etched-grid solo">
       <div class="prose">
         <h2>What is inside, and whose it is.</h2>
-        <p>Buy the silicon, own everything above it. For the first generations a cell runs on parts that exist and that we can measure: an AMD Ryzen AI Max+ 395 class part with its 128 GB of unified memory for the decode modules, a discrete GPU for prefill, an ordinary server CPU as host, a 400G switch, a busbar tap instead of a power supply, one liquid loop. What Spliced makes is the module board, the cold plate, the capped clock, the enclosure, the dock, the operating system and the scheduler. That is most of what a cell is.</p>
+        <p>Buy the silicon, own everything above it. The decode module is built around a part that exists and that we measure, an AMD Ryzen AI Max+ 395 class part with 128 GB of unified memory; the prefill module around a discrete GPU; the host is an ordinary server CPU; the switch is bought. What Spliced makes is the carrier, the cold plate, the capped clock, the enclosure, the dock, the operating system and the scheduler. That is most of what a cell is.</p>
         <h3>Our own chip, or not</h3>
         <p>The measurements say decode wants a small die with as much bandwidth as can be attached, at a fixed low clock, and no vendor sells exactly that. That is a real argument for a chip. Against it, today: the expensive part of an accelerator is the memory stack and the packaging, which we would buy anyway, and a two-person group cannot tape out a die. The test is in our software: once cells are measured, split a token's joules into memory traffic, compute, interconnect and overhead. If compute is a small share, a bought part is already near the roofline. We do not know which yet, and will not say we do.</p>
         <h3>Spliced Linux</h3>
-        <p>Not a distribution: an appliance image. An upstream kernel with the accelerator drivers we measure with, a read-only root built from a recipe, two slots with signed whole-image updates, one service manager, and one workload, the scheduler. The clock cap is set at boot and verified under load; every cell reports package power, clock and busy for every module, and the number it reports is the number we publish. The first deliverable costs only time: a recipe that boots the machine we own and reproduces our capped figures within 3%.</p>
+        <p>Not a distribution: an appliance image. An upstream kernel with the accelerator drivers we measure with, a read-only root built from a recipe, two slots with signed whole-image updates, one service manager, and one workload, the scheduler. The same image runs the desk unit and the cell. The clock cap is set at boot and verified under load; every unit reports package power, clock and busy for every module, and the number it reports is the number we publish.</p>
       </div>
     </div>
   </section>

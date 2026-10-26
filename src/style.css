@@ -1227,3 +1227,6 @@ pre { border: 0 !important; border-left: 1px solid #d4d4d4 !important; }
 @media (max-width: 900px) { .trio { grid-template-columns: 1fr; } .model-box + .model-box { border-left: 0; border-top: 1px solid #d4d4d4; } .model-box { padding: 32px 16px; } }
 .hero-center h1 { max-width: 12ch; }
 .etched-grid.solo > figure.wide { grid-column: 1 / -1; padding: 24px 0 0; max-width: 1100px; margin: 0 auto; }
+.etched-grid.solo > figure.wide img[src$=".svg"] { width: 100%; height: auto; background: #eee; }
+.top-render.lineup { margin-top: 0; padding-top: 24px; }
+.top-render.lineup img { max-height: 56vh; width: min(1500px, 94%); }

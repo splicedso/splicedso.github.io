@@ -62,7 +62,7 @@ def decode_module(ox, oy, z=0.0, plate_on=False):
         for hx in (-1.15, 1.15):
             for hy in (-1.0, 1.0):
                 S.screw((ox + hx, oy + hy, z + 0.36), frame, 0.06)
-        S.mark((ox - 0.75, oy - 0.65, z + 0.341), 0.34, S.mat("etch", (0.3, 0.3, 0.3), metal=1.0, rough=0.6))   # laser-etched into the plate
+        S.badge((ox - 0.55, oy - 0.7, z + 0.345), 0.22, plate, S.mat("etch", (0.3, 0.3, 0.3), metal=1.0, rough=0.6), depth=0.02)   # badge on the plate
     else:
         S.box((0.6, 0.6, 0.04), (ox, oy, z + 0.19), die, 0.006)                       # the small compute die
         for k in (-1, 1):                                                              # eight memory stacks, a ring

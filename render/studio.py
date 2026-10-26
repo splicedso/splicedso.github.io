@@ -242,3 +242,25 @@ def scuffed(name, color, metal=1.0, rough=0.3):
     nt.links.new(tc.outputs["Object"], mp.inputs["Vector"]); nt.links.new(mp.outputs["Vector"], nz.inputs["Vector"])
     nt.links.new(nz.outputs["Fac"], mr.inputs["Value"]); nt.links.new(mr.outputs["Result"], p.inputs["Roughness"])
     return m
+
+
+def badge(loc, height, m_plate, m_mark, rot=(0, 0, 0), depth=0.08, wordmark=True):
+    """A product badge: a slim raised plate carrying the mark and, beside it, the word in cut letters.
+    `height` is the mark's height; the plate is proportioned to it. Used on every concept model so the
+    family reads as one brand at every size."""
+    from mathutils import Euler, Vector
+    k = height
+    pw = k * (3.9 if wordmark else 1.3); ph = k * 1.35
+    bpy.ops.mesh.primitive_cube_add(size=1, location=loc, rotation=rot)
+    plate = bpy.context.object; plate.scale = (pw, ph, depth); bpy.ops.object.transform_apply(scale=True)
+    b = plate.modifiers.new("b", "BEVEL"); b.width = depth * 0.4; b.segments = 3
+    bpy.ops.object.shade_smooth(); plate.data.materials.append(m_plate)
+    # the mark, inset into the plate's face, at the left
+    off = Vector((-pw / 2 + k * 0.8, 0, depth / 2 + 0.001))
+    off.rotate(Euler(rot))
+    mark(tuple(Vector(loc) + off), k, m_mark, rot=rot, depth=depth * 0.3)
+    if wordmark:
+        off2 = Vector((-pw / 2 + k * 1.75, -k * 0.34, depth / 2 + 0.001))
+        off2.rotate(Euler(rot))
+        text("Spliced", tuple(Vector(loc) + off2), k * 0.62, m_mark, rot=rot, extrude=depth * 0.3, font="/System/Library/Fonts/HelveticaNeue.ttc")
+    return plate
