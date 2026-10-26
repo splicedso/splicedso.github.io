@@ -7,21 +7,21 @@
 <meta name="description" content="Efficient inference systems. What AI costs to run, and the models that cut it.">
 <meta property="og:title" content="Spliced">
 <meta property="og:description" content="Efficient inference systems. What AI costs to run, and the models that cut it.">
-<meta property="og:image" content="https://splicedso.github.io/assets/og.png?v=202610260219">
+<meta property="og:image" content="https://splicedso.github.io/assets/og.png?v=202610260638">
 <meta property="og:url" content="https://splicedso.github.io/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Spliced">
 <link rel="canonical" href="https://splicedso.github.io/">
 <meta name="color-scheme" content="light dark">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="assets/favicon.svg?v=202610260219" type="image/svg+xml">
-<link rel="icon" href="assets/favicon-32.png?v=202610260219" type="image/png" sizes="32x32">
-<link rel="apple-touch-icon" href="assets/apple-touch-icon.png?v=202610260219">
+<link rel="icon" href="assets/favicon.svg?v=202610260638" type="image/svg+xml">
+<link rel="icon" href="assets/favicon-32.png?v=202610260638" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png?v=202610260638">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>document.documentElement.classList.add("js");</script>
-<link rel="stylesheet" href="assets/style.css?v=202610260219">
+<link rel="stylesheet" href="assets/style.css?v=202610260638">
 <link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
 </head>
 <body data-root="" data-page="home">
@@ -69,7 +69,7 @@
       <div class="prose">
         <h2>Models that cost less per answer.</h2>
         <p>Spliced builds small models for the hardware people own, and measures what every token and every correct answer costs on it. The machines are an Apple M5 Pro, an AMD Ryzen AI Max+ 395 and an RTX 5070 Ti Laptop GPU; the numbers come from each chip's own power sensors and are published with the raw data beside them. Benchmarks report speed. We report what speed costs.</p>
-        <h3>25 notes. One question each.</h3>
+        <h3>26 notes. One question each.</h3>
         <p>What a quantization format costs. When batching pays. Whether speculative decoding saves energy or only time. Every note writes its prediction down before the run and keeps it when it is wrong. So far: eight requests at once cut energy per token by 72%, a read token costs a fortieth of a written one, and calibration doubles the accuracy of a 2-bit model at the same size.</p>
         <h3>Two model families, held to one bar.</h3>
         <p>Trace is a draft model trained to predict a larger one, for speculative decoding. Lattice keeps a model accurate below 4 bits per weight. A model ships only when it beats the stock model per correct answer on the same machine. Neither has yet. On a 32B model, calibrated 2-bit already beats 4-bit per correct answer by 16%.</p>
@@ -94,9 +94,9 @@
     <div class="wrap">
       <div class="split">
         <h2>Latest notes.</h2>
-        <a class="more" href="research/">All 25 <span aria-hidden="true">&rarr;</span></a>
+        <a class="more" href="research/">All 26 <span aria-hidden="true">&rarr;</span></a>
       </div>
-      <div class="notes"><a class="note-card" href="research/draft-and-batch/"><span class="meta">Note 25 &middot; 26 October 2026</span><h3>A draft and a batch fill the same gap</h3><p>A draft model against 1 to 16 requests at once on an M5 Pro. 1.26x the speed at one request and 29% less energy at two, then 12 to 50% more energy per token from four on. A draft and a batch fill the same idle arithmetic.</p><span class="go" aria-hidden="true">&rarr;</span></a><a class="note-card" href="research/decode-batch/"><span class="meta">Note 24 &middot; 25 October 2026</span><h3>Where batching stops paying</h3><p>Decode energy per token at batch 1 to 32 on an M5 Pro, 7B and 1.5B. Batch 8 costs 74% less than batch 1 and 16 costs 79% less, then 32 costs 15% more: the knee is an optimum, not a plateau, and both sizes put it at 16.</p><span class="go" aria-hidden="true">&rarr;</span></a><a class="note-card" href="research/capped-quality/"><span class="meta">Note 23 &middot; 25 October 2026</span><h3>Does a clock cap pay per correct answer?</h3><p>Capping the Strix Halo's shader clock at 1,800 MHz cuts joules per correct answer 19 to 28% on a 7B and a 32B at eight requests at once, with accuracy within a point, for 11 to 24% less speed. Two-bit's lead over 4-bit shrinks under the cap.</p><span class="go" aria-hidden="true">&rarr;</span></a></div>
+      <div class="notes"><a class="note-card" href="research/trace-35k/"><span class="meta">Note 26 &middot; 26 October 2026</span><h3>More data made the draft right more often, and no faster</h3><p>Trace v1 on 35,000 prompts: agreement with the 7B 0.7754, short of the 0.79 bar. Its guesses are accepted more often, but it guesses less at the same threshold, so it is no faster than the stock draft.</p><span class="go" aria-hidden="true">&rarr;</span></a><a class="note-card" href="research/draft-and-batch/"><span class="meta">Note 25 &middot; 26 October 2026</span><h3>A draft and a batch fill the same gap</h3><p>A draft model against 1 to 16 requests at once on an M5 Pro. 1.26x the speed at one request and 29% less energy at two, then 12 to 50% more energy per token from four on. A draft and a batch fill the same idle arithmetic.</p><span class="go" aria-hidden="true">&rarr;</span></a><a class="note-card" href="research/decode-batch/"><span class="meta">Note 24 &middot; 25 October 2026</span><h3>Where batching stops paying</h3><p>Decode energy per token at batch 1 to 32 on an M5 Pro, 7B and 1.5B. Batch 8 costs 74% less than batch 1 and 16 costs 79% less, then 32 costs 15% more: the knee is an optimum, not a plateau, and both sizes put it at 16.</p><span class="go" aria-hidden="true">&rarr;</span></a></div>
     </div>
   </section>
 
@@ -130,7 +130,7 @@
   </div>
 </footer>
 
-<script src="assets/site.js?v=202610260219"></script>
+<script src="assets/site.js?v=202610260638"></script>
 
 </body>
 </html>

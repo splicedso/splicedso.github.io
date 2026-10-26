@@ -100,6 +100,9 @@ NOTES = [
     {"slug": "draft-and-batch", "file": "2026-10-draft-and-batch.md", "n": 25,
      "summary": "A draft model against 1 to 16 requests at once on an M5 Pro. 1.26x the speed at one request and 29% less energy "
                 "at two, then 12 to 50% more energy per token from four on. A draft and a batch fill the same idle arithmetic."},
+    {"slug": "trace-35k", "file": "2026-10-trace-35k.md", "n": 26,
+     "summary": "Trace v1 on 35,000 prompts: agreement with the 7B 0.7754, short of the 0.79 bar. Its guesses are accepted more "
+                "often, but it guesses less at the same threshold, so it is no faster than the stock draft."},
 ]
 
 FIGURES = {

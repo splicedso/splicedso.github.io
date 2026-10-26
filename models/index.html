@@ -7,21 +7,21 @@
 <meta name="description" content="Spliced models: Trace draft models and Lattice low-bit models, with where each stands.">
 <meta property="og:title" content="Models &middot; Spliced">
 <meta property="og:description" content="Spliced models: Trace draft models and Lattice low-bit models, with where each stands.">
-<meta property="og:image" content="https://splicedso.github.io/assets/og.png?v=202610260219">
+<meta property="og:image" content="https://splicedso.github.io/assets/og.png?v=202610260638">
 <meta property="og:url" content="https://splicedso.github.io/models/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Spliced">
 <link rel="canonical" href="https://splicedso.github.io/models/">
 <meta name="color-scheme" content="light dark">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="../assets/favicon.svg?v=202610260219" type="image/svg+xml">
-<link rel="icon" href="../assets/favicon-32.png?v=202610260219" type="image/png" sizes="32x32">
-<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png?v=202610260219">
+<link rel="icon" href="../assets/favicon.svg?v=202610260638" type="image/svg+xml">
+<link rel="icon" href="../assets/favicon-32.png?v=202610260638" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png?v=202610260638">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>document.documentElement.classList.add("js");</script>
-<link rel="stylesheet" href="../assets/style.css?v=202610260219">
+<link rel="stylesheet" href="../assets/style.css?v=202610260638">
 <link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
 </head>
 <body data-root="../" data-page="models">
@@ -68,11 +68,11 @@
           <p class="sub">A small model that predicts a large one, so speculative decoding accepts more of its guesses.</p>
           <dl class="specs">
             <div><dt>v0</dt><dd>0.5B, distilled from Qwen2.5 7B. +3% accepted tokens.</dd></div>
-            <div><dt>v1</dt><dd>Trained on the 7B's probabilities: +0.7 points agreement, no faster. Scaling to 35,000 prompts next.</dd></div>
+            <div><dt>v1</dt><dd>Trained on the 7B's probabilities. At 35,000 prompts: +1.4 points agreement, no faster than the stock draft.</dd></div>
             <div><dt>Bar</dt><dd>+3 points top-1 agreement over the stock draft.</dd></div>
-            <div><dt>Now</dt><dd>The 35,000-prompt harvest is running; the retrain and its eval follow. A 72B target comes only if 7B clears the bar.</dd></div>
+            <div><dt>Now</dt><dd>One last pilot: on-policy training, graded by the served 7B itself. If it adds under a point of acceptance, Trace pauses.</dd></div>
           </dl>
-          <a class="more" href="../research/trace-v1/">Note 21 <span aria-hidden="true">&rarr;</span></a>
+          <a class="more" href="../research/trace-35k/">Note 26 <span aria-hidden="true">&rarr;</span></a>
         </div>
         <div class="model-box">
           <span class="label">Lattice</span>
@@ -108,7 +108,7 @@
   </div>
 </footer>
 
-<script src="../assets/site.js?v=202610260219"></script>
+<script src="../assets/site.js?v=202610260638"></script>
 
 </body>
 </html>

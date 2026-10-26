@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>More data made the draft right more often, and no faster &middot; Spliced</title>
+<meta name="description" content="Trace v1 on 35,000 prompts: agreement with the 7B 0.7754, short of the 0.79 bar. Its guesses are accepted more often, but it guesses less at the same threshold, so it is no faster than the stock draft.">
+<meta property="og:title" content="More data made the draft right more often, and no faster &middot; Spliced">
+<meta property="og:description" content="Trace v1 on 35,000 prompts: agreement with the 7B 0.7754, short of the 0.79 bar. Its guesses are accepted more often, but it guesses less at the same threshold, so it is no faster than the stock draft.">
+<meta property="og:image" content="https://splicedso.github.io/assets/og.png?v=202610260638">
+<meta property="og:url" content="https://splicedso.github.io/research/trace-35k/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Spliced">
+<link rel="canonical" href="https://splicedso.github.io/research/trace-35k/">
+<meta name="color-scheme" content="light dark">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="../../assets/favicon.svg?v=202610260638" type="image/svg+xml">
+<link rel="icon" href="../../assets/favicon-32.png?v=202610260638" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png?v=202610260638">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>document.documentElement.classList.add("js");</script>
+<link rel="stylesheet" href="../../assets/style.css?v=202610260638">
+<link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
+</head>
+<body data-root="../../" data-page="research">
+<a class="skip" href="#content">Skip to content</a>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="../../" aria-label="Spliced home">
+      <svg viewBox="-13 -13 966 1084" aria-hidden="true"><path fill="currentColor" stroke="currentColor" stroke-width="12.7" stroke-linejoin="round" d="M639.0 0.0 L941.0 0.0 L301.0 1059.0 L0.0 1059.0 Z"/></svg>
+      Spliced
+    </a>
+    <div class="nav-right">
+      <ul>
+        <li><a href="../../research/" data-nav="research">Research</a></li>
+        <li><a href="../../models/" data-nav="models">Models</a></li>
+        <li><a href="../../systems/" data-nav="systems">Systems</a></li>
+        <li><a href="../../foundry/" data-nav="foundry">Foundry</a></li>
+        <li class="about"><a href="../../about/" data-nav="about">About</a></li>
+      </ul>
+      <a class="icon-link" href="https://github.com/splicedso" aria-label="Spliced on GitHub" title="GitHub"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a>
+      <a class="icon-link" href="https://www.linkedin.com/company/splicedso" aria-label="Spliced on LinkedIn" title="LinkedIn"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M0 1.15C0 .52.52 0 1.18 0h13.64C15.48 0 16 .52 16 1.15v13.7c0 .63-.52 1.15-1.18 1.15H1.18C.52 16 0 15.48 0 14.85V1.15zM4.75 13.39V6.17H2.35v7.22h2.4zM3.55 5.18c.84 0 1.36-.55 1.36-1.25-.02-.71-.52-1.25-1.34-1.25-.82 0-1.36.54-1.36 1.25 0 .7.52 1.25 1.33 1.25h.01zm4.91 8.21V9.36c0-.22.02-.43.08-.59.18-.43.57-.88 1.23-.88.87 0 1.22.66 1.22 1.64v3.86h2.4V9.25c0-2.22-1.18-3.25-2.76-3.25-1.27 0-1.84.7-2.16 1.19v.03h-.02l.02-.03V6.17h-2.4c.03.68 0 7.22 0 7.22h2.4z"/></svg></a>
+    </div>
+  </div>
+</nav>
+
+<svg id="bus" aria-hidden="true"></svg>
+
+<div id="content">
+<header class="page-head">
+  <div class="wrap">
+    <span class="label">Note 26 &middot; 26 October 2026</span>
+    <h1>More data made the draft right more often, and no faster</h1>
+    <p class="lede">Trace v1 on 35,000 prompts: agreement with the 7B 0.7754, short of the 0.79 bar. Its guesses are accepted more often, but it guesses less at the same threshold, so it is no faster than the stock draft.</p>
+    <p class="setup"><strong>Prediction verdict:</strong> missed on the bar. Trained on 35,000 prompts, Trace v1 reached 0.7754 held-out agreement with its target, short of 0.79. The eval prediction held: 1.44 times plain decoding's speed with a third less chip energy, within 5% of the stock draft. The prediction that acceptance would rise less than agreement missed on the rate and held on the number that sets speed (section 2).</p>
+  </div>
+</header>
+<main><article class="wrap note-body"><p>Spliced research note 26, 26 October 2026. AMD Ryzen AI Max+ 395 (Strix Halo, Radeon 8060S, 128 GB, shared GPU memory 90%), Linux, llama.cpp 620d2225c, Vulkan; training in PyTorch 2.10 on ROCm 7.2. Target Qwen2.5 7B Instruct Q4_0, drafts Qwen2.5 0.5B.</p>
+<p>Note 21 trained Trace v1, a 0.5B draft model, on the 7B's own answers to 9,000 prompts and its token probabilities. Agreement with the 7B rose 0.7 points and decoding got no faster. This note asks whether that was a data problem, by repeating the same recipe on 35,000 prompts.</p>
+<h2 data-via>What "agreement" measures</h2>
+<p>Every number here is measured against the 7B as it is served: Q4_0, through llama.cpp. The training answers and the 180 held-out answers were generated by that model, greedy, with its top 20 probabilities at every token. Held-out agreement is the share of 56,600 answer positions where the draft's top choice is the 7B's. The speculative-decoding eval uses the same model as its target. The bar, 0.79, is 3 points over the stock 0.5B draft.</p>
+<h2 data-via>1. Four times the data, 0.7 points more</h2>
+<p>One epoch over 35,000 prompts, 4,200 steps, 121 minutes, learning rate 3e-6. Agreement every 200 steps:</p>
+<table>
+<thead>
+<tr>
+<th>step</th>
+<th style="text-align: right;">0 (stock)</th>
+<th style="text-align: right;">200</th>
+<th style="text-align: right;">1,000</th>
+<th style="text-align: right;">2,000</th>
+<th style="text-align: right;">3,000</th>
+<th style="text-align: right;">4,000</th>
+<th style="text-align: right;">4,200</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>agreement</td>
+<td style="text-align: right;">0.7616</td>
+<td style="text-align: right;">0.7663</td>
+<td style="text-align: right;">0.7683</td>
+<td style="text-align: right;">0.7707</td>
+<td style="text-align: right;">0.7724</td>
+<td style="text-align: right;">0.7753</td>
+<td style="text-align: right;"><strong>0.7754</strong></td>
+</tr>
+</tbody>
+</table>
+<p>The same recipe on 9,000 prompts reached 0.7685. The curve was still rising at the end, by about half a point over the last 2,000 steps and slowing. A second epoch would land near 0.78 at that slope.</p>
+<h2 data-via>2. Right more often, guessing less</h2>
+<p>The draft at work: the 7B decoding 40 held-out prompts, 256 tokens each, one request at a time, drafts of up to 4 tokens at a 0.5 confidence threshold, two passes.</p>
+<table>
+<thead>
+<tr>
+<th>draft</th>
+<th style="text-align: right;">tok/s</th>
+<th style="text-align: right;">vs plain</th>
+<th style="text-align: right;">acceptance</th>
+<th style="text-align: right;">drafted per pass</th>
+<th style="text-align: right;">accepted per generated token</th>
+<th style="text-align: right;">chip mJ/token</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>none</td>
+<td style="text-align: right;">49.6</td>
+<td style="text-align: right;">1.00x</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">2,096</td>
+</tr>
+<tr>
+<td>stock 0.5B</td>
+<td style="text-align: right;">73.3</td>
+<td style="text-align: right;">1.48x</td>
+<td style="text-align: right;">71.7%</td>
+<td style="text-align: right;">8,591</td>
+<td style="text-align: right;">0.601</td>
+<td style="text-align: right;">1,400</td>
+</tr>
+<tr>
+<td>Trace v1, 9k</td>
+<td style="text-align: right;">70.1</td>
+<td style="text-align: right;">1.41x</td>
+<td style="text-align: right;">73.6%</td>
+<td style="text-align: right;">8,086</td>
+<td style="text-align: right;">0.581</td>
+<td style="text-align: right;">1,423</td>
+</tr>
+<tr>
+<td>Trace v1, 35k</td>
+<td style="text-align: right;">71.7</td>
+<td style="text-align: right;">1.44x</td>
+<td style="text-align: right;">75.3%</td>
+<td style="text-align: right;">8,052</td>
+<td style="text-align: right;">0.592</td>
+<td style="text-align: right;">1,385</td>
+</tr>
+</tbody>
+</table>
+<p>The 35k draft's guesses are accepted more often, 75.3% against 71.7%. But it makes fewer guesses: at the same 0.5 confidence threshold it proposes 8,052 tokens per pass against the stock draft's 8,591. Speed depends on accepted tokens per generated token, and that fell from 0.601 to 0.592. Against the stock draft it is 2.3% slower and 1.1% cheaper per token, both inside the stock draft's own 4% gap between passes.</p>
+<p>Training on the 7B's top-20 probabilities taught the draft that several tokens are plausible at a position, which is true. A draft that spreads its probability is less often above 0.5, so the threshold that suits the stock draft holds the trained one back.</p>
+<h2 data-via>3. Speculation itself pays on this machine</h2>
+<p>Any of these drafts makes the 7B about 1.45 times faster at one request and cuts chip energy per token by a third. On the M5 Pro the same kind of draft gives 1.26 times the speed for 3% more energy (note 25). The difference is what the draft does to power. The Strix Halo's package draws about 104 W decoding one request and about 103 W with the stock draft (time-weighted over every row), so finishing 1.45 times sooner saves a third of the energy. On the M5 Pro, power rises from 23 to 30 W with the draft, and that rise eats what the shorter time saves.</p>
+<h2 data-via>What this changes</h2>
+<ul>
+<li>Off-policy distillation has run out at this size. More data and more epochs move agreement by tenths of a point and serving speed not at all.</li>
+<li>The trained draft's confidence threshold has to be chosen for it, not inherited from the stock draft.</li>
+<li>One pilot remains, registered before any of these runs: on-policy distillation, where the draft writes and the served 7B's own weights grade every token. If it does not beat the best draft here by at least one point of acceptance at one request, Trace pauses. The 72B Trace stays parked.</li>
+<li>The stock 0.5B draft remains the one Foundry ships.</li>
+</ul>
+<h2 data-via>Limits</h2>
+<ul>
+<li>One machine, one target, 40 prompts of two kinds (chat and code) for the eval; held-out agreement on 180.</li>
+<li>One epoch; the curve had not flattened, so this measures the recipe at one epoch, not its ceiling.</li>
+<li>Chip (package) energy, not the wall.</li>
+<li>The threshold explanation in section 2 is read from the counts, not tested. A threshold sweep for the trained draft would test it.</li>
+</ul>
+<h2 data-via>Reproduce</h2>
+<p>On the Strix Halo, with llama.cpp at 620d2225c built for Vulkan and the PyTorch environment in <code>docs/handoff-linux.md</code>:</p>
+<pre><code class="language-bash">sh experiments/trace_35k.sh       # harvest the remaining prompts, then train one epoch
+sh experiments/trace_35k_eval.sh  # convert, then evaluate.py at k=4 and 8, p 0.5, two passes
+</code></pre>
+<p>Raw: <code>results/drafter/train-log-v1-35k.json</code>, <code>results/drafter/eval-v135k-halo.json</code>, <code>results/drafter/teacher-check-halo.json</code>, and the full write-up <code>results/drafter/trace-v1-35k.md</code>.</p>
+<p class="source mono">Source, scripts and raw data: <a href="https://github.com/splicedso/phase/blob/main/notes/2026-10-trace-35k.md">phase/notes/2026-10-trace-35k.md</a></p>
+</article></main>
+</div>
+
+<footer>
+  <div class="wrap foot">
+    <a class="brand" href="../../" aria-label="Spliced home"><svg viewBox="-13 -13 966 1084" aria-hidden="true"><path fill="currentColor" stroke="currentColor" stroke-width="12.7" stroke-linejoin="round" d="M639.0 0.0 L941.0 0.0 L301.0 1059.0 L0.0 1059.0 Z"/></svg>Spliced</a>
+    <nav class="foot-nav" aria-label="Footer">
+      <a href="../../research/">Research</a><a href="../../models/">Models</a><a href="../../systems/">Systems</a><a href="../../designs/">Designs</a><a href="../../foundry/">Foundry</a><a href="../../learn/">Learn</a><a href="../../data/">Data</a><a href="../../tools/phase/">Phase</a><a href="../../about/">About</a>
+    </nav>
+    <div class="foot-social">
+      <a href="https://github.com/splicedso" aria-label="GitHub"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a>
+      <a href="https://www.linkedin.com/company/splicedso" aria-label="LinkedIn"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M0 1.15C0 .52.52 0 1.18 0h13.64C15.48 0 16 .52 16 1.15v13.7c0 .63-.52 1.15-1.18 1.15H1.18C.52 16 0 15.48 0 14.85V1.15zM4.75 13.39V6.17H2.35v7.22h2.4zM3.55 5.18c.84 0 1.36-.55 1.36-1.25-.02-.71-.52-1.25-1.34-1.25-.82 0-1.36.54-1.36 1.25 0 .7.52 1.25 1.33 1.25h.01zm4.91 8.21V9.36c0-.22.02-.43.08-.59.18-.43.57-.88 1.23-.88.87 0 1.22.66 1.22 1.64v3.86h2.4V9.25c0-2.22-1.18-3.25-2.76-3.25-1.27 0-1.84.7-2.16 1.19v.03h-.02l.02-.03V6.17h-2.4c.03.68 0 7.22 0 7.22h2.4z"/></svg></a>
+    </div>
+    <p class="foot-small">&copy; 2026 Spliced. Research and data are open.</p>
+  </div>
+</footer>
+
+<script src="../../assets/site.js?v=202610260638"></script>
+<script src="../../assets/charts.js?v=202610260638"></script>
+</body>
+</html>
