@@ -95,8 +95,8 @@ NOTES = [
      "summary": "Capping the Strix Halo's shader clock at 1,800 MHz cuts joules per correct answer 19 to 28% on a 7B and a 32B at eight "
                 "requests at once, with accuracy within a point, for 11 to 24% less speed. Two-bit's lead over 4-bit shrinks under the cap."},
     {"slug": "decode-batch", "file": "2026-10-decode-batch.md", "n": 24,
-     "summary": "Decode energy per token at batch 1 to 32 on an M5 Pro, 7B and 1.5B. Batch 8 costs 74% less than batch 1 and 16 "
-                "costs 79% less, then 32 costs 15% more: the knee is an optimum, not a plateau, and both sizes put it at 16."},
+     "summary": "Decode energy per token at batch 1 to 32. On an M5 Pro the cheapest batch is 16 and 32 costs 15% more: an optimum, "
+                "not a plateau. On a Strix Halo there is no knee to 32, where a token costs 90% less than at batch 1."},
     {"slug": "draft-and-batch", "file": "2026-10-draft-and-batch.md", "n": 25,
      "summary": "A draft model against 1 to 16 requests at once on an M5 Pro. 1.26x the speed at one request and 29% less energy "
                 "at two, then 12 to 50% more energy per token from four on. A draft and a batch fill the same idle arithmetic."},
