@@ -7,21 +7,21 @@
 <meta name="description" content="Efficient inference systems. What AI costs to run, and the models that cut it.">
 <meta property="og:title" content="Spliced">
 <meta property="og:description" content="Efficient inference systems. What AI costs to run, and the models that cut it.">
-<meta property="og:image" content="https://splicedso.github.io/assets/og.png?v=202610270036">
+<meta property="og:image" content="https://splicedso.github.io/assets/og.png?v=202610271215">
 <meta property="og:url" content="https://splicedso.github.io/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Spliced">
 <link rel="canonical" href="https://splicedso.github.io/">
 <meta name="color-scheme" content="light dark">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="assets/favicon.svg?v=202610270036" type="image/svg+xml">
-<link rel="icon" href="assets/favicon-32.png?v=202610270036" type="image/png" sizes="32x32">
-<link rel="apple-touch-icon" href="assets/apple-touch-icon.png?v=202610270036">
+<link rel="icon" href="assets/favicon.svg?v=202610271215" type="image/svg+xml">
+<link rel="icon" href="assets/favicon-32.png?v=202610271215" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png?v=202610271215">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>document.documentElement.classList.add("js");</script>
-<link rel="stylesheet" href="assets/style.css?v=202610270036">
+<link rel="stylesheet" href="assets/style.css?v=202610271215">
 <link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
 </head>
 <body data-root="" data-page="home">
@@ -69,7 +69,7 @@
       <div class="prose">
         <h2>Models that cost less per answer.</h2>
         <p>Spliced builds small models for the hardware people own, and measures what every token and every correct answer costs on it. The machines are an Apple M5 Pro, an AMD Ryzen AI Max+ 395 and an RTX 5070 Ti Laptop GPU; the numbers come from each chip's own power sensors and are published with the raw data beside them. Benchmarks report speed. We report what speed costs.</p>
-        <h3>32 notes. One question each.</h3>
+        <h3>33 notes. One question each.</h3>
         <p>What a quantization format costs. When batching pays. Whether speculative decoding saves energy or only time. Every note writes its prediction down before the run and keeps it when it is wrong. So far: eight requests at once cut energy per token by 72%, a read token costs a fortieth of a written one, and calibration doubles the accuracy of a 2-bit model at the same size.</p>
         <h3>Two model families, held to one bar.</h3>
         <p>Trace is a draft model trained to predict a larger one, for speculative decoding. Lattice keeps a model accurate below 4 bits per weight. A model ships only when it beats the stock model per correct answer on the same machine. Neither has yet. On a 32B model, calibrated 2-bit already beats 4-bit per correct answer by 16%.</p>
@@ -94,9 +94,9 @@
     <div class="wrap">
       <div class="split">
         <h2>Latest notes.</h2>
-        <a class="more" href="research/">All 32 <span aria-hidden="true">&rarr;</span></a>
+        <a class="more" href="research/">All 33 <span aria-hidden="true">&rarr;</span></a>
       </div>
-      <div class="notes"><a class="note-card" href="research/answer-modes-qa/"><span class="meta">Note 32 &middot; 27 October 2026</span><h3>When a stopped thought keeps talking</h3><p>On knowledge questions, answering from a cut thought gained 3.6 points, but one answer in six kept reasoning until the limit, at 16% more energy per correct answer. Foundry keeps thinking that starts over.</p><span class="go" aria-hidden="true">&rarr;</span></a><a class="note-card" href="research/answer-modes/"><span class="meta">Note 31 &middot; 26 October 2026</span><h3>Answering from a cut thought</h3><p>When a 4B's thought runs past its budget, letting it answer from what it has beats starting over: 92.1% against 89.6% on HumanEval, at about the same energy. Not enough to switch on yet.</p><span class="go" aria-hidden="true">&rarr;</span></a><a class="note-card" href="research/thinking-budget/"><span class="meta">Note 30 &middot; 26 October 2026</span><h3>Thinking on a budget</h3><p>Thinking up to 2,048 tokens, then answering plainly if it runs out, took a 4B from 78.0% to 89.6% on all 164 HumanEval problems, for 1.7 times the energy per correct answer. The gain held on the 124 problems never run with thinking.</p><span class="go" aria-hidden="true">&rarr;</span></a></div>
+      <div class="notes"><a class="note-card" href="research/answer-modes-capped/"><span class="meta">Note 33 &middot; 27 October 2026</span><h3>A cap on the answer, too</h3><p>Capping the whole reply at 2,560 tokens stops the runaway answers. Answering from a cut thought then wins on code, maths and knowledge at no extra energy, so Foundry's Think switch now does it.</p><span class="go" aria-hidden="true">&rarr;</span></a><a class="note-card" href="research/answer-modes-qa/"><span class="meta">Note 32 &middot; 27 October 2026</span><h3>When a stopped thought keeps talking</h3><p>On knowledge questions, answering from a cut thought gained 3.6 points, but one answer in six kept reasoning until the limit, at 16% more energy per correct answer. Foundry keeps thinking that starts over.</p><span class="go" aria-hidden="true">&rarr;</span></a><a class="note-card" href="research/answer-modes/"><span class="meta">Note 31 &middot; 26 October 2026</span><h3>Answering from a cut thought</h3><p>When a 4B's thought runs past its budget, letting it answer from what it has beats starting over: 92.1% against 89.6% on HumanEval, at about the same energy. Not enough to switch on yet.</p><span class="go" aria-hidden="true">&rarr;</span></a></div>
     </div>
   </section>
 
@@ -130,7 +130,7 @@
   </div>
 </footer>
 
-<script src="assets/site.js?v=202610270036"></script>
+<script src="assets/site.js?v=202610271215"></script>
 
 </body>
 </html>

@@ -121,6 +121,9 @@ NOTES = [
     {"slug": "answer-modes-qa", "file": "2026-10-answer-modes-qa.md", "n": 32,
      "summary": "On knowledge questions, answering from a cut thought gained 3.6 points, but one answer in six kept reasoning "
                 "until the limit, at 16% more energy per correct answer. Foundry keeps thinking that starts over."},
+    {"slug": "answer-modes-capped", "file": "2026-10-answer-modes-capped.md", "n": 33,
+     "summary": "Capping the whole reply at 2,560 tokens stops the runaway answers. Answering from a cut thought then wins on "
+                "code, maths and knowledge at no extra energy, so Foundry's Think switch now does it."},
 ]
 
 FIGURES = {

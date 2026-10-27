@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A cap on the answer, too &middot; Spliced</title>
+<meta name="description" content="Capping the whole reply at 2,560 tokens stops the runaway answers. Answering from a cut thought then wins on code, maths and knowledge at no extra energy, so Foundry's Think switch now does it.">
+<meta property="og:title" content="A cap on the answer, too &middot; Spliced">
+<meta property="og:description" content="Capping the whole reply at 2,560 tokens stops the runaway answers. Answering from a cut thought then wins on code, maths and knowledge at no extra energy, so Foundry's Think switch now does it.">
+<meta property="og:image" content="https://splicedso.github.io/assets/og.png?v=202610271215">
+<meta property="og:url" content="https://splicedso.github.io/research/answer-modes-capped/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Spliced">
+<link rel="canonical" href="https://splicedso.github.io/research/answer-modes-capped/">
+<meta name="color-scheme" content="light dark">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="../../assets/favicon.svg?v=202610271215" type="image/svg+xml">
+<link rel="icon" href="../../assets/favicon-32.png?v=202610271215" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png?v=202610271215">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>document.documentElement.classList.add("js");</script>
+<link rel="stylesheet" href="../../assets/style.css?v=202610271215">
+<link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
+</head>
+<body data-root="../../" data-page="research">
+<a class="skip" href="#content">Skip to content</a>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="../../" aria-label="Spliced home">
+      <svg viewBox="-13 -13 966 1084" aria-hidden="true"><path fill="currentColor" stroke="currentColor" stroke-width="12.7" stroke-linejoin="round" d="M639.0 0.0 L941.0 0.0 L301.0 1059.0 L0.0 1059.0 Z"/></svg>
+      Spliced
+    </a>
+    <div class="nav-right">
+      <ul>
+        <li><a href="../../research/" data-nav="research">Research</a></li>
+        <li><a href="../../models/" data-nav="models">Models</a></li>
+        <li><a href="../../systems/" data-nav="systems">Systems</a></li>
+        <li><a href="../../foundry/" data-nav="foundry">Foundry</a></li>
+        <li class="about"><a href="../../about/" data-nav="about">About</a></li>
+      </ul>
+      <a class="icon-link" href="https://github.com/splicedso" aria-label="Spliced on GitHub" title="GitHub"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a>
+      <a class="icon-link" href="https://www.linkedin.com/company/splicedso" aria-label="Spliced on LinkedIn" title="LinkedIn"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M0 1.15C0 .52.52 0 1.18 0h13.64C15.48 0 16 .52 16 1.15v13.7c0 .63-.52 1.15-1.18 1.15H1.18C.52 16 0 15.48 0 14.85V1.15zM4.75 13.39V6.17H2.35v7.22h2.4zM3.55 5.18c.84 0 1.36-.55 1.36-1.25-.02-.71-.52-1.25-1.34-1.25-.82 0-1.36.54-1.36 1.25 0 .7.52 1.25 1.33 1.25h.01zm4.91 8.21V9.36c0-.22.02-.43.08-.59.18-.43.57-.88 1.23-.88.87 0 1.22.66 1.22 1.64v3.86h2.4V9.25c0-2.22-1.18-3.25-2.76-3.25-1.27 0-1.84.7-2.16 1.19v.03h-.02l.02-.03V6.17h-2.4c.03.68 0 7.22 0 7.22h2.4z"/></svg></a>
+    </div>
+  </div>
+</nav>
+
+<svg id="bus" aria-hidden="true"></svg>
+
+<div id="content">
+<header class="page-head">
+  <div class="wrap">
+    <span class="label">Note 33 &middot; 27 October 2026</span>
+    <h1>A cap on the answer, too</h1>
+    <p class="lede">Capping the whole reply at 2,560 tokens stops the runaway answers. Answering from a cut thought then wins on code, maths and knowledge at no extra energy, so Foundry's Think switch now does it.</p>
+    <p class="setup"><strong>Prediction verdict:</strong> all three clauses held. Letting the model answer from a cut thought, with the whole reply capped at 2,560 tokens, beat Foundry's fallback on every task at no extra energy per correct answer. The extra power of note 32 is gone. By the rule set before the run, Foundry's Think switch moves to it.</p>
+  </div>
+</header>
+<main><article class="wrap note-body"><p>Spliced research note 33, 27 October 2026. Apple M5 Pro, 24 GB, macOS 27.0.1 on AC, Metal. llama.cpp build 11669 (Homebrew). Qwen3.5 4B Instruct (Apache-2.0), quantized to Q4_0 here, as in notes 29 to 32.</p>
+<p>Notes 31 and 32 found that answering from a cut thought gets a few more questions right than starting over, but that the model sometimes keeps reasoning in its answer until the reply limit. That cost tokens, and those passes also drew 5 to 6 W more for reasons we could not pin down. This note caps the answer as well as the thought, and asks again without thinking when the cap is hit.</p>
+<p><strong>Prediction</strong> (<code>docs/predictions.md</code>, 27 October 01:02, before the run): the capped mode lands within a point of what a replay of notes 31 and 32's recorded replies gives it on every task; its chip power is within 1.5 W of the fallback's; and its energy per correct answer is within 8% of the fallback's. Set at the same time: Foundry moves to it if it is never less accurate than the fallback, at least 2 points better on one task, and no more than 10% costlier per correct answer on any.</p>
+<h2 data-via>Method</h2>
+<p><code>experiments/general_eval.py</code> on all 164 HumanEval problems, the first 100 GSM8K problems and the first 8 MMLU-Pro questions of each of its 14 subjects. Eight requests at once. Two conditions:</p>
+<ul>
+<li><strong>Fallback</strong> (Foundry's Think until now): think up to 2,048 tokens; if no answer has come, ask again with thinking off. Every reply capped at 2,048.</li>
+<li><strong>Capped answer:</strong> the server started with <code>--reasoning-budget 2048</code>, so the thought ends there and the model answers from it. The whole reply is capped at 2,560 tokens; a reply stopped by that cap is asked again with thinking off, capped at 2,048.</li>
+</ul>
+<p>Two passes each in mirrored order, started after the Mac idled under 2 W twice in a row (<code>experiments/modes_mac_d.sh</code>). Three passes ran 01:07 to 03:06. Martin paused the work there, and the fallback's second pass ran alone from 11:38 to 12:14 under the same gate. It matched its first pass question for question.</p>
+<h2 data-via>Results</h2>
+<table>
+<thead>
+<tr>
+<th>condition</th>
+<th style="text-align: right;">HumanEval</th>
+<th style="text-align: right;">GSM8K</th>
+<th style="text-align: right;">MMLU-Pro</th>
+<th style="text-align: right;">chip W</th>
+<th style="text-align: right;">J per correct, HumanEval / GSM8K / MMLU-Pro</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>fallback</td>
+<td style="text-align: right;">89.6%</td>
+<td style="text-align: right;">96.0%</td>
+<td style="text-align: right;">68.8%</td>
+<td style="text-align: right;">30.2 to 31.2</td>
+<td style="text-align: right;">138.3 / 186.6 / 359.9</td>
+</tr>
+<tr>
+<td>capped answer</td>
+<td style="text-align: right;">92.1%</td>
+<td style="text-align: right;">97.0%</td>
+<td style="text-align: right;">71.4%</td>
+<td style="text-align: right;">30.4 to 30.5</td>
+<td style="text-align: right;">128.9 / 179.2 / 358.6</td>
+</tr>
+</tbody>
+</table>
+<p><strong>The replay was right to the question.</strong> The capped mode scored exactly what the recorded replies predicted on all three tasks, with token counts within a few per question, and asked again on 3, 3 and 31 questions as predicted. No reply changed score between passes in either condition.</p>
+<p><strong>More right, for the same energy.</strong> The capped mode gained 2.4 points on code, 1.0 on maths and 2.7 on knowledge, and cost 7%, 4% and 0% less per correct answer. Every difference comes from the questions where the thought ran past 2,048 tokens: 26 on code (18 right against 14), about a third of maths (28 against 27) and 75 on knowledge (46 against 43). Question by question it won 12 and lost 4 across the three tasks. That is a real gain on this set, but a small one.</p>
+<p><strong>The cap catches the runaways.</strong> On knowledge, 31 of 112 answers reached 2,560 tokens and were asked again; 15 of those came out right, against 14 for the fallback on the same questions. They are expensive, 46% of the capped mode's knowledge tokens, which is why it used 4% more tokens there than the fallback. On code and maths it was 3 questions each. No reply in a chat now reasons on for thousands of tokens before an answer.</p>
+<p><strong>The extra watts were the runaways.</strong> With the server flag on and the replies capped, chip power was within a watt of the fallback's on every task: 0.8 and 0.3 W lower on code and maths, 0.3 W higher on knowledge. In note 32 the same flag with replies allowed to 4,096 tokens drew 36 to 37 W. So the flag costs nothing. The extra power came with the long replies, though this run does not show why a long reply draws more at the same speed.</p>
+<h2 data-via>Verdicts</h2>
+<ul>
+<li>The capped mode lands within a point of its replay on every task: <strong>held</strong> (exactly, on all three).</li>
+<li>Its chip power is within 1.5 W of the fallback's on every task: <strong>held</strong> (-0.8, -0.3 and +0.3 W).</li>
+<li>Its energy per correct answer is within 8% of the fallback's on every task: <strong>held</strong> (-6.8%, -4.0% and -0.4%).</li>
+</ul>
+<h2 data-via>What this means for the box</h2>
+<p>The rule is met: never less accurate, 2.4 and 2.7 points better on code and knowledge, and no costlier per correct answer anywhere. Foundry's Think switch now starts the server with <code>--reasoning-budget 2048</code> and caps a Think reply at 2,560 tokens; a reply that hits the cap is still asked again without thinking.</p>
+<p>Across notes 29 to 33, the answer for a 4B is: thinking off by default; with Think on, end the thought at 2,048 tokens, let the model answer from it, and cap the whole reply. The next question is whether the same holds for a larger model, which the Strix Halo's Qwen3.6 runs will answer.</p>
+<h2 data-via>Limits</h2>
+<ul>
+<li>One small model, one machine. The gain is 12 questions won against 4 lost, out of 376.</li>
+<li>Chip energy, not the wall.</li>
+<li>The fallback's second pass ran nine hours after the rest, after a pause. It matched its first pass on every question, and its chip power was within 0.6 W of it.</li>
+<li>The test sets overlap notes 29 to 32, and the prediction was made from a replay of their recorded replies. The replay is what was tested here, not a fresh sample.</li>
+</ul>
+<p class="source mono">Source, scripts and raw data: <a href="https://github.com/splicedso/phase/blob/main/notes/2026-10-answer-modes-capped.md">phase/notes/2026-10-answer-modes-capped.md</a></p>
+</article></main>
+</div>
+
+<footer>
+  <div class="wrap foot">
+    <a class="brand" href="../../" aria-label="Spliced home"><svg viewBox="-13 -13 966 1084" aria-hidden="true"><path fill="currentColor" stroke="currentColor" stroke-width="12.7" stroke-linejoin="round" d="M639.0 0.0 L941.0 0.0 L301.0 1059.0 L0.0 1059.0 Z"/></svg>Spliced</a>
+    <nav class="foot-nav" aria-label="Footer">
+      <a href="../../research/">Research</a><a href="../../models/">Models</a><a href="../../systems/">Systems</a><a href="../../designs/">Designs</a><a href="../../foundry/">Foundry</a><a href="../../learn/">Learn</a><a href="../../data/">Data</a><a href="../../tools/phase/">Phase</a><a href="../../about/">About</a>
+    </nav>
+    <div class="foot-social">
+      <a href="https://github.com/splicedso" aria-label="GitHub"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a>
+      <a href="https://www.linkedin.com/company/splicedso" aria-label="LinkedIn"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M0 1.15C0 .52.52 0 1.18 0h13.64C15.48 0 16 .52 16 1.15v13.7c0 .63-.52 1.15-1.18 1.15H1.18C.52 16 0 15.48 0 14.85V1.15zM4.75 13.39V6.17H2.35v7.22h2.4zM3.55 5.18c.84 0 1.36-.55 1.36-1.25-.02-.71-.52-1.25-1.34-1.25-.82 0-1.36.54-1.36 1.25 0 .7.52 1.25 1.33 1.25h.01zm4.91 8.21V9.36c0-.22.02-.43.08-.59.18-.43.57-.88 1.23-.88.87 0 1.22.66 1.22 1.64v3.86h2.4V9.25c0-2.22-1.18-3.25-2.76-3.25-1.27 0-1.84.7-2.16 1.19v.03h-.02l.02-.03V6.17h-2.4c.03.68 0 7.22 0 7.22h2.4z"/></svg></a>
+    </div>
+    <p class="foot-small">&copy; 2026 Spliced. Research and data are open.</p>
+  </div>
+</footer>
+
+<script src="../../assets/site.js?v=202610271215"></script>
+<script src="../../assets/charts.js?v=202610271215"></script>
+</body>
+</html>
