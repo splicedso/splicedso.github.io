@@ -118,6 +118,9 @@ NOTES = [
     {"slug": "answer-modes", "file": "2026-10-answer-modes.md", "n": 31,
      "summary": "When a 4B's thought runs past its budget, letting it answer from what it has beats starting over: 92.1% against "
                 "89.6% on HumanEval, at about the same energy. Not enough to switch on yet."},
+    {"slug": "answer-modes-qa", "file": "2026-10-answer-modes-qa.md", "n": 32,
+     "summary": "On knowledge questions, answering from a cut thought gained 3.6 points, but one answer in six kept reasoning "
+                "until the limit, at 16% more energy per correct answer. Foundry keeps thinking that starts over."},
 ]
 
 FIGURES = {
