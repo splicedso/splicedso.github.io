@@ -115,6 +115,9 @@ NOTES = [
     {"slug": "thinking-budget", "file": "2026-10-thinking-budget.md", "n": 30,
      "summary": "Thinking up to 2,048 tokens, then answering plainly if it runs out, took a 4B from 78.0% to 89.6% on all 164 HumanEval "
                 "problems, for 1.7 times the energy per correct answer. The gain held on the 124 problems never run with thinking."},
+    {"slug": "answer-modes", "file": "2026-10-answer-modes.md", "n": 31,
+     "summary": "When a 4B's thought runs past its budget, letting it answer from what it has beats starting over: 92.1% against "
+                "89.6% on HumanEval, at about the same energy. Not enough to switch on yet."},
 ]
 
 FIGURES = {

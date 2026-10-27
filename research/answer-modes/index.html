@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Answering from a cut thought &middot; Spliced</title>
+<meta name="description" content="When a 4B's thought runs past its budget, letting it answer from what it has beats starting over: 92.1% against 89.6% on HumanEval, at about the same energy. Not enough to switch on yet.">
+<meta property="og:title" content="Answering from a cut thought &middot; Spliced">
+<meta property="og:description" content="When a 4B's thought runs past its budget, letting it answer from what it has beats starting over: 92.1% against 89.6% on HumanEval, at about the same energy. Not enough to switch on yet.">
+<meta property="og:image" content="https://splicedso.github.io/assets/og.png?v=202610262231">
+<meta property="og:url" content="https://splicedso.github.io/research/answer-modes/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Spliced">
+<link rel="canonical" href="https://splicedso.github.io/research/answer-modes/">
+<meta name="color-scheme" content="light dark">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="../../assets/favicon.svg?v=202610262231" type="image/svg+xml">
+<link rel="icon" href="../../assets/favicon-32.png?v=202610262231" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png?v=202610262231">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>document.documentElement.classList.add("js");</script>
+<link rel="stylesheet" href="../../assets/style.css?v=202610262231">
+<link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
+</head>
+<body data-root="../../" data-page="research">
+<a class="skip" href="#content">Skip to content</a>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="../../" aria-label="Spliced home">
+      <svg viewBox="-13 -13 966 1084" aria-hidden="true"><path fill="currentColor" stroke="currentColor" stroke-width="12.7" stroke-linejoin="round" d="M639.0 0.0 L941.0 0.0 L301.0 1059.0 L0.0 1059.0 Z"/></svg>
+      Spliced
+    </a>
+    <div class="nav-right">
+      <ul>
+        <li><a href="../../research/" data-nav="research">Research</a></li>
+        <li><a href="../../models/" data-nav="models">Models</a></li>
+        <li><a href="../../systems/" data-nav="systems">Systems</a></li>
+        <li><a href="../../foundry/" data-nav="foundry">Foundry</a></li>
+        <li class="about"><a href="../../about/" data-nav="about">About</a></li>
+      </ul>
+      <a class="icon-link" href="https://github.com/splicedso" aria-label="Spliced on GitHub" title="GitHub"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a>
+      <a class="icon-link" href="https://www.linkedin.com/company/splicedso" aria-label="Spliced on LinkedIn" title="LinkedIn"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M0 1.15C0 .52.52 0 1.18 0h13.64C15.48 0 16 .52 16 1.15v13.7c0 .63-.52 1.15-1.18 1.15H1.18C.52 16 0 15.48 0 14.85V1.15zM4.75 13.39V6.17H2.35v7.22h2.4zM3.55 5.18c.84 0 1.36-.55 1.36-1.25-.02-.71-.52-1.25-1.34-1.25-.82 0-1.36.54-1.36 1.25 0 .7.52 1.25 1.33 1.25h.01zm4.91 8.21V9.36c0-.22.02-.43.08-.59.18-.43.57-.88 1.23-.88.87 0 1.22.66 1.22 1.64v3.86h2.4V9.25c0-2.22-1.18-3.25-2.76-3.25-1.27 0-1.84.7-2.16 1.19v.03h-.02l.02-.03V6.17h-2.4c.03.68 0 7.22 0 7.22h2.4z"/></svg></a>
+    </div>
+  </div>
+</nav>
+
+<svg id="bus" aria-hidden="true"></svg>
+
+<div id="content">
+<header class="page-head">
+  <div class="wrap">
+    <span class="label">Note 31 &middot; 26 October 2026</span>
+    <h1>Answering from a cut thought</h1>
+    <p class="lede">When a 4B's thought runs past its budget, letting it answer from what it has beats starting over: 92.1% against 89.6% on HumanEval, at about the same energy. Not enough to switch on yet.</p>
+    <p class="setup"><strong>Prediction verdict:</strong> one of four clauses held. llama.cpp's own reasoning budget, which ends the thought at 2,048 tokens and makes the model answer from it, scored 92.1% on HumanEval against 89.6% for note 30's policy of throwing the thought away and asking again. It was not cheaper, so by the rule set before the run, Foundry's Think switch stays as it is.</p>
+  </div>
+</header>
+<main><article class="wrap note-body"><p>Spliced research note 31, 26 October 2026. Apple M5 Pro, 24 GB, macOS 27.0.1 on AC, Metal. llama.cpp build 11669 (Homebrew). Qwen3.5 4B Instruct (Apache-2.0), quantized to Q4_0 here, as in notes 29 and 30.</p>
+<p>Note 30 gave a 4B a thinking budget on code: think for up to 2,048 tokens, and if no answer has come, discard the thought and ask again with thinking off. That added 11.6 points. llama.cpp has a second way to do it: <code>--reasoning-budget</code> closes the thought when the budget runs out and lets the model write its answer after it, in the same request. This note compares the two, and a cap on plain replies.</p>
+<p><strong>Prediction</strong> (<code>docs/predictions.md</code>, 26 October 21:21, before the run): thinking off with a 2,048-token cap costs 40 to 65 J per correct answer; the fallback policy with every reply capped costs 150 to 185 J; the built-in budget scores 86 to 92% at 900 to 1,200 tokens per problem, and costs 5 to 20% less than the fallback. Set at the same time: Foundry moves to the built-in budget if it is within a point of the fallback, or better, and at least 5% cheaper per correct answer.</p>
+<h2 data-via>Method</h2>
+<p><code>experiments/general_eval.py</code> on all 164 HumanEval problems, the model's code run against the tests in a sandbox with no network and no access to the home directory. Eight requests at once. Three conditions:</p>
+<ul>
+<li><strong>Off, capped:</strong> thinking off, at most 2,048 tokens per reply.</li>
+<li><strong>Fallback, capped:</strong> note 30's policy, but the second request is also capped at 2,048 tokens.</li>
+<li><strong>Built-in:</strong> thinking on, the server started with <code>--reasoning-budget 2048</code>, at most 4,096 tokens per reply.</li>
+</ul>
+<p>Two passes each in mirrored order (off, fallback, built-in, built-in, fallback, off), started after the Mac idled under 2 W twice in a row (<code>experiments/modes_mac.sh</code>). The run took 21:36 to 22:28.</p>
+<h2 data-via>Results</h2>
+<table>
+<thead>
+<tr>
+<th>condition</th>
+<th style="text-align: right;">accuracy</th>
+<th style="text-align: right;">tokens per problem</th>
+<th style="text-align: right;">chip J per correct</th>
+<th style="text-align: right;">pass-to-pass energy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>off, capped</td>
+<td style="text-align: right;">78.0%</td>
+<td style="text-align: right;">267</td>
+<td style="text-align: right;">43.6</td>
+<td style="text-align: right;">3.7%</td>
+</tr>
+<tr>
+<td>fallback, capped</td>
+<td style="text-align: right;">89.6%</td>
+<td style="text-align: right;">1,107</td>
+<td style="text-align: right;">141.8</td>
+<td style="text-align: right;">0.8%</td>
+</tr>
+<tr>
+<td>built-in</td>
+<td style="text-align: right;">92.1%</td>
+<td style="text-align: right;">1,076</td>
+<td style="text-align: right;">148.5</td>
+<td style="text-align: right;">19.9%</td>
+</tr>
+<tr>
+<td>note 30: off, uncapped</td>
+<td style="text-align: right;">78.0%</td>
+<td style="text-align: right;">442</td>
+<td style="text-align: right;">120.0</td>
+<td style="text-align: right;">6.9%</td>
+</tr>
+<tr>
+<td>note 30: fallback, uncapped</td>
+<td style="text-align: right;">89.6%</td>
+<td style="text-align: right;">1,282</td>
+<td style="text-align: right;">201.9</td>
+<td style="text-align: right;">8.0%</td>
+</tr>
+</tbody>
+</table>
+<p>Every reply was identical between the two passes of each condition, all 492 of them.</p>
+<p><strong>The difference is all in 26 problems.</strong> On the 138 problems where the thought finished inside 2,048 tokens, the fallback and the built-in budget wrote the same reply, token for token. They differ only on the 26 where it did not. There, the fallback's fresh answer got 14 right, exactly what thinking off gets on those 26. Answering from the cut thought got 18 right: six gained, two lost. It also used 8% fewer tokens on them, because the model does not start over.</p>
+<p><strong>It was not cheaper, and one pass is why the figure is unsure.</strong> By tokens, the built-in budget should cost about 3% less than the fallback. Its two passes decoded the same 176,410 tokens, but the first drew 36.2 W at 259 tokens a second and the second 31.5 W at 276. Every other pass in the run drew 31 to 33 W. I found no cause: nothing else was started on the Mac, and the idle reading before the pass was normal. Its mean is 4.7% more costly than the fallback; the second pass alone is 5.7% cheaper; the token count says 3%. None of the three reaches the 5% the rule asked for.</p>
+<p><strong>The cap on plain replies did what note 30 said.</strong> Problems 132 and 134 are the two that loop without thinking. A 2,048-token cap stopped both, cost no correct answers, and took thinking off from 120.0 to 43.6 J per correct answer. The same cap on the fallback's second reply took it from 201.9 to 141.8 J.</p>
+<h2 data-via>Verdicts</h2>
+<ul>
+<li>Off, capped, costs 40 to 65 J per correct answer: <strong>held</strong> (43.6).</li>
+<li>Fallback, capped, costs 150 to 185 J: <strong>missed, low</strong> (141.8). I credited the loops with less of its energy than they had.</li>
+<li>Built-in scores 86 to 92% at 900 to 1,200 tokens: <strong>missed by 0.1 point, high</strong> (92.1% at 1,076).</li>
+<li>Built-in costs 5 to 20% less than the fallback: <strong>missed</strong> (4.7% more on the mean).</li>
+</ul>
+<h2 data-via>What this means for the box</h2>
+<p>The rule was about cost, and cost did not move. So Foundry's Think switch keeps note 30's policy. The finding the rule did not plan for is accuracy: when a small model's thought runs long, what it has thought is worth more than a fresh start without it. Four problems in 164 is too few to switch on, so the next run tests it where note 29 found thinking hurt most, on maths and knowledge questions, with the decision rule written for accuracy before it starts.</p>
+<p>The plain-reply cap stays out of Foundry, as set before the run. HumanEval rewards short code; in a chat a long answer is often the right one.</p>
+<h2 data-via>Limits</h2>
+<ul>
+<li>One small model, one machine, one task. The 26 problems that separate the two policies are a small sample.</li>
+<li>Chip energy, not the wall. One pass drew 15% more power than its twin for no cause I could find, so this run cannot rank the two policies by energy closer than about 5%.</li>
+<li>Problems 1 to 40 informed note 30's budget of 2,048. Both policies use the same budget, so that favours neither.</li>
+</ul>
+<p class="source mono">Source, scripts and raw data: <a href="https://github.com/splicedso/phase/blob/main/notes/2026-10-answer-modes.md">phase/notes/2026-10-answer-modes.md</a></p>
+</article></main>
+</div>
+
+<footer>
+  <div class="wrap foot">
+    <a class="brand" href="../../" aria-label="Spliced home"><svg viewBox="-13 -13 966 1084" aria-hidden="true"><path fill="currentColor" stroke="currentColor" stroke-width="12.7" stroke-linejoin="round" d="M639.0 0.0 L941.0 0.0 L301.0 1059.0 L0.0 1059.0 Z"/></svg>Spliced</a>
+    <nav class="foot-nav" aria-label="Footer">
+      <a href="../../research/">Research</a><a href="../../models/">Models</a><a href="../../systems/">Systems</a><a href="../../designs/">Designs</a><a href="../../foundry/">Foundry</a><a href="../../learn/">Learn</a><a href="../../data/">Data</a><a href="../../tools/phase/">Phase</a><a href="../../about/">About</a>
+    </nav>
+    <div class="foot-social">
+      <a href="https://github.com/splicedso" aria-label="GitHub"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a>
+      <a href="https://www.linkedin.com/company/splicedso" aria-label="LinkedIn"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M0 1.15C0 .52.52 0 1.18 0h13.64C15.48 0 16 .52 16 1.15v13.7c0 .63-.52 1.15-1.18 1.15H1.18C.52 16 0 15.48 0 14.85V1.15zM4.75 13.39V6.17H2.35v7.22h2.4zM3.55 5.18c.84 0 1.36-.55 1.36-1.25-.02-.71-.52-1.25-1.34-1.25-.82 0-1.36.54-1.36 1.25 0 .7.52 1.25 1.33 1.25h.01zm4.91 8.21V9.36c0-.22.02-.43.08-.59.18-.43.57-.88 1.23-.88.87 0 1.22.66 1.22 1.64v3.86h2.4V9.25c0-2.22-1.18-3.25-2.76-3.25-1.27 0-1.84.7-2.16 1.19v.03h-.02l.02-.03V6.17h-2.4c.03.68 0 7.22 0 7.22h2.4z"/></svg></a>
+    </div>
+    <p class="foot-small">&copy; 2026 Spliced. Research and data are open.</p>
+  </div>
+</footer>
+
+<script src="../../assets/site.js?v=202610262231"></script>
+<script src="../../assets/charts.js?v=202610262231"></script>
+</body>
+</html>
