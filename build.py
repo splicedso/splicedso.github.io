@@ -112,6 +112,9 @@ NOTES = [
     {"slug": "thinking-cost", "file": "2026-10-thinking-cost.md", "n": 29,
      "summary": "Thinking on a 4B: about seven times the energy per correct answer, and lower scores on maths and knowledge. Almost "
                 "every lost answer ran out of room mid-thought. A 2,048-token budget with a fallback kept the gain on code at a third of the tokens."},
+    {"slug": "thinking-budget", "file": "2026-10-thinking-budget.md", "n": 30,
+     "summary": "Thinking up to 2,048 tokens, then answering plainly if it runs out, took a 4B from 78.0% to 89.6% on all 164 HumanEval "
+                "problems, for 1.7 times the energy per correct answer. The gain held on the 124 problems never run with thinking."},
 ]
 
 FIGURES = {

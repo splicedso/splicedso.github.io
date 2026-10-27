@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Thinking on a budget &middot; Spliced</title>
+<meta name="description" content="Thinking up to 2,048 tokens, then answering plainly if it runs out, took a 4B from 78.0% to 89.6% on all 164 HumanEval problems, for 1.7 times the energy per correct answer. The gain held on the 124 problems never run with thinking.">
+<meta property="og:title" content="Thinking on a budget &middot; Spliced">
+<meta property="og:description" content="Thinking up to 2,048 tokens, then answering plainly if it runs out, took a 4B from 78.0% to 89.6% on all 164 HumanEval problems, for 1.7 times the energy per correct answer. The gain held on the 124 problems never run with thinking.">
+<meta property="og:image" content="https://splicedso.github.io/assets/og.png?v=202610262111">
+<meta property="og:url" content="https://splicedso.github.io/research/thinking-budget/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Spliced">
+<link rel="canonical" href="https://splicedso.github.io/research/thinking-budget/">
+<meta name="color-scheme" content="light dark">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="../../assets/favicon.svg?v=202610262111" type="image/svg+xml">
+<link rel="icon" href="../../assets/favicon-32.png?v=202610262111" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png?v=202610262111">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>document.documentElement.classList.add("js");</script>
+<link rel="stylesheet" href="../../assets/style.css?v=202610262111">
+<link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
+</head>
+<body data-root="../../" data-page="research">
+<a class="skip" href="#content">Skip to content</a>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="../../" aria-label="Spliced home">
+      <svg viewBox="-13 -13 966 1084" aria-hidden="true"><path fill="currentColor" stroke="currentColor" stroke-width="12.7" stroke-linejoin="round" d="M639.0 0.0 L941.0 0.0 L301.0 1059.0 L0.0 1059.0 Z"/></svg>
+      Spliced
+    </a>
+    <div class="nav-right">
+      <ul>
+        <li><a href="../../research/" data-nav="research">Research</a></li>
+        <li><a href="../../models/" data-nav="models">Models</a></li>
+        <li><a href="../../systems/" data-nav="systems">Systems</a></li>
+        <li><a href="../../foundry/" data-nav="foundry">Foundry</a></li>
+        <li class="about"><a href="../../about/" data-nav="about">About</a></li>
+      </ul>
+      <a class="icon-link" href="https://github.com/splicedso" aria-label="Spliced on GitHub" title="GitHub"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a>
+      <a class="icon-link" href="https://www.linkedin.com/company/splicedso" aria-label="Spliced on LinkedIn" title="LinkedIn"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M0 1.15C0 .52.52 0 1.18 0h13.64C15.48 0 16 .52 16 1.15v13.7c0 .63-.52 1.15-1.18 1.15H1.18C.52 16 0 15.48 0 14.85V1.15zM4.75 13.39V6.17H2.35v7.22h2.4zM3.55 5.18c.84 0 1.36-.55 1.36-1.25-.02-.71-.52-1.25-1.34-1.25-.82 0-1.36.54-1.36 1.25 0 .7.52 1.25 1.33 1.25h.01zm4.91 8.21V9.36c0-.22.02-.43.08-.59.18-.43.57-.88 1.23-.88.87 0 1.22.66 1.22 1.64v3.86h2.4V9.25c0-2.22-1.18-3.25-2.76-3.25-1.27 0-1.84.7-2.16 1.19v.03h-.02l.02-.03V6.17h-2.4c.03.68 0 7.22 0 7.22h2.4z"/></svg></a>
+    </div>
+  </div>
+</nav>
+
+<svg id="bus" aria-hidden="true"></svg>
+
+<div id="content">
+<header class="page-head">
+  <div class="wrap">
+    <span class="label">Note 30 &middot; 26 October 2026</span>
+    <h1>Thinking on a budget</h1>
+    <p class="lede">Thinking up to 2,048 tokens, then answering plainly if it runs out, took a 4B from 78.0% to 89.6% on all 164 HumanEval problems, for 1.7 times the energy per correct answer. The gain held on the 124 problems never run with thinking.</p>
+    <p class="setup"><strong>Prediction verdict:</strong> missed on all four clauses, three of them in the budget's favour. Letting a 4B think for at most 2,048 tokens on code, and asking again without thinking when it runs out, raised HumanEval from 78.0% to 89.6%. It cost 2.9 times the tokens and 1.7 times the energy per correct answer, against a predicted 3 to 7.</p>
+  </div>
+</header>
+<main><article class="wrap note-body"><p>Spliced research note 30, 26 October 2026. Apple M5 Pro, 24 GB, macOS 27.0.1 on AC, Metal. llama.cpp build 11669 (Homebrew). Qwen3.5 4B Instruct (Apache-2.0), quantized to Q4_0 here, as in note 29.</p>
+<p>Note 29 found that thinking lost a 4B its accuracy by running out of room, not by reasoning badly. Replaying its recorded replies suggested a policy: think up to a budget, and if no answer has come, ask again with thinking off. The replay covered 40 code problems. This note runs the policy live on all 164.</p>
+<p><strong>Prediction</strong> (<code>docs/predictions.md</code>, 26 October 20:08, before the run): the budget raises accuracy by 2 to 8 points over thinking off, at 3 to 6 times the tokens and 3 to 7 times the energy per correct answer, and 4 to 15% of problems fall back. Set at the same time: Foundry offers the budget only if the gain is at least 3 points.</p>
+<h2 data-via>Method</h2>
+<p><code>experiments/general_eval.py</code> with <code>THINK_BUDGET=2048</code>: each problem is asked with thinking on and at most 2,048 tokens. A reply stopped by that limit is discarded and the problem is asked again with thinking off, up to 16,384 tokens. Both replies' tokens and energy count. HumanEval, all 164 problems, the model's code run against the tests in a sandbox with no network and no access to the home directory. Eight requests at once. Two passes per condition in mirrored order (off, budget, budget, off), started after the Mac idled under 2 W twice in a row (<code>experiments/budget_mac.sh</code>).</p>
+<h2 data-via>Results</h2>
+<table>
+<thead>
+<tr>
+<th>condition</th>
+<th style="text-align: right;">accuracy</th>
+<th style="text-align: right;">tokens per problem</th>
+<th style="text-align: right;">chip J per correct</th>
+<th style="text-align: right;">fell back</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>thinking off</td>
+<td style="text-align: right;">78.0%</td>
+<td style="text-align: right;">442</td>
+<td style="text-align: right;">120.0</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>budget 2,048</td>
+<td style="text-align: right;">89.6%</td>
+<td style="text-align: right;">1,282</td>
+<td style="text-align: right;">201.9</td>
+<td style="text-align: right;">16%</td>
+</tr>
+<tr>
+<td>budget against off</td>
+<td style="text-align: right;">+11.6 points</td>
+<td style="text-align: right;">x2.9</td>
+<td style="text-align: right;">x1.68</td>
+<td style="text-align: right;"></td>
+</tr>
+</tbody>
+</table>
+<p>Accuracy was identical in both passes of each condition. Energy differed by 6.9% and 8.0% between passes, both times with the second pass costlier and the machine warmer at rest.</p>
+<p><strong>The gain is real, and not from the 40 problems already seen.</strong> The budget fixed 20 problems and broke 1. On problems 1 to 40 it scored 37 against 34, exactly what note 29's replay said. On problems 41 to 164, which had never been run with thinking, it scored 110 against 94, a gain of 12.9 points. On the 138 problems where thinking finished inside the budget, it got 133 right against 114 without thinking. On the 26 that fell back, the answer is the plain answer, so the score is the same.</p>
+<p><strong>Why it cost less energy than predicted.</strong> Two problems made the model loop without thinking: it reasoned in comments inside its code block until it hit 16,384 tokens, wrong both times. Those two replies were 45% of all thinking-off tokens. They ran at the end of the batch, nearly alone, and note 24 showed one request at a time costs several times more per token than eight. So thinking off paid 205 mJ per token and the budget 136. The budget pays for the same two loops after falling back, but its other tokens are decoded eight at a time.</p>
+<h2 data-via>What this means for the box</h2>
+<p>On a small model, on code, a short thinking budget with a fallback is worth having: twelve points for under twice the energy per correct answer. Unlimited thinking was the worst setting in note 29, and thinking off is still best on maths and knowledge questions. So the box should set thinking per task, with a budget, never unlimited. The decision rule is met, so Foundry gets a "think on code" setting built on this.</p>
+<p>The loops point to a second, cheaper fix: no plain reply that passed was longer than 1,374 tokens, so a cap near 2,048 tokens on plain code replies would have cut nearly half of thinking off's tokens, and lost nothing. That is a prediction for a later run, not a result.</p>
+<h2 data-via>Limits</h2>
+<ul>
+<li>One small model, one machine, one task. Maths and knowledge were not re-run: note 29's replay found no gain there.</li>
+<li>Chip energy, not the wall. The pass-to-pass energy gap is over 3% in both conditions.</li>
+<li>The budget of 2,048 was chosen from note 29's replay of problems 1 to 40, which are part of this run. Problems 41 to 164 are the clean test, and the gain held there.</li>
+</ul>
+<p class="source mono">Source, scripts and raw data: <a href="https://github.com/splicedso/phase/blob/main/notes/2026-10-thinking-budget.md">phase/notes/2026-10-thinking-budget.md</a></p>
+</article></main>
+</div>
+
+<footer>
+  <div class="wrap foot">
+    <a class="brand" href="../../" aria-label="Spliced home"><svg viewBox="-13 -13 966 1084" aria-hidden="true"><path fill="currentColor" stroke="currentColor" stroke-width="12.7" stroke-linejoin="round" d="M639.0 0.0 L941.0 0.0 L301.0 1059.0 L0.0 1059.0 Z"/></svg>Spliced</a>
+    <nav class="foot-nav" aria-label="Footer">
+      <a href="../../research/">Research</a><a href="../../models/">Models</a><a href="../../systems/">Systems</a><a href="../../designs/">Designs</a><a href="../../foundry/">Foundry</a><a href="../../learn/">Learn</a><a href="../../data/">Data</a><a href="../../tools/phase/">Phase</a><a href="../../about/">About</a>
+    </nav>
+    <div class="foot-social">
+      <a href="https://github.com/splicedso" aria-label="GitHub"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a>
+      <a href="https://www.linkedin.com/company/splicedso" aria-label="LinkedIn"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M0 1.15C0 .52.52 0 1.18 0h13.64C15.48 0 16 .52 16 1.15v13.7c0 .63-.52 1.15-1.18 1.15H1.18C.52 16 0 15.48 0 14.85V1.15zM4.75 13.39V6.17H2.35v7.22h2.4zM3.55 5.18c.84 0 1.36-.55 1.36-1.25-.02-.71-.52-1.25-1.34-1.25-.82 0-1.36.54-1.36 1.25 0 .7.52 1.25 1.33 1.25h.01zm4.91 8.21V9.36c0-.22.02-.43.08-.59.18-.43.57-.88 1.23-.88.87 0 1.22.66 1.22 1.64v3.86h2.4V9.25c0-2.22-1.18-3.25-2.76-3.25-1.27 0-1.84.7-2.16 1.19v.03h-.02l.02-.03V6.17h-2.4c.03.68 0 7.22 0 7.22h2.4z"/></svg></a>
+    </div>
+    <p class="foot-small">&copy; 2026 Spliced. Research and data are open.</p>
+  </div>
+</footer>
+
+<script src="../../assets/site.js?v=202610262111"></script>
+<script src="../../assets/charts.js?v=202610262111"></script>
+</body>
+</html>
