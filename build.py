@@ -124,6 +124,9 @@ NOTES = [
     {"slug": "answer-modes-capped", "file": "2026-10-answer-modes-capped.md", "n": 33,
      "summary": "Capping the whole reply at 2,560 tokens stops the runaway answers. Answering from a cut thought then wins on "
                 "code, maths and knowledge at no extra energy, so Foundry's Think switch now does it."},
+    {"slug": "lattice-32b-formats", "file": "2026-10-lattice-32b-formats.md", "n": 34,
+     "summary": "At 32B, calibrated Q2_K is still the cheapest format per correct answer. The tighter IQ formats decode slower "
+                "and cost more, and Q3_K_M matches Q4_0 at 85% of the bytes."},
 ]
 
 FIGURES = {

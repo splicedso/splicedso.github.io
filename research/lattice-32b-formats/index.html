@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Smaller files, slower tokens &middot; Spliced</title>
+<meta name="description" content="At 32B, calibrated Q2_K is still the cheapest format per correct answer. The tighter IQ formats decode slower and cost more, and Q3_K_M matches Q4_0 at 85% of the bytes.">
+<meta property="og:title" content="Smaller files, slower tokens &middot; Spliced">
+<meta property="og:description" content="At 32B, calibrated Q2_K is still the cheapest format per correct answer. The tighter IQ formats decode slower and cost more, and Q3_K_M matches Q4_0 at 85% of the bytes.">
+<meta property="og:image" content="https://splicedso.github.io/assets/og.png?v=202610271850">
+<meta property="og:url" content="https://splicedso.github.io/research/lattice-32b-formats/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Spliced">
+<link rel="canonical" href="https://splicedso.github.io/research/lattice-32b-formats/">
+<meta name="color-scheme" content="light dark">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="../../assets/favicon.svg?v=202610271850" type="image/svg+xml">
+<link rel="icon" href="../../assets/favicon-32.png?v=202610271850" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png?v=202610271850">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>document.documentElement.classList.add("js");</script>
+<link rel="stylesheet" href="../../assets/style.css?v=202610271850">
+<link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
+</head>
+<body data-root="../../" data-page="research">
+<a class="skip" href="#content">Skip to content</a>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="../../" aria-label="Spliced home">
+      <svg viewBox="-13 -13 966 1084" aria-hidden="true"><path fill="currentColor" stroke="currentColor" stroke-width="12.7" stroke-linejoin="round" d="M639.0 0.0 L941.0 0.0 L301.0 1059.0 L0.0 1059.0 Z"/></svg>
+      Spliced
+    </a>
+    <div class="nav-right">
+      <ul>
+        <li><a href="../../research/" data-nav="research">Research</a></li>
+        <li><a href="../../models/" data-nav="models">Models</a></li>
+        <li><a href="../../systems/" data-nav="systems">Systems</a></li>
+        <li><a href="../../foundry/" data-nav="foundry">Foundry</a></li>
+        <li class="about"><a href="../../about/" data-nav="about">About</a></li>
+      </ul>
+      <a class="icon-link" href="https://github.com/splicedso" aria-label="Spliced on GitHub" title="GitHub"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a>
+      <a class="icon-link" href="https://www.linkedin.com/company/splicedso" aria-label="Spliced on LinkedIn" title="LinkedIn"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M0 1.15C0 .52.52 0 1.18 0h13.64C15.48 0 16 .52 16 1.15v13.7c0 .63-.52 1.15-1.18 1.15H1.18C.52 16 0 15.48 0 14.85V1.15zM4.75 13.39V6.17H2.35v7.22h2.4zM3.55 5.18c.84 0 1.36-.55 1.36-1.25-.02-.71-.52-1.25-1.34-1.25-.82 0-1.36.54-1.36 1.25 0 .7.52 1.25 1.33 1.25h.01zm4.91 8.21V9.36c0-.22.02-.43.08-.59.18-.43.57-.88 1.23-.88.87 0 1.22.66 1.22 1.64v3.86h2.4V9.25c0-2.22-1.18-3.25-2.76-3.25-1.27 0-1.84.7-2.16 1.19v.03h-.02l.02-.03V6.17h-2.4c.03.68 0 7.22 0 7.22h2.4z"/></svg></a>
+    </div>
+  </div>
+</nav>
+
+<svg id="bus" aria-hidden="true"></svg>
+
+<div id="content">
+<header class="page-head">
+  <div class="wrap">
+    <span class="label">Note 34 &middot; 27 October 2026</span>
+    <h1>Smaller files, slower tokens</h1>
+    <p class="lede">At 32B, calibrated Q2_K is still the cheapest format per correct answer. The tighter IQ formats decode slower and cost more, and Q3_K_M matches Q4_0 at 85% of the bytes.</p>
+    <p class="setup"><strong>Prediction verdict:</strong> the central claim held. Calibrated Q2_K is still the cheapest format per correct answer for a 32B model, 12.9% under Q4_0. But seven of twelve clauses missed, mostly on how badly the IQ formats did. Calibrated Q3_K_M, which a disturbed first run made look expensive, matches Q4_0 at 85% of the bytes.</p>
+  </div>
+</header>
+<main><article class="wrap note-body"><p>Spliced research note 34, 27 October 2026. AMD Ryzen AI Max+ 395 (Strix Halo, RAH-001), 128 GB, Linux, llama.cpp 620d2225c on Vulkan. Qwen2.5 32B Instruct (Apache-2.0).</p>
+<p>Note 22 found that at 32B a calibrated 2-bit file (Q2_K) costs less per correct answer than Q4_0, the reverse of every smaller model. llama.cpp has other low-bit formats, the IQ family, that pack weights tighter still. This note asks whether any of them, or a 3-bit format, beats Q2_K.</p>
+<p><strong>Prediction</strong> (<code>docs/predictions.md</code>, 26 October 11:04, before any file was built): Q3_K_M and IQ3_XXS within a point of Q4_0, Q2_K and IQ2_M within 2, IQ2_XS 2 to 6 points below; the IQ formats no cheaper per token than Q2_K, because they cost more to unpack; Q3_K_M between Q2_K and Q4_0; answer length the same within 5%; Q2_K cheapest per correct answer, within 5% of second, and nothing beating note 22's 473.7 J by more than 5%.</p>
+<h2 data-via>Method</h2>
+<p>Five formats quantized from the same F16 with note 22's GSM8K importance matrix, against stock Q4_0. GSM8K, 250 problems, eight requests at once, automatic clocks, two passes in mirrored order, package power for energy (<code>experiments/lattice32_formats.sh</code>, 26 October).</p>
+<p>Part of that run was spoiled. From 12:51 to 14:42 another job shared the GPU, found afterwards in the power log. The cells it touched were void for energy, so they ran again on 27 October behind a gate that waits until no other job is on the GPU (<code>experiments/lattice32_rerun.sh</code>), with Q4_0 re-run as an anchor. The anchor reproduced to within 1%. The table uses only clean cells.</p>
+<h2 data-via>Results</h2>
+<table>
+<thead>
+<tr>
+<th>format</th>
+<th style="text-align: right;">file</th>
+<th style="text-align: right;">accuracy</th>
+<th style="text-align: right;">tokens per second</th>
+<th style="text-align: right;">J per correct</th>
+<th style="text-align: right;">against Q4_0</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Q4_0, stock</td>
+<td style="text-align: right;">18.6 GB</td>
+<td style="text-align: right;">95.6%</td>
+<td style="text-align: right;">55.6</td>
+<td style="text-align: right;">555.7</td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>Q2_K, calibrated</td>
+<td style="text-align: right;">12.3 GB</td>
+<td style="text-align: right;">96.0%</td>
+<td style="text-align: right;">60.0</td>
+<td style="text-align: right;">484.1</td>
+<td style="text-align: right;">-12.9%</td>
+</tr>
+<tr>
+<td>Q3_K_M, calibrated</td>
+<td style="text-align: right;">15.9 GB</td>
+<td style="text-align: right;">96.0%</td>
+<td style="text-align: right;">54.4</td>
+<td style="text-align: right;">563.8</td>
+<td style="text-align: right;">+1.5%</td>
+</tr>
+<tr>
+<td>IQ2_XS, calibrated</td>
+<td style="text-align: right;">10.0 GB</td>
+<td style="text-align: right;">92.8%</td>
+<td style="text-align: right;">44.6</td>
+<td style="text-align: right;">628.3</td>
+<td style="text-align: right;">+13.1%</td>
+</tr>
+<tr>
+<td>IQ2_M, calibrated</td>
+<td style="text-align: right;">11.3 GB</td>
+<td style="text-align: right;">89.8%</td>
+<td style="text-align: right;">32.4</td>
+<td style="text-align: right;">925.4</td>
+<td style="text-align: right;">+66.5%</td>
+</tr>
+<tr>
+<td>IQ3_XXS, calibrated</td>
+<td style="text-align: right;">12.8 GB</td>
+<td style="text-align: right;">90.0%</td>
+<td style="text-align: right;">32.8</td>
+<td style="text-align: right;">931.6</td>
+<td style="text-align: right;">+67.7%</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Speed sets the order.</strong> Every format drew 118 to 124 W while decoding, so energy per token is just the inverse of speed. Speed did not follow file size. The smallest file, IQ2_XS, decoded at 80% of Q4_0's rate, and IQ2_M and IQ3_XXS at 58 to 59%. The work of unpacking those formats on this GPU outweighs the bytes they save. Q2_K is the one format that is both smaller and faster than Q4_0.</p>
+<p><strong>Q3_K_M is the safe middle.</strong> It matched Q4_0 on accuracy, answer length and energy, 2% slower, in a file 3 GB smaller. In the spoiled run it had looked 1.7 to 2.5 times dearer; all of that was the other job. When Q4_0 does not fit and a 2-bit loss is not wanted, Q3_K_M is the format to take.</p>
+<p><strong>The IQ formats lose accuracy too.</strong> IQ2_M and IQ3_XXS scored 5.6 and 5.8 points below Q4_0, outside the predicted band, and the 3-bit IQ3_XXS scored below the 2-bit IQ2_XS. On this model and importance matrix, more bits in the IQ family did not mean better answers.</p>
+<p><strong>The IQ speeds are not firm.</strong> In the re-run, IQ2_XS and IQ3_XXS ran 13% and 8% faster in their later pass at the same accuracy, power and shader clock, and IQ2_M's two passes on 26 October differed by 14% in energy. A clock log during the re-run ruled out the GPU core and could not read the memory-side clocks well enough to say more. Treat each IQ figure as ±10%; the Q-format passes agree within 1.5%.</p>
+<h2 data-via>Verdicts</h2>
+<ul>
+<li>Accuracy: Q3_K_M, Q2_K and IQ2_XS <strong>held</strong>; IQ3_XXS and IQ2_M <strong>missed</strong> (5.6 and 5.8 points under Q4_0).</li>
+<li>The IQ formats no cheaper per token than Q2_K, within 5%: <strong>missed</strong>. They were 35 to 79% dearer, worse than predicted.</li>
+<li>Q3_K_M between Q2_K and Q4_0: <strong>missed</strong> (1.5% over Q4_0).</li>
+<li>Answer length within 5%: <strong>missed</strong> (IQ2_XS answered 12.5% shorter; two of five formats inside 5%).</li>
+<li>Q2_K cheapest per correct answer: <strong>held</strong>. Within 5% of second: <strong>missed</strong> (12.9% ahead). Nothing beats 473.7 J by 5%: <strong>held</strong>.</li>
+<li>The ranking is set by speed, not file size: <strong>held</strong>.</li>
+</ul>
+<h2 data-via>What this means for the box</h2>
+<p>For a 32B model on this machine, use calibrated Q2_K, or Q3_K_M where a 2-bit file costs too much accuracy for the task. Avoid the IQ formats on this Vulkan build. The ranking belongs to this build's unpacking code: a ROCm build or a later llama.cpp could reorder the IQ formats, so the comparison is worth repeating when the box's software changes.</p>
+<h2 data-via>Limits</h2>
+<ul>
+<li>One task (GSM8K), one model, one importance matrix, one llama.cpp build.</li>
+<li>Package energy, not the wall.</li>
+<li>The spoiled cells were found after the fact. The gate that stops that from happening again (<code>experiments/gpu_gate.sh</code>) came from this run.</li>
+<li>Full per-cell table, both runs and the clock log: <code>results/lattice32-halo.md</code>.</li>
+</ul>
+<p class="source mono">Source, scripts and raw data: <a href="https://github.com/splicedso/phase/blob/main/notes/2026-10-lattice-32b-formats.md">phase/notes/2026-10-lattice-32b-formats.md</a></p>
+</article></main>
+</div>
+
+<footer>
+  <div class="wrap foot">
+    <a class="brand" href="../../" aria-label="Spliced home"><svg viewBox="-13 -13 966 1084" aria-hidden="true"><path fill="currentColor" stroke="currentColor" stroke-width="12.7" stroke-linejoin="round" d="M639.0 0.0 L941.0 0.0 L301.0 1059.0 L0.0 1059.0 Z"/></svg>Spliced</a>
+    <nav class="foot-nav" aria-label="Footer">
+      <a href="../../research/">Research</a><a href="../../models/">Models</a><a href="../../systems/">Systems</a><a href="../../designs/">Designs</a><a href="../../foundry/">Foundry</a><a href="../../learn/">Learn</a><a href="../../data/">Data</a><a href="../../tools/phase/">Phase</a><a href="../../about/">About</a>
+    </nav>
+    <div class="foot-social">
+      <a href="https://github.com/splicedso" aria-label="GitHub"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a>
+      <a href="https://www.linkedin.com/company/splicedso" aria-label="LinkedIn"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M0 1.15C0 .52.52 0 1.18 0h13.64C15.48 0 16 .52 16 1.15v13.7c0 .63-.52 1.15-1.18 1.15H1.18C.52 16 0 15.48 0 14.85V1.15zM4.75 13.39V6.17H2.35v7.22h2.4zM3.55 5.18c.84 0 1.36-.55 1.36-1.25-.02-.71-.52-1.25-1.34-1.25-.82 0-1.36.54-1.36 1.25 0 .7.52 1.25 1.33 1.25h.01zm4.91 8.21V9.36c0-.22.02-.43.08-.59.18-.43.57-.88 1.23-.88.87 0 1.22.66 1.22 1.64v3.86h2.4V9.25c0-2.22-1.18-3.25-2.76-3.25-1.27 0-1.84.7-2.16 1.19v.03h-.02l.02-.03V6.17h-2.4c.03.68 0 7.22 0 7.22h2.4z"/></svg></a>
+    </div>
+    <p class="foot-small">&copy; 2026 Spliced. Research and data are open.</p>
+  </div>
+</footer>
+
+<script src="../../assets/site.js?v=202610271850"></script>
+<script src="../../assets/charts.js?v=202610271850"></script>
+</body>
+</html>
