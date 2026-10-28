@@ -279,7 +279,7 @@ def badge(loc, height, m_plate, m_mark, rot=(0, 0, 0), depth=0.08, wordmark=True
     off.rotate(Euler(rot))
     mark(tuple(Vector(loc) + off), k, m_mark, rot=rot, depth=depth * 0.3)
     if wordmark:
-        off2 = Vector((-pw / 2 + k * 1.55, -k * 0.34, depth / 2 + 0.001))
+        off2 = Vector((-pw / 2 + k * 1.9, -k * 0.34, depth / 2 + 0.001))
         off2.rotate(Euler(rot))
         text("Spliced", tuple(Vector(loc) + off2), k * 0.62, m_mark, rot=rot, extrude=depth * 0.3, font="/System/Library/Fonts/HelveticaNeue.ttc")
     return plate
