@@ -149,12 +149,31 @@ def text(body, loc, size, m, rot=(0, 0, 0), extrude=0.0, font="/System/Library/F
     return o
 
 
+def mark_outline(n=8):
+    """The Spliced mark (2026-10-27): an upright bar with pointed ends, 250 x 750, corners rounded
+    at 26, as in brand/build.py. Returns the outline as points, n per corner."""
+    pts = [(125, 0), (250, 85), (250, 665), (125, 750), (0, 665), (0, 85)]
+    r, out = 26, []
+    for i, p in enumerate(pts):
+        a, b = pts[i - 1], pts[(i + 1) % 6]
+        u = ((a[0] - p[0]), (a[1] - p[1])); lu = math.hypot(*u); u = (u[0] / lu, u[1] / lu)
+        v = ((b[0] - p[0]), (b[1] - p[1])); lv = math.hypot(*v); v = (v[0] / lv, v[1] / lv)
+        th = math.acos(max(-1, min(1, u[0] * v[0] + u[1] * v[1])))
+        bx, by = u[0] + v[0], u[1] + v[1]; lb = math.hypot(bx, by)
+        c = (p[0] + bx / lb * r / math.sin(th / 2), p[1] + by / lb * r / math.sin(th / 2))
+        t = r / math.tan(th / 2)
+        s0 = math.atan2(p[1] + u[1] * t - c[1], p[0] + u[0] * t - c[0])
+        s1 = math.atan2(p[1] + v[1] * t - c[1], p[0] + v[0] * t - c[0])
+        d = (s1 - s0 + math.pi) % (2 * math.pi) - math.pi
+        out += [(c[0] + r * math.cos(s0 + d * j / n), c[1] + r * math.sin(s0 + d * j / n)) for j in range(n + 1)]
+    return out
+
+
 def mark(loc, height, m, rot=(0, 0, 0), depth=0.0):
-    """The Spliced mark as a flat or slightly raised plate."""
-    A = [(639, 0), (941, 0), (301, 1059), (0, 1059)]
-    k = height / 1059
-    v = [((x - 470) * k, -(y - 530) * k, 0) for x, y in A]
-    me = bpy.data.meshes.new("mark"); me.from_pydata(v, [], [[0, 1, 2, 3]]); me.update()
+    """The Spliced mark as a flat or slightly raised plate. `height` is the mark's height."""
+    k = height / 750
+    v = [((x - 125) * k, -(y - 375) * k, 0) for x, y in mark_outline()]
+    me = bpy.data.meshes.new("mark"); me.from_pydata(v, [], [list(range(len(v)))]); me.update()
     o = bpy.data.objects.new("mark", me); o.location = loc; o.rotation_euler = rot
     bpy.context.scene.collection.objects.link(o); o.data.materials.append(m)
     if depth:
@@ -260,7 +279,7 @@ def badge(loc, height, m_plate, m_mark, rot=(0, 0, 0), depth=0.08, wordmark=True
     off.rotate(Euler(rot))
     mark(tuple(Vector(loc) + off), k, m_mark, rot=rot, depth=depth * 0.3)
     if wordmark:
-        off2 = Vector((-pw / 2 + k * 1.75, -k * 0.34, depth / 2 + 0.001))
+        off2 = Vector((-pw / 2 + k * 1.55, -k * 0.34, depth / 2 + 0.001))
         off2.rotate(Euler(rot))
         text("Spliced", tuple(Vector(loc) + off2), k * 0.62, m_mark, rot=rot, extrude=depth * 0.3, font="/System/Library/Fonts/HelveticaNeue.ttc")
     return plate

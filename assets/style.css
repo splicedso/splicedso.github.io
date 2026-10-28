@@ -66,7 +66,7 @@ a { color: inherit; }
 nav { position: sticky; top: 0; z-index: 20; background: var(--nav); backdrop-filter: blur(8px); border-bottom: 1px solid var(--ink); }
 nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 58px; }
 .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; font-weight: 600; font-size: 19px; letter-spacing: -.02em; }
-.brand svg { height: 22px; width: auto; }
+.brand svg { height: 26px; width: auto; }
 nav ul { display: flex; gap: 26px; list-style: none; padding: 0; }
 nav ul a { text-decoration: none; color: var(--mute); font-size: 14.5px; transition: color .2s; }
 nav ul a:hover { color: var(--ink); }
@@ -598,7 +598,7 @@ h2.center { text-align: center; margin: 0 auto 56px; max-width: 22ch; }
 /* footer */
 footer { padding: 32px 0 48px; border-top: 1px solid var(--line); margin-top: 40px; }
 .foot { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 20px 32px; }
-.foot .brand svg { height: 20px; color: var(--blue); }
+.foot .brand svg { height: 24px; color: var(--blue); }
 .foot-nav { display: flex; gap: 22px; justify-content: center; flex-wrap: wrap; }
 .foot-nav a, .foot-social a { color: var(--mute); text-decoration: none; font-size: 15px; transition: color .2s; }
 .foot-nav a:hover, .foot-social a:hover { color: var(--blue); }

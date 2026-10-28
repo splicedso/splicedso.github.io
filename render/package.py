@@ -60,7 +60,7 @@ for i in range(30):
         bpy.ops.mesh.primitive_uv_sphere_add(radius=0.035, location=(-1.48 + i * 0.102, -1.48 + j * 0.102, -0.02), segments=12, ring_count=8)
         bpy.ops.object.shade_smooth(); bpy.context.object.data.materials.append(ball)
 
-S.mark((-0.25, 0.15, 0.2805), 1.0, etch)
+S.mark((0.0, 0.08, 0.2805), 1.1, etch)
 # pin-1 marker
 bpy.ops.mesh.primitive_cylinder_add(radius=0.03, depth=0.002, location=(-0.98, -0.98, 0.2806), vertices=24)
 bpy.context.object.data.materials.append(laser)

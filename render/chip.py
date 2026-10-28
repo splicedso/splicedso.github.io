@@ -44,11 +44,12 @@ subst = mat("substrate", (0.03, 0.03, 0.03), rough=0.4)
 box("board", (16, 10, 0.1), (0, 0, -0.05), board)
 box("substrate", (2.6, 2.6, 0.08), (0, 0, 0.04), subst, 0.02)
 box("lid", (1.9, 1.9, 0.12), (0, 0, 0.14), lid, 0.05)
-A = [(639, 0), (941, 0), (301, 1059), (0, 1059)]  # the Spliced mark, as in brand/build.py
+sys.path.insert(0, __import__("os").path.dirname(__file__))
+from studio import mark_outline  # noqa: E402  the Spliced mark, as in brand/build.py
 etch = mat("etch", (0.08, 0.08, 0.08), metal=1.0, rough=0.7)
-for pts in (A,):
-    k = 1.0 / 1059
-    v = [((x - 470) * k, -(y - 530) * k, 0.201) for x, y in pts]
+for pts in (mark_outline(),):
+    k = 1.0 / 750
+    v = [((x - 125) * k, -(y - 375) * k, 0.201) for x, y in pts]
     me = bpy.data.meshes.new("m"); me.from_pydata(v, [], [list(range(len(v)))]); me.update()
     o = bpy.data.objects.new("mark", me); sc.collection.objects.link(o); o.data.materials.append(etch)
 
