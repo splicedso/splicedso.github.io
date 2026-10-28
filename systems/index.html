@@ -7,21 +7,21 @@
 <meta name="description" content="How to run a model well on one machine, decided by what we measured: format, batch, draft, prefix cache, clock.">
 <meta property="og:title" content="Systems &middot; Spliced">
 <meta property="og:description" content="How to run a model well on one machine, decided by what we measured: format, batch, draft, prefix cache, clock.">
-<meta property="og:image" content="https://splicedso.github.io/assets/og.png?v=202610271217">
+<meta property="og:image" content="https://splicedso.github.io/assets/og.png?v=202610271841">
 <meta property="og:url" content="https://splicedso.github.io/systems/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Spliced">
 <link rel="canonical" href="https://splicedso.github.io/systems/">
 <meta name="color-scheme" content="light dark">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="../assets/favicon.svg?v=202610271217" type="image/svg+xml">
-<link rel="icon" href="../assets/favicon-32.png?v=202610271217" type="image/png" sizes="32x32">
-<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png?v=202610271217">
+<link rel="icon" href="../assets/favicon.svg?v=202610271841" type="image/svg+xml">
+<link rel="icon" href="../assets/favicon-32.png?v=202610271841" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png?v=202610271841">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>document.documentElement.classList.add("js");</script>
-<link rel="stylesheet" href="../assets/style.css?v=202610271217">
+<link rel="stylesheet" href="../assets/style.css?v=202610271841">
 <link rel="alternate" type="application/atom+xml" title="Spliced research" href="https://splicedso.github.io/feed.xml">
 </head>
 <body data-root="../" data-page="systems">
@@ -70,7 +70,9 @@ every model width we measured, on the M5 Pro, the RTX 5070 Ti Laptop GPU and the
 (notes 1, 4, 6). Below 4 bits the token gets more expensive, not cheaper, because unpacking the
 format costs more than the bytes it saves (note 5): on a 7B, a calibrated 2-bit token costs 18%
 more chip energy than a 4-bit one and Q4_0 is 21% cheaper per correct answer (note 22). At 32B
-the sign flips: calibrated Q2_K costs 16% less per correct answer at equal accuracy. The
+the sign flips: calibrated Q2_K costs 13 to 16% less per correct answer at equal accuracy, and calibrated Q3_K_M matches
+Q4_0 on accuracy and energy at 85% of the bytes, the format to take when Q4_0 does not fit. The IQ formats decode at 58 to
+80% of Q4_0's speed on this Vulkan build and cost more per correct answer (results/lattice32-halo.md). The
 crossover sits between 7B and 32B on the Strix Halo and is machine dependent.</p>
 <p><strong>Model size: the largest that fits with room to batch.</strong> Per correct answer, a 7B serving eight
 requests beats a 1.5B serving one, on both machines (note 19). Accuracy buys more than speed
@@ -205,7 +207,7 @@ energy, so the gap a cell has to close is named: host, supplies, fans and idle.<
   </div>
 </footer>
 
-<script src="../assets/site.js?v=202610271217"></script>
+<script src="../assets/site.js?v=202610271841"></script>
 
 </body>
 </html>
